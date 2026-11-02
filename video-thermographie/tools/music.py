@@ -211,7 +211,7 @@ with wave.open(raw, "wb") as w:
 
 out = os.path.join(ROOT, "assets", "audio", "music.wav")
 subprocess.run(
-    ["ffmpeg", "-loglevel", "error", "-y", "-i", raw, "-af", "loudnorm=I=-18:TP=-2:LRA=9", "-ar", str(SR), out],
+    ["ffmpeg", "-loglevel", "error", "-y", "-i", raw, "-af", "loudnorm=I=-15.5:TP=-1.5:LRA=9", "-ar", str(SR), out],
     check=True,
 )
 os.remove(raw)

@@ -15,7 +15,9 @@
 - `hyperframes check` : 0 erreur, 0 avertissement (lint, runtime, mise en page, contraste, rythme, audio).
 - Planches de raccords : les 5 coupes sont continues (aucun saut visible à ±0,1 s).
 - Planche téléphone (360 px) : titres lisibles ; étiquettes agrandies à 30–36 px après ce passage.
-- Son : mesuré (musique −17,5 LUFS, crête −4 dBTP, pics des effets calés une image après l’action), **pas écouté**.
+- Son : mesuré, **pas écouté**. Premier rendu à −17,3 LUFS (trop bas) → musique remontée à −15 LUFS (crête −1,5 dBTP) ;
+  pics des effets calés une image après l’action à l’écran.
+- Images décodées du MP4 vérifiées : polices chargées (Montserrat, Poppins, Fredoka), couleurs et tracés conformes.
 
 ## Corrigé pendant la revue
 - Le tracé progressif sautait (GSAP arrondit `strokeDashoffset` en CSS) → animation de l’attribut SVG.
