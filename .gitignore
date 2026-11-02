@@ -1,0 +1,6 @@
+# HyperFrames working files (snapshots, check reports, render cache)
+video-thermographie/.hyperframes/
+video-thermographie/renders/render.log
+node_modules/
+__pycache__/
+.DS_Store

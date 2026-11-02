@@ -1,0 +1,163 @@
+<template>
+  <!-- Scène 3 — Inspection drone -->
+  <style>
+    #root { position: absolute; inset: 0; overflow: hidden; font-family: "Montserrat", sans-serif; color: #111111; }
+    #root svg.world { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; overflow: visible; }
+    #root svg.zoom * { vector-effect: non-scaling-stroke; }
+    #root .d { stroke-dasharray: 1 1.2; }
+    #root .title { position: absolute; font-weight: 600; font-size: 64px; line-height: 1.1; letter-spacing: -0.015em; color: #111111; white-space: nowrap; }
+    #root .w { display: inline-block; }
+    #root .acc { color: #FF5700; }
+    #root .label { position: absolute; font-family: "Poppins", sans-serif; font-weight: 500; font-size: 32px; line-height: 1.2; color: #6B6B70; white-space: nowrap; }
+
+    #root #s3-hud { position: absolute; left: 480px; top: 306px; display: flex; align-items: center; gap: 36px; }
+    #root .tag { font-family: "Poppins", sans-serif; font-weight: 500; font-size: 30px; line-height: 1; padding: 10px 16px; background: #FFFFFF; border: 1.5px solid #111111; color: #111111; white-space: nowrap; }
+    #root .scale { display: flex; align-items: center; gap: 14px; font-family: "Poppins", sans-serif; font-weight: 500; font-size: 30px; color: #6B6B70; }
+    #root .scale i { display: block; width: 200px; height: 12px; background: linear-gradient(90deg, #E4E4E7 0%, #FFD2BC 55%, #FF5700 100%); }
+    #root #s3-tag, #root #s3-scale, #root #s3-leaddot, #root #s3-scan, #root .s3-ring { opacity: 0; }
+    #root .s3-pfill, #root .s3-cells { opacity: 0; }
+  </style>
+  <div
+    id="root"
+    data-composition-id="s3"
+    data-width="1920"
+    data-height="1080"
+    data-composition-variables="[{&quot;id&quot;: &quot;s3-title&quot;, &quot;type&quot;: &quot;string&quot;, &quot;label&quot;: &quot;Scène 3 — titre&quot;, &quot;default&quot;: &quot;Le scan infrarouge révèle|chaque *échauffement*.&quot;}]"
+  >
+    <svg id="s3-svg" class="world zoom" viewBox="0 0 1920 1080" width="1920" height="1080">
+      <defs>
+        <radialGradient id="s3-hot"><stop offset="0" stop-color="#FF5700" stop-opacity="1"/><stop offset="0.3" stop-color="#FF5700" stop-opacity="0.9"/><stop offset="0.62" stop-color="#FF7A33" stop-opacity="0.42"/><stop offset="1" stop-color="#FF9A66" stop-opacity="0"/></radialGradient><radialGradient id="s3-warm"><stop offset="0" stop-color="#FF5700" stop-opacity="0.62"/><stop offset="1" stop-color="#FF5700" stop-opacity="0.26"/></radialGradient>
+        <linearGradient id="s3-trail" x1="0" x2="1" y1="0" y2="0">
+          <stop offset="0" stop-color="#FF5700" stop-opacity="0"/>
+          <stop offset="1" stop-color="#FF5700" stop-opacity="0.16"/>
+        </linearGradient>
+        <clipPath id="s3-clip"><rect id="s3-cliprect" x="215" y="392" width="0" height="576"/></clipPath>
+      </defs>
+      <g id="s3-normal"><rect class="s3-pfill" x="230" y="412" width="210" height="160" fill="#F3F3F4"/><path class="s3-cells" d="M265 412V572M300 412V572M335 412V572M370 412V572M405 412V572M230 452H440M230 492H440M230 532H440" stroke="#D4D4D8" stroke-width="1" fill="none"/><rect stroke-dashoffset="1.05" class="d s3-pline" pathLength="1" x="230" y="412" width="210" height="160" fill="none" stroke="#111111" stroke-width="2"/><rect class="s3-pfill" x="230" y="600" width="210" height="160" fill="#F3F3F4"/><path class="s3-cells" d="M265 600V760M300 600V760M335 600V760M370 600V760M405 600V760M230 640H440M230 680H440M230 720H440" stroke="#D4D4D8" stroke-width="1" fill="none"/><rect stroke-dashoffset="1.05" class="d s3-pline" pathLength="1" x="230" y="600" width="210" height="160" fill="none" stroke="#111111" stroke-width="2"/><rect class="s3-pfill" x="230" y="788" width="210" height="160" fill="#F3F3F4"/><path class="s3-cells" d="M265 788V948M300 788V948M335 788V948M370 788V948M405 788V948M230 828H440M230 868H440M230 908H440" stroke="#D4D4D8" stroke-width="1" fill="none"/><rect stroke-dashoffset="1.05" class="d s3-pline" pathLength="1" x="230" y="788" width="210" height="160" fill="none" stroke="#111111" stroke-width="2"/><rect class="s3-pfill" x="452" y="412" width="210" height="160" fill="#F3F3F4"/><path class="s3-cells" d="M487 412V572M522 412V572M557 412V572M592 412V572M627 412V572M452 452H662M452 492H662M452 532H662" stroke="#D4D4D8" stroke-width="1" fill="none"/><rect stroke-dashoffset="1.05" class="d s3-pline" pathLength="1" x="452" y="412" width="210" height="160" fill="none" stroke="#111111" stroke-width="2"/><rect class="s3-pfill" x="452" y="600" width="210" height="160" fill="#F3F3F4"/><path class="s3-cells" d="M487 600V760M522 600V760M557 600V760M592 600V760M627 600V760M452 640H662M452 680H662M452 720H662" stroke="#D4D4D8" stroke-width="1" fill="none"/><rect stroke-dashoffset="1.05" class="d s3-pline" pathLength="1" x="452" y="600" width="210" height="160" fill="none" stroke="#111111" stroke-width="2"/><rect class="s3-pfill" x="452" y="788" width="210" height="160" fill="#F3F3F4"/><path class="s3-cells" d="M487 788V948M522 788V948M557 788V948M592 788V948M627 788V948M452 828H662M452 868H662M452 908H662" stroke="#D4D4D8" stroke-width="1" fill="none"/><rect stroke-dashoffset="1.05" class="d s3-pline" pathLength="1" x="452" y="788" width="210" height="160" fill="none" stroke="#111111" stroke-width="2"/><rect class="s3-pfill" x="674" y="412" width="210" height="160" fill="#F3F3F4"/><path class="s3-cells" d="M709 412V572M744 412V572M779 412V572M814 412V572M849 412V572M674 452H884M674 492H884M674 532H884" stroke="#D4D4D8" stroke-width="1" fill="none"/><rect stroke-dashoffset="1.05" class="d s3-pline" pathLength="1" x="674" y="412" width="210" height="160" fill="none" stroke="#111111" stroke-width="2"/><rect class="s3-pfill" x="674" y="600" width="210" height="160" fill="#F3F3F4"/><path class="s3-cells" d="M709 600V760M744 600V760M779 600V760M814 600V760M849 600V760M674 640H884M674 680H884M674 720H884" stroke="#D4D4D8" stroke-width="1" fill="none"/><rect stroke-dashoffset="1.05" class="d s3-pline" pathLength="1" x="674" y="600" width="210" height="160" fill="none" stroke="#111111" stroke-width="2"/><rect class="s3-pfill" x="674" y="788" width="210" height="160" fill="#F3F3F4"/><path class="s3-cells" d="M709 788V948M744 788V948M779 788V948M814 788V948M849 788V948M674 828H884M674 868H884M674 908H884" stroke="#D4D4D8" stroke-width="1" fill="none"/><rect stroke-dashoffset="1.05" class="d s3-pline" pathLength="1" x="674" y="788" width="210" height="160" fill="none" stroke="#111111" stroke-width="2"/><rect class="s3-pfill" x="896" y="412" width="210" height="160" fill="#F3F3F4"/><path class="s3-cells" d="M931 412V572M966 412V572M1001 412V572M1036 412V572M1071 412V572M896 452H1106M896 492H1106M896 532H1106" stroke="#D4D4D8" stroke-width="1" fill="none"/><rect stroke-dashoffset="1.05" class="d s3-pline" pathLength="1" x="896" y="412" width="210" height="160" fill="none" stroke="#111111" stroke-width="2"/><rect class="s3-pfill" x="896" y="600" width="210" height="160" fill="#F3F3F4"/><path class="s3-cells" d="M931 600V760M966 600V760M1001 600V760M1036 600V760M1071 600V760M896 640H1106M896 680H1106M896 720H1106" stroke="#D4D4D8" stroke-width="1" fill="none"/><rect stroke-dashoffset="1.05" class="d s3-pline" pathLength="1" x="896" y="600" width="210" height="160" fill="none" stroke="#111111" stroke-width="2"/><rect class="s3-pfill" x="896" y="788" width="210" height="160" fill="#F3F3F4"/><path class="s3-cells" d="M931 788V948M966 788V948M1001 788V948M1036 788V948M1071 788V948M896 828H1106M896 868H1106M896 908H1106" stroke="#D4D4D8" stroke-width="1" fill="none"/><rect stroke-dashoffset="1.05" class="d s3-pline" pathLength="1" x="896" y="788" width="210" height="160" fill="none" stroke="#111111" stroke-width="2"/><rect class="s3-pfill" x="1118" y="412" width="210" height="160" fill="#F3F3F4"/><path class="s3-cells" d="M1153 412V572M1188 412V572M1223 412V572M1258 412V572M1293 412V572M1118 452H1328M1118 492H1328M1118 532H1328" stroke="#D4D4D8" stroke-width="1" fill="none"/><rect stroke-dashoffset="1.05" class="d s3-pline" pathLength="1" x="1118" y="412" width="210" height="160" fill="none" stroke="#111111" stroke-width="2"/><rect class="s3-pfill" x="1118" y="600" width="210" height="160" fill="#F3F3F4"/><path class="s3-cells" d="M1153 600V760M1188 600V760M1223 600V760M1258 600V760M1293 600V760M1118 640H1328M1118 680H1328M1118 720H1328" stroke="#D4D4D8" stroke-width="1" fill="none"/><rect stroke-dashoffset="1.05" class="d s3-pline" pathLength="1" x="1118" y="600" width="210" height="160" fill="none" stroke="#111111" stroke-width="2"/><rect class="s3-pfill" x="1118" y="788" width="210" height="160" fill="#F3F3F4"/><path class="s3-cells" d="M1153 788V948M1188 788V948M1223 788V948M1258 788V948M1293 788V948M1118 828H1328M1118 868H1328M1118 908H1328" stroke="#D4D4D8" stroke-width="1" fill="none"/><rect stroke-dashoffset="1.05" class="d s3-pline" pathLength="1" x="1118" y="788" width="210" height="160" fill="none" stroke="#111111" stroke-width="2"/><rect class="s3-pfill" x="1340" y="412" width="210" height="160" fill="#F3F3F4"/><path class="s3-cells" d="M1375 412V572M1410 412V572M1445 412V572M1480 412V572M1515 412V572M1340 452H1550M1340 492H1550M1340 532H1550" stroke="#D4D4D8" stroke-width="1" fill="none"/><rect stroke-dashoffset="1.05" class="d s3-pline" pathLength="1" x="1340" y="412" width="210" height="160" fill="none" stroke="#111111" stroke-width="2"/><rect class="s3-pfill" x="1340" y="600" width="210" height="160" fill="#F3F3F4"/><path class="s3-cells" d="M1375 600V760M1410 600V760M1445 600V760M1480 600V760M1515 600V760M1340 640H1550M1340 680H1550M1340 720H1550" stroke="#D4D4D8" stroke-width="1" fill="none"/><rect stroke-dashoffset="1.05" class="d s3-pline" pathLength="1" x="1340" y="600" width="210" height="160" fill="none" stroke="#111111" stroke-width="2"/><rect class="s3-pfill" x="1340" y="788" width="210" height="160" fill="#F3F3F4"/><path class="s3-cells" d="M1375 788V948M1410 788V948M1445 788V948M1480 788V948M1515 788V948M1340 828H1550M1340 868H1550M1340 908H1550" stroke="#D4D4D8" stroke-width="1" fill="none"/><rect stroke-dashoffset="1.05" class="d s3-pline" pathLength="1" x="1340" y="788" width="210" height="160" fill="none" stroke="#111111" stroke-width="2"/><rect class="s3-pfill" x="1562" y="412" width="210" height="160" fill="#F3F3F4"/><path class="s3-cells" d="M1597 412V572M1632 412V572M1667 412V572M1702 412V572M1737 412V572M1562 452H1772M1562 492H1772M1562 532H1772" stroke="#D4D4D8" stroke-width="1" fill="none"/><rect stroke-dashoffset="1.05" class="d s3-pline" pathLength="1" x="1562" y="412" width="210" height="160" fill="none" stroke="#111111" stroke-width="2"/><rect class="s3-pfill" x="1562" y="600" width="210" height="160" fill="#F3F3F4"/><path class="s3-cells" d="M1597 600V760M1632 600V760M1667 600V760M1702 600V760M1737 600V760M1562 640H1772M1562 680H1772M1562 720H1772" stroke="#D4D4D8" stroke-width="1" fill="none"/><rect stroke-dashoffset="1.05" class="d s3-pline" pathLength="1" x="1562" y="600" width="210" height="160" fill="none" stroke="#111111" stroke-width="2"/><rect class="s3-pfill" x="1562" y="788" width="210" height="160" fill="#F3F3F4"/><path class="s3-cells" d="M1597 788V948M1632 788V948M1667 788V948M1702 788V948M1737 788V948M1562 828H1772M1562 868H1772M1562 908H1772" stroke="#D4D4D8" stroke-width="1" fill="none"/><rect stroke-dashoffset="1.05" class="d s3-pline" pathLength="1" x="1562" y="788" width="210" height="160" fill="none" stroke="#111111" stroke-width="2"/></g>
+      <g id="s3-thermal" clip-path="url(#s3-clip)"><rect x="230" y="412" width="210" height="160" fill="#FFF1E8"/><path d="M265 412V572M300 412V572M335 412V572M370 412V572M405 412V572M230 452H440M230 492H440M230 532H440" stroke="#FFC9AE" stroke-width="1" fill="none"/><rect x="230" y="412" width="210" height="160" fill="none" stroke="#111111" stroke-width="2"/><rect x="230" y="600" width="210" height="160" fill="#FFEADF"/><path d="M265 600V760M300 600V760M335 600V760M370 600V760M405 600V760M230 640H440M230 680H440M230 720H440" stroke="#FFC9AE" stroke-width="1" fill="none"/><rect x="230" y="600" width="210" height="160" fill="none" stroke="#111111" stroke-width="2"/><rect x="230" y="788" width="210" height="160" fill="#FFF1E8"/><path d="M265 788V948M300 788V948M335 788V948M370 788V948M405 788V948M230 828H440M230 868H440M230 908H440" stroke="#FFC9AE" stroke-width="1" fill="none"/><rect x="230" y="788" width="210" height="160" fill="none" stroke="#111111" stroke-width="2"/><rect x="452" y="412" width="210" height="160" fill="#FFEADF"/><path d="M487 412V572M522 412V572M557 412V572M592 412V572M627 412V572M452 452H662M452 492H662M452 532H662" stroke="#FFC9AE" stroke-width="1" fill="none"/><g class="s3-anom" data-x="539.5"><circle cx="539.5" cy="472" r="22" fill="url(#s3-hot)"/><circle cx="539.5" cy="472" r="5" fill="#FF5700"/></g><rect x="452" y="412" width="210" height="160" fill="none" stroke="#111111" stroke-width="2"/><rect x="452" y="600" width="210" height="160" fill="#FFF1E8"/><path d="M487 600V760M522 600V760M557 600V760M592 600V760M627 600V760M452 640H662M452 680H662M452 720H662" stroke="#FFC9AE" stroke-width="1" fill="none"/><rect x="452" y="600" width="210" height="160" fill="none" stroke="#111111" stroke-width="2"/><rect x="452" y="788" width="210" height="160" fill="#FFEADF"/><path d="M487 788V948M522 788V948M557 788V948M592 788V948M627 788V948M452 828H662M452 868H662M452 908H662" stroke="#FFC9AE" stroke-width="1" fill="none"/><rect x="452" y="788" width="210" height="160" fill="none" stroke="#111111" stroke-width="2"/><rect x="674" y="412" width="210" height="160" fill="#FFF1E8"/><path d="M709 412V572M744 412V572M779 412V572M814 412V572M849 412V572M674 452H884M674 492H884M674 532H884" stroke="#FFC9AE" stroke-width="1" fill="none"/><rect x="674" y="412" width="210" height="160" fill="none" stroke="#111111" stroke-width="2"/><rect x="674" y="600" width="210" height="160" fill="#FFEADF"/><path d="M709 600V760M744 600V760M779 600V760M814 600V760M849 600V760M674 640H884M674 680H884M674 720H884" stroke="#FFC9AE" stroke-width="1" fill="none"/><rect x="674" y="600" width="210" height="160" fill="none" stroke="#111111" stroke-width="2"/><rect x="674" y="788" width="210" height="160" fill="#FFF1E8"/><path d="M709 788V948M744 788V948M779 788V948M814 788V948M849 788V948M674 828H884M674 868H884M674 908H884" stroke="#FFC9AE" stroke-width="1" fill="none"/><rect x="674" y="788" width="210" height="160" fill="none" stroke="#111111" stroke-width="2"/><rect x="896" y="412" width="210" height="160" fill="#FFEADF"/><path d="M931 412V572M966 412V572M1001 412V572M1036 412V572M1071 412V572M896 452H1106M896 492H1106M896 532H1106" stroke="#FFC9AE" stroke-width="1" fill="none"/><rect x="896" y="412" width="210" height="160" fill="none" stroke="#111111" stroke-width="2"/><rect x="896" y="600" width="210" height="160" fill="#FFF1E8"/><path d="M931 600V760M966 600V760M1001 600V760M1036 600V760M1071 600V760M896 640H1106M896 680H1106M896 720H1106" stroke="#FFC9AE" stroke-width="1" fill="none"/><rect x="896" y="600" width="210" height="160" fill="none" stroke="#111111" stroke-width="2"/><rect x="896" y="788" width="210" height="160" fill="#FFEADF"/><path d="M931 788V948M966 788V948M1001 788V948M1036 788V948M1071 788V948M896 828H1106M896 868H1106M896 908H1106" stroke="#FFC9AE" stroke-width="1" fill="none"/><rect x="896" y="788" width="210" height="160" fill="none" stroke="#111111" stroke-width="2"/><rect x="1118" y="412" width="210" height="160" fill="#FFF1E8"/><path d="M1153 412V572M1188 412V572M1223 412V572M1258 412V572M1293 412V572M1118 452H1328M1118 492H1328M1118 532H1328" stroke="#FFC9AE" stroke-width="1" fill="none"/><rect x="1118" y="412" width="210" height="160" fill="none" stroke="#111111" stroke-width="2"/><rect x="1118" y="600" width="210" height="160" fill="#FFEADF"/><path d="M1153 600V760M1188 600V760M1223 600V760M1258 600V760M1293 600V760M1118 640H1328M1118 680H1328M1118 720H1328" stroke="#FFC9AE" stroke-width="1" fill="none"/><g class="s3-anom" data-x="1170.5"><circle cx="1170.5" cy="660" r="22" fill="url(#s3-hot)"/><circle cx="1170.5" cy="660" r="5" fill="#FF5700"/></g><rect class="s3-anom" data-x="1223" x="1223" y="680" width="35" height="40" fill="url(#s3-warm)"/><g class="s3-anom" data-x="1310.5"><ellipse cx="1310.5" cy="720" rx="13" ry="5" fill="url(#s3-hot)"/><ellipse cx="1310.5" cy="720" rx="5" ry="2" fill="#FF5700"/></g><rect x="1118" y="600" width="210" height="160" fill="none" stroke="#111111" stroke-width="2"/><rect x="1118" y="788" width="210" height="160" fill="#FFF1E8"/><path d="M1153 788V948M1188 788V948M1223 788V948M1258 788V948M1293 788V948M1118 828H1328M1118 868H1328M1118 908H1328" stroke="#FFC9AE" stroke-width="1" fill="none"/><rect x="1118" y="788" width="210" height="160" fill="none" stroke="#111111" stroke-width="2"/><rect x="1340" y="412" width="210" height="160" fill="#FFEADF"/><path d="M1375 412V572M1410 412V572M1445 412V572M1480 412V572M1515 412V572M1340 452H1550M1340 492H1550M1340 532H1550" stroke="#FFC9AE" stroke-width="1" fill="none"/><rect x="1340" y="412" width="210" height="160" fill="none" stroke="#111111" stroke-width="2"/><rect x="1340" y="600" width="210" height="160" fill="#FFF1E8"/><path d="M1375 600V760M1410 600V760M1445 600V760M1480 600V760M1515 600V760M1340 640H1550M1340 680H1550M1340 720H1550" stroke="#FFC9AE" stroke-width="1" fill="none"/><rect x="1340" y="600" width="210" height="160" fill="none" stroke="#111111" stroke-width="2"/><rect x="1340" y="788" width="210" height="160" fill="#FFEADF"/><path d="M1375 788V948M1410 788V948M1445 788V948M1480 788V948M1515 788V948M1340 828H1550M1340 868H1550M1340 908H1550" stroke="#FFC9AE" stroke-width="1" fill="none"/><rect class="s3-anom" data-x="1375" x="1375" y="868" width="35" height="40" fill="url(#s3-warm)"/><rect class="s3-anom" data-x="1375" x="1375" y="908" width="35" height="40" fill="url(#s3-warm)"/><rect x="1340" y="788" width="210" height="160" fill="none" stroke="#111111" stroke-width="2"/><rect x="1562" y="412" width="210" height="160" fill="#FFF1E8"/><path d="M1597 412V572M1632 412V572M1667 412V572M1702 412V572M1737 412V572M1562 452H1772M1562 492H1772M1562 532H1772" stroke="#FFC9AE" stroke-width="1" fill="none"/><g class="s3-anom" data-x="1719.5"><circle cx="1719.5" cy="432" r="22" fill="url(#s3-hot)"/><circle cx="1719.5" cy="432" r="5" fill="#FF5700"/></g><rect x="1562" y="412" width="210" height="160" fill="none" stroke="#111111" stroke-width="2"/><rect x="1562" y="600" width="210" height="160" fill="#FFEADF"/><path d="M1597 600V760M1632 600V760M1667 600V760M1702 600V760M1737 600V760M1562 640H1772M1562 680H1772M1562 720H1772" stroke="#FFC9AE" stroke-width="1" fill="none"/><rect x="1562" y="600" width="210" height="160" fill="none" stroke="#111111" stroke-width="2"/><rect x="1562" y="788" width="210" height="160" fill="#FFF1E8"/><path d="M1597 788V948M1632 788V948M1667 788V948M1702 788V948M1737 788V948M1562 828H1772M1562 868H1772M1562 908H1772" stroke="#FFC9AE" stroke-width="1" fill="none"/><rect x="1562" y="788" width="210" height="160" fill="none" stroke="#111111" stroke-width="2"/><circle class="s3-ring" data-x="539.5" cx="539.5" cy="472" r="16" fill="none" stroke="#FF5700" stroke-width="2"/><circle class="s3-ring" data-x="1170.5" cx="1170.5" cy="660" r="16" fill="none" stroke="#FF5700" stroke-width="2"/><circle class="s3-ring" data-x="1719.5" cx="1719.5" cy="432" r="16" fill="none" stroke="#FF5700" stroke-width="2"/></g>
+      <g id="s3-scan">
+        <rect x="-120" y="392" width="120" height="576" fill="url(#s3-trail)"/>
+        <line x1="0" y1="392" x2="0" y2="968" stroke="#FF5700" stroke-width="3"/>
+        <line x1="-12" y1="392" x2="12" y2="392" stroke="#FF5700" stroke-width="3"/>
+        <line x1="-12" y1="968" x2="12" y2="968" stroke="#FF5700" stroke-width="3"/>
+      </g>
+      <g id="s3-drone">
+          <ellipse cx="34" cy="46" rx="150" ry="112" fill="#111111" fill-opacity="0.06"/>
+          <g fill="none" stroke="#111111" stroke-width="1.5" stroke-opacity="0.6">
+            <circle id="s3-reticle" stroke-dashoffset="1.05" class="d" pathLength="1" r="175" transform="rotate(-90)"/>
+            <line stroke-dashoffset="1.05" class="d s3-tick" pathLength="1" x1="0" y1="-175" x2="0" y2="-197"/><line stroke-dashoffset="1.05" class="d s3-tick" pathLength="1" x1="175" y1="0" x2="197" y2="0"/><line stroke-dashoffset="1.05" class="d s3-tick" pathLength="1" x1="0" y1="175" x2="0" y2="197"/><line stroke-dashoffset="1.05" class="d s3-tick" pathLength="1" x1="-175" y1="0" x2="-197" y2="0"/>
+          </g>
+          <line x1="-31.5" y1="-23.4" x2="-105" y2="-78" stroke="#111111" stroke-width="7" stroke-linecap="round"/><line x1="-31.5" y1="-23.4" x2="-105" y2="-78" stroke="#FFFFFF" stroke-width="2.5" stroke-linecap="round"/><line x1="31.5" y1="-23.4" x2="105" y2="-78" stroke="#111111" stroke-width="7" stroke-linecap="round"/><line x1="31.5" y1="-23.4" x2="105" y2="-78" stroke="#FFFFFF" stroke-width="2.5" stroke-linecap="round"/><line x1="-31.5" y1="23.4" x2="-105" y2="78" stroke="#111111" stroke-width="7" stroke-linecap="round"/><line x1="-31.5" y1="23.4" x2="-105" y2="78" stroke="#FFFFFF" stroke-width="2.5" stroke-linecap="round"/><line x1="31.5" y1="23.4" x2="105" y2="78" stroke="#111111" stroke-width="7" stroke-linecap="round"/><line x1="31.5" y1="23.4" x2="105" y2="78" stroke="#FFFFFF" stroke-width="2.5" stroke-linecap="round"/>
+          <g transform="translate(-105 -78)"><circle r="56" fill="#111111" fill-opacity="0.035" stroke="#111111" stroke-width="1.5"/><circle r="9" fill="#FFFFFF" stroke="#111111" stroke-width="2"/><g class="s3-blade"><line x1="-48" y1="0" x2="48" y2="0" stroke="#111111" stroke-width="3.5" stroke-linecap="round"/></g></g><g transform="translate(105 -78)"><circle r="56" fill="#111111" fill-opacity="0.035" stroke="#111111" stroke-width="1.5"/><circle r="9" fill="#FFFFFF" stroke="#111111" stroke-width="2"/><g class="s3-blade"><line x1="-48" y1="0" x2="48" y2="0" stroke="#111111" stroke-width="3.5" stroke-linecap="round"/></g></g><g transform="translate(-105 78)"><circle r="56" fill="#111111" fill-opacity="0.035" stroke="#111111" stroke-width="1.5"/><circle r="9" fill="#FFFFFF" stroke="#111111" stroke-width="2"/><g class="s3-blade"><line x1="-48" y1="0" x2="48" y2="0" stroke="#111111" stroke-width="3.5" stroke-linecap="round"/></g></g><g transform="translate(105 78)"><circle r="56" fill="#111111" fill-opacity="0.035" stroke="#111111" stroke-width="1.5"/><circle r="9" fill="#FFFFFF" stroke="#111111" stroke-width="2"/><g class="s3-blade"><line x1="-48" y1="0" x2="48" y2="0" stroke="#111111" stroke-width="3.5" stroke-linecap="round"/></g></g>
+          <rect x="-52" y="-36" width="104" height="72" rx="18" fill="#FFFFFF" stroke="#111111" stroke-width="2.5"/>
+          <line x1="-30" y1="-36" x2="-30" y2="36" stroke="#111111" stroke-width="1.2"/>
+          <circle cx="58" cy="0" r="14" fill="#FFFFFF" stroke="#111111" stroke-width="2.5"/>
+          <circle cx="58" cy="0" r="6" fill="#FF5700"/>
+        </g>
+      <polyline id="s3-leader" stroke-dashoffset="1.05" class="d" pathLength="1" points="327.5,546 420,331 470,331" fill="none" stroke="#111111" stroke-width="1.5"/>
+      <circle id="s3-leaddot" cx="327.5" cy="546" r="4" fill="#111111"/>
+    </svg>
+    <div id="s3-hud">
+      <div id="s3-tag" class="tag">Caméra infrarouge</div>
+      <div id="s3-scale" class="scale"><span>Froid</span><i></i><span>Chaud</span></div>
+    </div>
+    <div id="s3-title" class="title" style="left: 140px; top: 120px">Le scan infrarouge révèle<br />chaque échauffement.</div>
+  </div>
+  <script>
+    (function () {
+      const R = document.querySelector('[data-composition-id="s3"]') || document;
+      const $ = (s) => R.querySelector(s);
+      const $$ = (s) => Array.from(R.querySelectorAll(s));
+      let V = {};
+      try {
+        V = (window.__hyperframes && window.__hyperframes.getVariables && window.__hyperframes.getVariables()) || {};
+      } catch (e) {}
+      const txt = (id, d) => (typeof V[id] === "string" && V[id].trim().length ? V[id] : d);
+      // "a b|c *d*." -> word spans; "|" = line break, *x* = accent colour
+      function words(el, text) {
+        el.textContent = "";
+        const out = [];
+        let inAcc = false;
+        text.split("|").forEach((line, li) => {
+          if (li) el.appendChild(document.createElement("br"));
+          line.trim().split(/\s+/).forEach((w, i) => {
+            if (i) el.appendChild(document.createTextNode(" "));
+            const s = document.createElement("span");
+            s.className = "w";
+            if (w.startsWith("*")) { inAcc = true; w = w.slice(1); }
+            const m = w.match(/^(.*?)\*([^\s*]*)$/);
+            const core = m ? m[1] : w, tail = m ? m[2] : "";
+            if (inAcc) {
+              const a = document.createElement("span");
+              a.className = "acc";
+              a.textContent = core;
+              s.appendChild(a);
+            } else {
+              s.textContent = core;
+            }
+            if (tail) s.appendChild(document.createTextNode(tail));
+            if (m) inAcc = false;
+            el.appendChild(s);
+            out.push(s);
+          });
+        });
+        return out;
+      }
+      const tl = gsap.timeline({ paused: true });
+      const draw = (t, els, d = 0.8, ease = "power2.inOut", stagger = 0) =>
+        tl.fromTo(els, { attr: { "stroke-dashoffset": 1.05 } }, { attr: { "stroke-dashoffset": 0 }, duration: d, ease, stagger }, t);
+      const undraw = (t, els, d = 0.5, ease = "power3.in", stagger = 0) =>
+        tl.to(els, { attr: { "stroke-dashoffset": -1.15 }, duration: d, ease, stagger }, t);
+      const solid = (t, els) => tl.set(els, { strokeDasharray: "none" }, t);
+      const blurIn = (t, els, d = 0.15, stagger = 0.067, px = 6) =>
+        tl.fromTo(els, { opacity: 0, filter: "blur(" + px + "px)" }, { opacity: 1, filter: "blur(0px)", duration: d, ease: "power2.out", stagger }, t);
+      const blurOut = (t, els, d = 0.18, stagger = 0.03, px = 8) =>
+        tl.to(els, { opacity: 0, filter: "blur(" + px + "px)", duration: d, ease: "power2.in", stagger }, t);
+      const fadeIn = (t, els, d = 0.4, stagger = 0, ease = "power1.out") =>
+        tl.fromTo(els, { opacity: 0 }, { opacity: 1, duration: d, ease, stagger }, t);
+      const fadeOut = (t, els, d = 0.3, stagger = 0, ease = "power1.in") =>
+        tl.to(els, { opacity: 0, duration: d, ease, stagger }, t);
+
+      const title = words($("#s3-title"), txt("s3-title", "Le scan infrarouge révèle|chaque *échauffement*."));
+      const HOVER = 215, END = 1790, Y = 680;
+      const T0 = 3.9, TD = 2.7; // balayage
+      // 1. le champ de panneaux se dessine (vue de dessus)
+      draw(0.1, $$(".s3-pline"), 0.5, "power2.inOut", 0.035);
+      fadeIn(0.35, $$(".s3-pfill"), 0.4, 0.035);
+      fadeIn(0.7, $$(".s3-cells"), 0.5, 0.025);
+      solid(1.9, $$(".s3-pline"));
+      // 2. le drone entre ; les rotors tournent en continu
+      tl.fromTo($("#s3-drone"), { x: -260, y: Y }, { x: HOVER, y: Y, duration: 1.2, ease: "expo.out" }, 0.9);
+      tl.fromTo($$(".s3-blade"), { rotation: 0, transformOrigin: "50% 50%" }, { rotation: 360 * 15, duration: 7.2, ease: "none" }, 0);
+      // 3. HUD technique autour du drone
+      draw(1.9, $("#s3-reticle"), 0.55);
+      draw(2.25, $$(".s3-tick"), 0.2, "power2.out", 0.04);
+      fadeIn(2.15, $("#s3-leaddot"), 0.15);
+      draw(2.2, $("#s3-leader"), 0.3, "power2.out");
+      blurIn(2.45, [$("#s3-tag"), $("#s3-scale")], 0.18, 0.12);
+      blurOut(3.65, [$("#s3-tag"), $("#s3-scale")], 0.16, 0.05);
+      undraw(3.65, $("#s3-leader"), 0.22, "power3.in");
+      fadeOut(3.7, $("#s3-leaddot"), 0.15);
+      tl.set($("#s3-leader"), { opacity: 0 }, 3.9);
+      // 4. balayage thermique : la ligne orange révèle la vue thermique
+      fadeIn(T0 - 0.15, $("#s3-scan"), 0.15);
+      tl.fromTo($("#s3-scan"), { x: HOVER }, { x: END, duration: TD, ease: "power1.inOut" }, T0);
+      tl.to($("#s3-drone"), { x: END, duration: TD, ease: "power1.inOut" }, T0);
+      tl.fromTo($("#s3-cliprect"), { attr: { width: 0 } }, { attr: { width: END - HOVER }, duration: TD, ease: "power1.inOut" }, T0);
+      // chaque point chaud pulse quand la ligne le croise
+      const inv = (y) => (y < 0.5 ? Math.sqrt(y / 2) : 1 - Math.sqrt((1 - y) / 2)); // inverse de power1.inOut
+      $$(".s3-ring").forEach((el) => {
+        const p = (parseFloat(el.getAttribute("data-x")) - HOVER) / (END - HOVER);
+        const t = T0 + TD * inv(Math.min(Math.max(p, 0), 1));
+        tl.fromTo(el, { opacity: 0.9, scale: 1, transformOrigin: "50% 50%" }, { opacity: 0, scale: 2.6, duration: 0.8, ease: "power2.out", immediateRender: false }, t + 0.05);
+      });
+      blurIn(4.0, title, 0.15, 0.067);
+      // 5. sortie : le drone quitte le cadre, puis zoom traversant
+      fadeOut(T0 + TD - 0.05, $("#s3-scan"), 0.25);
+      tl.to($("#s3-drone"), { x: 2250, duration: 0.5, ease: "power3.in" }, 6.6);
+      blurOut(6.95, title, 0.16, 0.02);
+      tl.to($("#s3-svg"), { attr: { viewBox: "903 493.33 640 360" }, duration: 0.62, ease: "power3.in" }, 7.18);
+      window.__timelines["s3"] = tl;
+    })();
+  </script>
+</template>

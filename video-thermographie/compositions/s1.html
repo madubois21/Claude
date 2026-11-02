@@ -1,0 +1,148 @@
+<template>
+  <!-- Scène 1 — Le problème invisible -->
+  <style>
+    #root { position: absolute; inset: 0; overflow: hidden; font-family: "Montserrat", sans-serif; color: #111111; }
+    #root svg.world { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; overflow: visible; }
+    #root svg.zoom * { vector-effect: non-scaling-stroke; }
+    #root .d { stroke-dasharray: 1 1.2; }
+    #root .title { position: absolute; font-weight: 600; font-size: 64px; line-height: 1.1; letter-spacing: -0.015em; color: #111111; white-space: nowrap; }
+    #root .w { display: inline-block; }
+    #root .acc { color: #FF5700; }
+    #root .label { position: absolute; font-family: "Poppins", sans-serif; font-weight: 500; font-size: 32px; line-height: 1.2; color: #6B6B70; white-space: nowrap; }
+
+    #root .s1-pline { stroke: #111111; }
+    #root .s1-pfill, #root .s1-cells, #root .s1-wfill { opacity: 0; }
+    #root #s1-hotglow, #root #s1-ring, #root #s1-ring2 { opacity: 0; }
+  </style>
+  <div
+    id="root"
+    data-composition-id="s1"
+    data-width="1920"
+    data-height="1080"
+    data-composition-variables="[{&quot;id&quot;: &quot;s1-title&quot;, &quot;type&quot;: &quot;string&quot;, &quot;label&quot;: &quot;Scène 1 — titre (| = retour ligne, *mot* = orange)&quot;, &quot;default&quot;: &quot;Certaines anomalies|sont *invisibles*|à l’œil nu.&quot;}]"
+  >
+    <svg class="world" viewBox="0 0 1920 1080" width="1920" height="1080">
+      <defs><radialGradient id="s1-hot"><stop offset="0" stop-color="#FF5700" stop-opacity="1"/><stop offset="0.3" stop-color="#FF5700" stop-opacity="0.9"/><stop offset="0.62" stop-color="#FF7A33" stop-opacity="0.42"/><stop offset="1" stop-color="#FF9A66" stop-opacity="0"/></radialGradient><radialGradient id="s1-warm"><stop offset="0" stop-color="#FF5700" stop-opacity="0.62"/><stop offset="1" stop-color="#FF5700" stop-opacity="0.26"/></radialGradient></defs>
+      <g fill="none" stroke="#111111" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <line id="s1-ground" stroke-dashoffset="1.05" class="d" pathLength="1" x1="120" y1="880" x2="1800" y2="880"/>
+        <g id="s1-walls" stroke="none" fill="#FFFFFF">
+          <rect class="s1-wfill" x="980" y="640" width="700" height="240"/>
+          <polygon class="s1-wfill" points="1680,880 1680,640 1790,400 1790,790"/>
+          <polygon class="s1-wfill" points="980,640 1680,640 1790,400 1090,400"/>
+        </g>
+        <rect id="s1-front" stroke-dashoffset="1.05" class="d s1-line" pathLength="1" x="980" y="640" width="700" height="240"/>
+        <polyline id="s1-side" stroke-dashoffset="1.05" class="d s1-line" pathLength="1" points="1680,640 1790,400 1790,790 1680,880"/>
+        <polyline id="s1-roof" stroke-dashoffset="1.05" class="d s1-line" pathLength="1" points="980,640 1090,400 1790,400"/>
+        <g stroke-width="2">
+          <rect stroke-dashoffset="1.05" class="d s1-detail" pathLength="1" x="1080" y="720" width="180" height="160"/>
+          <polyline stroke-dashoffset="1.05" class="d s1-detail" pathLength="1" points="1080,720 1260,880"/>
+          <polyline stroke-dashoffset="1.05" class="d s1-detail" pathLength="1" points="1260,720 1080,880"/>
+          <rect stroke-dashoffset="1.05" class="d s1-detail" pathLength="1" x="1360" y="700" width="240" height="44"/>
+          <polyline stroke-dashoffset="1.05" class="d s1-detail" pathLength="1" points="1440,700 1440,744"/>
+          <polyline stroke-dashoffset="1.05" class="d s1-detail" pathLength="1" points="1520,700 1520,744"/>
+        </g>
+        <g id="s1-panels">
+          <polygon class="s1-pfill" points="1102.3,416.8 1203.97,416.8 1175,480 1073.33,480" fill="#F1F2F4" stroke="none"/><polygon class="s1-pfill" points="1069.48,488.4 1171.15,488.4 1142.18,551.6 1040.52,551.6" fill="#F1F2F4" stroke="none"/><polygon class="s1-pfill" points="1213.97,416.8 1315.63,416.8 1286.67,480 1185,480" fill="#F1F2F4" stroke="none"/><polygon class="s1-pfill" points="1036.67,560 1138.33,560 1109.37,623.2 1007.7,623.2" fill="#F1F2F4" stroke="none"/><polygon class="s1-pfill" points="1181.15,488.4 1282.82,488.4 1253.85,551.6 1152.18,551.6" fill="#F1F2F4" stroke="none"/><polygon class="s1-pfill" points="1325.63,416.8 1427.3,416.8 1398.33,480 1296.67,480" fill="#F1F2F4" stroke="none"/><polygon class="s1-pfill" points="1148.33,560 1250,560 1221.03,623.2 1119.37,623.2" fill="#F1F2F4" stroke="none"/><polygon class="s1-pfill" points="1292.82,488.4 1394.48,488.4 1365.52,551.6 1263.85,551.6" fill="#F1F2F4" stroke="none"/><polygon class="s1-pfill" points="1437.3,416.8 1538.97,416.8 1510,480 1408.33,480" fill="#F1F2F4" stroke="none"/><polygon class="s1-pfill" points="1260,560 1361.67,560 1332.7,623.2 1231.03,623.2" fill="#F1F2F4" stroke="none"/><polygon class="s1-pfill" points="1404.48,488.4 1506.15,488.4 1477.18,551.6 1375.52,551.6" fill="#F1F2F4" stroke="none"/><polygon class="s1-pfill" points="1548.97,416.8 1650.63,416.8 1621.67,480 1520,480" fill="#F1F2F4" stroke="none"/><polygon class="s1-pfill" points="1371.67,560 1473.33,560 1444.37,623.2 1342.7,623.2" fill="#F1F2F4" stroke="none"/><polygon class="s1-pfill" points="1516.15,488.4 1617.82,488.4 1588.85,551.6 1487.18,551.6" fill="#F1F2F4" stroke="none"/><polygon class="s1-pfill" points="1660.63,416.8 1762.3,416.8 1733.33,480 1631.67,480" fill="#F1F2F4" stroke="none"/><polygon class="s1-pfill" points="1483.33,560 1585,560 1556.03,623.2 1454.37,623.2" fill="#F1F2F4" stroke="none"/><polygon class="s1-pfill" points="1627.82,488.4 1729.48,488.4 1700.52,551.6 1598.85,551.6" fill="#F1F2F4" stroke="none"/><polygon class="s1-pfill" points="1595,560 1696.67,560 1667.7,623.2 1566.03,623.2" fill="#F1F2F4" stroke="none"/>
+          <g stroke="#C9CBD1" stroke-width="1"><path class="s1-cells" d="M1127.72 416.8L1098.75 480M1153.13 416.8L1124.17 480M1178.55 416.8L1149.58 480M1092.64 437.87L1194.31 437.87M1082.99 458.93L1184.66 458.93"/><path class="s1-cells" d="M1094.9 488.4L1065.93 551.6M1120.32 488.4L1091.35 551.6M1145.73 488.4L1116.77 551.6M1059.83 509.47L1161.49 509.47M1050.17 530.53L1151.84 530.53"/><path class="s1-cells" d="M1239.38 416.8L1210.42 480M1264.8 416.8L1235.83 480M1290.22 416.8L1261.25 480M1204.31 437.87L1305.98 437.87M1194.66 458.93L1296.32 458.93"/><path class="s1-cells" d="M1062.08 560L1033.12 623.2M1087.5 560L1058.53 623.2M1112.92 560L1083.95 623.2M1027.01 581.07L1128.68 581.07M1017.36 602.13L1119.02 602.13"/><path class="s1-cells" d="M1206.57 488.4L1177.6 551.6M1231.98 488.4L1203.02 551.6M1257.4 488.4L1228.43 551.6M1171.49 509.47L1273.16 509.47M1161.84 530.53L1263.51 530.53"/><path class="s1-cells" d="M1351.05 416.8L1322.08 480M1376.47 416.8L1347.5 480M1401.88 416.8L1372.92 480M1315.98 437.87L1417.64 437.87M1306.32 458.93L1407.99 458.93"/><path class="s1-cells" d="M1173.75 560L1144.78 623.2M1199.17 560L1170.2 623.2M1224.58 560L1195.62 623.2M1138.68 581.07L1240.34 581.07M1129.02 602.13L1230.69 602.13"/><path class="s1-cells" d="M1318.23 488.4L1289.27 551.6M1343.65 488.4L1314.68 551.6M1369.07 488.4L1340.1 551.6M1283.16 509.47L1384.83 509.47M1273.51 530.53L1375.17 530.53"/><path class="s1-cells" d="M1462.72 416.8L1433.75 480M1488.13 416.8L1459.17 480M1513.55 416.8L1484.58 480M1427.64 437.87L1529.31 437.87M1417.99 458.93L1519.66 458.93"/><path class="s1-cells" d="M1285.42 560L1256.45 623.2M1310.83 560L1281.87 623.2M1336.25 560L1307.28 623.2M1250.34 581.07L1352.01 581.07M1240.69 602.13L1342.36 602.13"/><path class="s1-cells" d="M1429.9 488.4L1400.93 551.6M1455.32 488.4L1426.35 551.6M1480.73 488.4L1451.77 551.6M1394.83 509.47L1496.49 509.47M1385.17 530.53L1486.84 530.53"/><path class="s1-cells" d="M1574.38 416.8L1545.42 480M1599.8 416.8L1570.83 480M1625.22 416.8L1596.25 480M1539.31 437.87L1640.98 437.87M1529.66 458.93L1631.32 458.93"/><path class="s1-cells" d="M1397.08 560L1368.12 623.2M1422.5 560L1393.53 623.2M1447.92 560L1418.95 623.2M1362.01 581.07L1463.68 581.07M1352.36 602.13L1454.02 602.13"/><path class="s1-cells" d="M1541.57 488.4L1512.6 551.6M1566.98 488.4L1538.02 551.6M1592.4 488.4L1563.43 551.6M1506.49 509.47L1608.16 509.47M1496.84 530.53L1598.51 530.53"/><path class="s1-cells" d="M1686.05 416.8L1657.08 480M1711.47 416.8L1682.5 480M1736.88 416.8L1707.92 480M1650.98 437.87L1752.64 437.87M1641.32 458.93L1742.99 458.93"/><path class="s1-cells" d="M1508.75 560L1479.78 623.2M1534.17 560L1505.2 623.2M1559.58 560L1530.62 623.2M1473.68 581.07L1575.34 581.07M1464.02 602.13L1565.69 602.13"/><path class="s1-cells" d="M1653.23 488.4L1624.27 551.6M1678.65 488.4L1649.68 551.6M1704.07 488.4L1675.1 551.6M1618.16 509.47L1719.83 509.47M1608.51 530.53L1710.17 530.53"/><path class="s1-cells" d="M1620.42 560L1591.45 623.2M1645.83 560L1616.87 623.2M1671.25 560L1642.28 623.2M1585.34 581.07L1687.01 581.07M1575.69 602.13L1677.36 602.13"/></g>
+          <g stroke-width="2"><polygon stroke-dashoffset="1.05" class="d s1-pline" pathLength="1" points="1102.3,416.8 1203.97,416.8 1175,480 1073.33,480"/><polygon stroke-dashoffset="1.05" class="d s1-pline" pathLength="1" points="1069.48,488.4 1171.15,488.4 1142.18,551.6 1040.52,551.6"/><polygon stroke-dashoffset="1.05" class="d s1-pline" pathLength="1" points="1213.97,416.8 1315.63,416.8 1286.67,480 1185,480"/><polygon stroke-dashoffset="1.05" class="d s1-pline" pathLength="1" points="1036.67,560 1138.33,560 1109.37,623.2 1007.7,623.2"/><polygon stroke-dashoffset="1.05" class="d s1-pline" pathLength="1" points="1181.15,488.4 1282.82,488.4 1253.85,551.6 1152.18,551.6"/><polygon stroke-dashoffset="1.05" class="d s1-pline" pathLength="1" points="1325.63,416.8 1427.3,416.8 1398.33,480 1296.67,480"/><polygon stroke-dashoffset="1.05" class="d s1-pline" pathLength="1" points="1148.33,560 1250,560 1221.03,623.2 1119.37,623.2"/><polygon stroke-dashoffset="1.05" class="d s1-pline" pathLength="1" points="1292.82,488.4 1394.48,488.4 1365.52,551.6 1263.85,551.6"/><polygon stroke-dashoffset="1.05" class="d s1-pline" pathLength="1" points="1437.3,416.8 1538.97,416.8 1510,480 1408.33,480"/><polygon stroke-dashoffset="1.05" class="d s1-pline" pathLength="1" points="1260,560 1361.67,560 1332.7,623.2 1231.03,623.2"/><polygon stroke-dashoffset="1.05" class="d s1-pline" pathLength="1" points="1404.48,488.4 1506.15,488.4 1477.18,551.6 1375.52,551.6"/><polygon stroke-dashoffset="1.05" class="d s1-pline" pathLength="1" points="1548.97,416.8 1650.63,416.8 1621.67,480 1520,480"/><polygon stroke-dashoffset="1.05" class="d s1-pline" pathLength="1" points="1371.67,560 1473.33,560 1444.37,623.2 1342.7,623.2"/><polygon stroke-dashoffset="1.05" class="d s1-pline" pathLength="1" points="1516.15,488.4 1617.82,488.4 1588.85,551.6 1487.18,551.6"/><polygon stroke-dashoffset="1.05" class="d s1-pline" pathLength="1" points="1660.63,416.8 1762.3,416.8 1733.33,480 1631.67,480"/><polygon stroke-dashoffset="1.05" class="d s1-pline" pathLength="1" points="1483.33,560 1585,560 1556.03,623.2 1454.37,623.2"/><polygon stroke-dashoffset="1.05" class="d s1-pline" pathLength="1" points="1627.82,488.4 1729.48,488.4 1700.52,551.6 1598.85,551.6"/><polygon stroke-dashoffset="1.05" class="d s1-pline" pathLength="1" points="1595,560 1696.67,560 1667.7,623.2 1566.03,623.2"/></g>
+        </g>
+        <g id="s1-sun" stroke-width="2.5">
+          <circle id="s1-sunc" stroke-dashoffset="1.05" class="d" pathLength="1" cx="1300" cy="210" r="34" transform="rotate(-90 1300 210)"/>
+          <line stroke-dashoffset="1.05" class="d s1-ray" pathLength="1" x1="1300" y1="160" x2="1300" y2="138"/><line stroke-dashoffset="1.05" class="d s1-ray" pathLength="1" x1="1335.36" y1="174.64" x2="1350.91" y2="159.09"/><line stroke-dashoffset="1.05" class="d s1-ray" pathLength="1" x1="1350" y1="210" x2="1372" y2="210"/><line stroke-dashoffset="1.05" class="d s1-ray" pathLength="1" x1="1335.36" y1="245.36" x2="1350.91" y2="260.91"/><line stroke-dashoffset="1.05" class="d s1-ray" pathLength="1" x1="1300" y1="260" x2="1300" y2="282"/><line stroke-dashoffset="1.05" class="d s1-ray" pathLength="1" x1="1264.64" y1="245.36" x2="1249.09" y2="260.91"/><line stroke-dashoffset="1.05" class="d s1-ray" pathLength="1" x1="1250" y1="210" x2="1228" y2="210"/><line stroke-dashoffset="1.05" class="d s1-ray" pathLength="1" x1="1264.64" y1="174.64" x2="1249.09" y2="159.09"/>
+        </g>
+      </g>
+      <g id="s1-hot" transform="matrix(1 0 -0.45833 1 1090 400)">
+        <circle id="s1-hotglow" cx="418.54" cy="120" r="40" fill="url(#s1-hot)"/>
+        <circle id="s1-ring" cx="418.54" cy="120" r="22" fill="none" stroke="#FF5700" stroke-width="2"/>
+        <circle id="s1-ring2" cx="418.54" cy="120" r="22" fill="none" stroke="#FF5700" stroke-width="2"/>
+      </g>
+    </svg>
+    <div id="s1-title" class="title" style="left: 140px; top: 352px">Certaines anomalies<br />sont invisibles<br />à l’œil nu.</div>
+  </div>
+  <script>
+    (function () {
+      const R = document.querySelector('[data-composition-id="s1"]') || document;
+      const $ = (s) => R.querySelector(s);
+      const $$ = (s) => Array.from(R.querySelectorAll(s));
+      let V = {};
+      try {
+        V = (window.__hyperframes && window.__hyperframes.getVariables && window.__hyperframes.getVariables()) || {};
+      } catch (e) {}
+      const txt = (id, d) => (typeof V[id] === "string" && V[id].trim().length ? V[id] : d);
+      // "a b|c *d*." -> word spans; "|" = line break, *x* = accent colour
+      function words(el, text) {
+        el.textContent = "";
+        const out = [];
+        let inAcc = false;
+        text.split("|").forEach((line, li) => {
+          if (li) el.appendChild(document.createElement("br"));
+          line.trim().split(/\s+/).forEach((w, i) => {
+            if (i) el.appendChild(document.createTextNode(" "));
+            const s = document.createElement("span");
+            s.className = "w";
+            if (w.startsWith("*")) { inAcc = true; w = w.slice(1); }
+            const m = w.match(/^(.*?)\*([^\s*]*)$/);
+            const core = m ? m[1] : w, tail = m ? m[2] : "";
+            if (inAcc) {
+              const a = document.createElement("span");
+              a.className = "acc";
+              a.textContent = core;
+              s.appendChild(a);
+            } else {
+              s.textContent = core;
+            }
+            if (tail) s.appendChild(document.createTextNode(tail));
+            if (m) inAcc = false;
+            el.appendChild(s);
+            out.push(s);
+          });
+        });
+        return out;
+      }
+      const tl = gsap.timeline({ paused: true });
+      const draw = (t, els, d = 0.8, ease = "power2.inOut", stagger = 0) =>
+        tl.fromTo(els, { attr: { "stroke-dashoffset": 1.05 } }, { attr: { "stroke-dashoffset": 0 }, duration: d, ease, stagger }, t);
+      const undraw = (t, els, d = 0.5, ease = "power3.in", stagger = 0) =>
+        tl.to(els, { attr: { "stroke-dashoffset": -1.15 }, duration: d, ease, stagger }, t);
+      const solid = (t, els) => tl.set(els, { strokeDasharray: "none" }, t);
+      const blurIn = (t, els, d = 0.15, stagger = 0.067, px = 6) =>
+        tl.fromTo(els, { opacity: 0, filter: "blur(" + px + "px)" }, { opacity: 1, filter: "blur(0px)", duration: d, ease: "power2.out", stagger }, t);
+      const blurOut = (t, els, d = 0.18, stagger = 0.03, px = 8) =>
+        tl.to(els, { opacity: 0, filter: "blur(" + px + "px)", duration: d, ease: "power2.in", stagger }, t);
+      const fadeIn = (t, els, d = 0.4, stagger = 0, ease = "power1.out") =>
+        tl.fromTo(els, { opacity: 0 }, { opacity: 1, duration: d, ease, stagger }, t);
+      const fadeOut = (t, els, d = 0.3, stagger = 0, ease = "power1.in") =>
+        tl.to(els, { opacity: 0, duration: d, ease, stagger }, t);
+
+      const title = words($("#s1-title"), txt("s1-title", "Certaines anomalies|sont *invisibles*|à l’œil nu."));
+      // 1. dessin progressif du bâtiment
+      tl.fromTo($("#s1-ground"), { attr: { "stroke-dashoffset": 0.62 } }, { attr: { "stroke-dashoffset": 0 }, duration: 1.0, ease: "power2.out" }, 0);
+      fadeIn(0.3, $$(".s1-wfill"), 0.6);
+      draw(0.3, $("#s1-front"), 0.9);
+      draw(0.55, $("#s1-side"), 0.8);
+      draw(0.8, $("#s1-roof"), 0.9);
+      draw(1.25, $$(".s1-detail"), 0.6, "power2.inOut", 0.06);
+      draw(1.1, $$(".s1-pline"), 0.5, "power2.inOut", 0.045);
+      fadeIn(1.45, $$(".s1-pfill"), 0.4, 0.045);
+      fadeIn(1.9, $$(".s1-cells"), 0.5, 0.02);
+      draw(1.7, $("#s1-sunc"), 0.7);
+      draw(2.05, $$(".s1-ray"), 0.3, "power2.out", 0.04);
+      // 2. le point chaud apparaît progressivement
+      tl.fromTo($("#s1-hotglow"), { opacity: 0, scale: 0.35, transformOrigin: "50% 50%" }, { opacity: 1, scale: 1, duration: 1.2, ease: "power2.inOut" }, 2.6);
+      [[4.0, "#s1-ring"], [4.35, "#s1-ring2"], [5.2, "#s1-ring"], [5.55, "#s1-ring2"]].forEach(([t, id]) => {
+        tl.fromTo($(id), { opacity: 0.8, scale: 1, transformOrigin: "50% 50%" }, { opacity: 0, scale: 2.6, duration: 1.0, ease: "power2.out", immediateRender: false }, t);
+      });
+      // 3. titre mot à mot
+      blurIn(3.0, title);
+      // 4. sortie : tout se dé-trace sauf la ligne de sol
+      blurOut(6.35, title, 0.18, 0.025);
+      fadeOut(6.4, $("#s1-hotglow"), 0.3);
+      undraw(6.4, $$(".s1-pline").reverse(), 0.4, "power3.in", 0.012);
+      fadeOut(6.4, [...$$(".s1-pfill"), ...$$(".s1-cells")], 0.35);
+      undraw(6.45, [...$$(".s1-ray"), $("#s1-sunc")], 0.4, "power3.in", 0.02);
+      undraw(6.4, [...$$(".s1-detail"), $("#s1-roof"), $("#s1-side"), $("#s1-front")], 0.5, "power3.in", 0.025);
+      fadeOut(6.6, $$(".s1-wfill"), 0.4);
+      window.__timelines["s1"] = tl;
+    })();
+  </script>
+</template>

@@ -1,0 +1,146 @@
+<template>
+  <!-- Scène 5 — Rapport et bénéfices -->
+  <style>
+    #root { position: absolute; inset: 0; overflow: hidden; font-family: "Montserrat", sans-serif; color: #111111; }
+    #root svg.world { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; overflow: visible; }
+    #root svg.zoom * { vector-effect: non-scaling-stroke; }
+    #root .d { stroke-dasharray: 1 1.2; }
+    #root .title { position: absolute; font-weight: 600; font-size: 64px; line-height: 1.1; letter-spacing: -0.015em; color: #111111; white-space: nowrap; }
+    #root .w { display: inline-block; }
+    #root .acc { color: #FF5700; }
+    #root .label { position: absolute; font-family: "Poppins", sans-serif; font-weight: 500; font-size: 32px; line-height: 1.2; color: #6B6B70; white-space: nowrap; }
+
+    #root #s5-paper { position: absolute; background: #FFFFFF; box-shadow: 0 18px 40px rgba(17, 17, 17, 0.08); opacity: 0; }
+    #root .dochead { position: absolute; font-family: "Poppins", sans-serif; font-weight: 600; font-size: 30px; line-height: 40px; color: #111111; white-space: nowrap; }
+    #root .item { position: absolute; font-family: "Poppins", sans-serif; font-weight: 500; font-size: 30px; line-height: 42px; color: #111111; white-space: nowrap; }
+    #root #s5-dot { opacity: 0; }
+  </style>
+  <div
+    id="root"
+    data-composition-id="s5"
+    data-width="1920"
+    data-height="1080"
+    data-composition-variables="[{&quot;id&quot;: &quot;s5-title&quot;, &quot;type&quot;: &quot;string&quot;, &quot;label&quot;: &quot;Scène 5 — titre&quot;, &quot;default&quot;: &quot;Un rapport clair|pour *agir vite*.&quot;}, {&quot;id&quot;: &quot;s5-i0&quot;, &quot;type&quot;: &quot;string&quot;, &quot;label&quot;: &quot;Scène 5 — ligne 1&quot;, &quot;default&quot;: &quot;Anomalies localisées&quot;}, {&quot;id&quot;: &quot;s5-i1&quot;, &quot;type&quot;: &quot;string&quot;, &quot;label&quot;: &quot;Scène 5 — ligne 2&quot;, &quot;default&quot;: &quot;Priorités d’intervention&quot;}, {&quot;id&quot;: &quot;s5-i2&quot;, &quot;type&quot;: &quot;string&quot;, &quot;label&quot;: &quot;Scène 5 — ligne 3&quot;, &quot;default&quot;: &quot;Recommandations&quot;}]"
+  >
+    <div id="s5-paper" style="left: 220px; top: 96px; width: 600px; height: 848px"></div>
+    <svg class="world" viewBox="0 0 1920 1080" width="1920" height="1080">
+      <g fill="none" stroke="#111111" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path id="s5-doc" stroke-dashoffset="1.05" class="d" pathLength="1" d="M220 96 H820 V944 H220 Z"/>
+        <line id="s5-rule" stroke-dashoffset="1.05" class="d" pathLength="1" x1="260" y1="178" x2="780" y2="178" stroke-width="1.5"/>
+        <rect stroke-dashoffset="1.05" class="d s5-box" pathLength="1" x="260" y="633" width="34" height="34" rx="4"/><rect stroke-dashoffset="1.05" class="d s5-box" pathLength="1" x="260" y="713" width="34" height="34" rx="4"/><rect stroke-dashoffset="1.05" class="d s5-box" pathLength="1" x="260" y="793" width="34" height="34" rx="4"/>
+        <polyline id="s5-k0" stroke-dashoffset="1.05" class="d" pathLength="1" points="266,651 275,660 290,641" stroke="#FF5700" stroke-width="4"/><polyline id="s5-k1" stroke-dashoffset="1.05" class="d" pathLength="1" points="266,731 275,740 290,721" stroke="#FF5700" stroke-width="4"/><polyline id="s5-k2" stroke-dashoffset="1.05" class="d" pathLength="1" points="266,811 275,820 290,801" stroke="#FF5700" stroke-width="4"/>
+        <line stroke-dashoffset="1.05" class="d s5-foot" pathLength="1" x1="260" y1="884" x2="660" y2="884" stroke="#E4E4E7" stroke-width="8"/>
+        <line stroke-dashoffset="1.05" class="d s5-foot" pathLength="1" x1="260" y1="910" x2="560" y2="910" stroke="#E4E4E7" stroke-width="8"/>
+      </g>
+    </svg>
+    <svg id="s5-thumb" class="world zoom" viewBox="-360 -139.23 3544.62 1993.85" width="1920" height="1080">
+      <defs><radialGradient id="s5-hot"><stop offset="0" stop-color="#FF5700" stop-opacity="1"/><stop offset="0.3" stop-color="#FF5700" stop-opacity="0.9"/><stop offset="0.62" stop-color="#FF7A33" stop-opacity="0.42"/><stop offset="1" stop-color="#FF9A66" stop-opacity="0"/></radialGradient><radialGradient id="s5-warm"><stop offset="0" stop-color="#FF5700" stop-opacity="0.62"/><stop offset="1" stop-color="#FF5700" stop-opacity="0.26"/></radialGradient></defs>
+      <g><rect x="120" y="230" width="960" height="731.43" fill="#FFEADF"/><path d="M164.8 236V955.43M200 236V955.43M235.2 236V955.43M324.8 236V955.43M360 236V955.43M395.2 236V955.43M484.8 236V955.43M520 236V955.43M555.2 236V955.43M644.8 236V955.43M680 236V955.43M715.2 236V955.43M804.8 236V955.43M840 236V955.43M875.2 236V955.43M964.8 236V955.43M1000 236V955.43M1035.2 236V955.43" stroke="#FFDCCB" stroke-width="1" fill="none"/><path d="M280 230V961.43M440 230V961.43M600 230V961.43M760 230V961.43M920 230V961.43M120 412.86H1080M120 595.71H1080M120 778.57H1080" stroke="#FFC9AE" stroke-width="1" fill="none"/><g class="s5-anom" data-x="360"><circle cx="360" cy="504.29" r="100.57" fill="url(#s5-hot)"/><circle cx="360" cy="504.29" r="22.86" fill="#FF5700"/></g><rect class="s5-anom" data-x="600" x="600" y="595.71" width="160" height="182.86" fill="url(#s5-warm)"/><g class="s5-anom" data-x="1000"><ellipse cx="1000" cy="778.57" rx="59.43" ry="22.86" fill="url(#s5-hot)"/><ellipse cx="1000" cy="778.57" rx="22.86" ry="9.14" fill="#FF5700"/></g><rect x="134" y="244" width="932" height="703.43" fill="none" stroke="#111111" stroke-width="1.2"/><rect x="120" y="230" width="960" height="731.43" fill="none" stroke="#111111" stroke-width="2"/></g>
+      <g id="s5-marks"><circle id="s5-c0" pathLength="1" cx="360" cy="504.29" r="110" fill="none" stroke="#FF5700" stroke-width="3" transform="rotate(-90 360 504.29)"/><circle id="s5-c1" pathLength="1" cx="680" cy="687.14" r="135" fill="none" stroke="#FF5700" stroke-width="3" transform="rotate(-90 680 687.14)"/><circle id="s5-c2" pathLength="1" cx="1000" cy="778.57" r="80" fill="none" stroke="#FF5700" stroke-width="3" transform="rotate(-90 1000 778.57)"/></g>
+    </svg>
+    <svg id="s5-chart" class="world" viewBox="0 0 1920 1080" width="1920" height="1080">
+      <defs><clipPath id="s5-clip"><rect id="s5-cliprect" x="955" y="380" width="0" height="500"/></clipPath></defs>
+      <g fill="none" stroke-linecap="round" stroke-linejoin="round">
+        <line id="s5-ax" stroke-dashoffset="1.05" class="d" pathLength="1" x1="960" y1="860" x2="1760" y2="860" stroke="#111111" stroke-width="2.5"/>
+        <line id="s5-ay" stroke-dashoffset="1.05" class="d" pathLength="1" x1="960" y1="860" x2="960" y2="420" stroke="#111111" stroke-width="2.5"/>
+        <path clip-path="url(#s5-clip)" d="M960 520 C1150 515 1300 640 1500 730 C1600 770 1700 790 1760 795" stroke="#B4B4BB" stroke-width="2.5" stroke-dasharray="9 10"/>
+        <path id="s5-curve" stroke-dashoffset="1.05" class="d" pathLength="1" d="M960 520 C1150 512 1300 505 1450 470 C1580 440 1680 420 1745 405" stroke="#FF5700" stroke-width="4"/>
+      </g>
+      <circle id="s5-dot" cx="1745" cy="405" r="10" fill="#FF5700"/>
+    </svg>
+    <div id="s5-h" stroke-dashoffset="1.05" class="dochead" style="left: 260px; top: 128px">Rapport d’inspection</div>
+    <div id="s5-i0" class="item" style="left: 318px; top: 629px">Anomalies localisées</div><div id="s5-i1" class="item" style="left: 318px; top: 709px">Priorités d’intervention</div><div id="s5-i2" class="item" style="left: 318px; top: 789px">Recommandations</div>
+    <div id="s5-lab-y" class="label" style="left: 982px; top: 400px">Rendement</div>
+    <div id="s5-lab-a" class="label" style="left: 1640px; top: 812px">Avant</div>
+    <div id="s5-lab-b" class="label" style="left: 1560px; top: 350px; color: #111111">Après</div>
+    <div id="s5-title" class="title" style="left: 960px; top: 150px">Un rapport clair<br />pour agir vite.</div>
+  </div>
+  <script>
+    (function () {
+      const R = document.querySelector('[data-composition-id="s5"]') || document;
+      const $ = (s) => R.querySelector(s);
+      const $$ = (s) => Array.from(R.querySelectorAll(s));
+      let V = {};
+      try {
+        V = (window.__hyperframes && window.__hyperframes.getVariables && window.__hyperframes.getVariables()) || {};
+      } catch (e) {}
+      const txt = (id, d) => (typeof V[id] === "string" && V[id].trim().length ? V[id] : d);
+      // "a b|c *d*." -> word spans; "|" = line break, *x* = accent colour
+      function words(el, text) {
+        el.textContent = "";
+        const out = [];
+        let inAcc = false;
+        text.split("|").forEach((line, li) => {
+          if (li) el.appendChild(document.createElement("br"));
+          line.trim().split(/\s+/).forEach((w, i) => {
+            if (i) el.appendChild(document.createTextNode(" "));
+            const s = document.createElement("span");
+            s.className = "w";
+            if (w.startsWith("*")) { inAcc = true; w = w.slice(1); }
+            const m = w.match(/^(.*?)\*([^\s*]*)$/);
+            const core = m ? m[1] : w, tail = m ? m[2] : "";
+            if (inAcc) {
+              const a = document.createElement("span");
+              a.className = "acc";
+              a.textContent = core;
+              s.appendChild(a);
+            } else {
+              s.textContent = core;
+            }
+            if (tail) s.appendChild(document.createTextNode(tail));
+            if (m) inAcc = false;
+            el.appendChild(s);
+            out.push(s);
+          });
+        });
+        return out;
+      }
+      const tl = gsap.timeline({ paused: true });
+      const draw = (t, els, d = 0.8, ease = "power2.inOut", stagger = 0) =>
+        tl.fromTo(els, { attr: { "stroke-dashoffset": 1.05 } }, { attr: { "stroke-dashoffset": 0 }, duration: d, ease, stagger }, t);
+      const undraw = (t, els, d = 0.5, ease = "power3.in", stagger = 0) =>
+        tl.to(els, { attr: { "stroke-dashoffset": -1.15 }, duration: d, ease, stagger }, t);
+      const solid = (t, els) => tl.set(els, { strokeDasharray: "none" }, t);
+      const blurIn = (t, els, d = 0.15, stagger = 0.067, px = 6) =>
+        tl.fromTo(els, { opacity: 0, filter: "blur(" + px + "px)" }, { opacity: 1, filter: "blur(0px)", duration: d, ease: "power2.out", stagger }, t);
+      const blurOut = (t, els, d = 0.18, stagger = 0.03, px = 8) =>
+        tl.to(els, { opacity: 0, filter: "blur(" + px + "px)", duration: d, ease: "power2.in", stagger }, t);
+      const fadeIn = (t, els, d = 0.4, stagger = 0, ease = "power1.out") =>
+        tl.fromTo(els, { opacity: 0 }, { opacity: 1, duration: d, ease, stagger }, t);
+      const fadeOut = (t, els, d = 0.3, stagger = 0, ease = "power1.in") =>
+        tl.to(els, { opacity: 0, duration: d, ease, stagger }, t);
+
+      const title = words($("#s5-title"), txt("s5-title", "Un rapport clair|pour *agir vite*."));
+      ["s5-i0", "s5-i1", "s5-i2"].forEach((id, i) => { const v = txt(id, ""); if (v) $("#" + id).textContent = v; });
+      // 1. la feuille se dessine autour de la vignette
+      draw(0, $("#s5-doc"), 1.1, "power2.inOut");
+      fadeIn(0.2, $("#s5-paper"), 0.7);
+      blurIn(0.55, $("#s5-h"), 0.2);
+      draw(0.65, $("#s5-rule"), 0.45, "power2.out");
+      // 2. titre
+      blurIn(0.9, title, 0.15, 0.067);
+      // 3. checklist cochée
+      draw(1.15, $$(".s5-box"), 0.35, "power2.out", 0.12);
+      blurIn(1.3, [$("#s5-i0"), $("#s5-i1"), $("#s5-i2")], 0.18, 0.2);
+      draw(1.8, $("#s5-k0"), 0.25, "power2.out");
+      draw(2.2, $("#s5-k1"), 0.25, "power2.out");
+      draw(2.6, $("#s5-k2"), 0.25, "power2.out");
+      draw(1.7, $$(".s5-foot"), 0.4, "power2.out", 0.1);
+      // 4. la courbe de rendement remonte
+      draw(2.2, [$("#s5-ay"), $("#s5-ax")], 0.55, "power3.out", 0.08);
+      blurIn(2.55, $("#s5-lab-y"), 0.18);
+      tl.fromTo($("#s5-cliprect"), { attr: { width: 0 } }, { attr: { width: 810 }, duration: 0.8, ease: "power1.inOut" }, 2.75);
+      blurIn(3.4, $("#s5-lab-a"), 0.18);
+      draw(3.3, $("#s5-curve"), 1.0, "power2.inOut");
+      tl.fromTo($("#s5-dot"), { opacity: 0, scale: 0, transformOrigin: "50% 50%" }, { opacity: 1, scale: 1, duration: 0.4, ease: "back.out(1.4)" }, 4.25);
+      blurIn(4.4, $("#s5-lab-b"), 0.18);
+      // 5. sortie : tout se floute, le point orange file vers le logo
+      const keep = $("#s5-dot");
+      blurOut(5.85, [...title, $("#s5-h"), $("#s5-i0"), $("#s5-i1"), $("#s5-i2"), $("#s5-lab-y"), $("#s5-lab-a"), $("#s5-lab-b")], 0.2, 0.015);
+      blurOut(5.9, [R.querySelector("svg.world"), $("#s5-thumb"), $("#s5-paper")], 0.22, 0.02);
+      tl.to($$("#s5-chart > g"), { opacity: 0, filter: "blur(8px)", duration: 0.22, ease: "power2.in" }, 5.9);
+      tl.to(keep, { x: -1281.1, y: 9.76, duration: 0.6, ease: "power2.inOut" }, 5.95);
+      window.__timelines["s5"] = tl;
+    })();
+  </script>
+</template>

@@ -1,0 +1,59 @@
+# SPEC — Inspection thermographique photovoltaïque par drone
+
+Source : `Cahier_des_charges.pdf` (structure en 6 scènes, textes S1 et S2 imposés).
+Choix validés avec le client : pas de voix off ; musique originale composée ; 16:9 seul pour ce premier passage ; logo PNG fourni plus tard (emplacement `assets/logo.png`).
+
+```text
+GOAL:    le spectateur comprend qu'un défaut invisible coûte cher et qu'un survol thermique par drone le révèle ; il retient « faire contrôler son installation ».
+OUTPUT:  HyperFrames, 1920 x 1080, 30 fps, MP4 H.264 (version LinkedIn).
+TIME:    40,8 s x 30 = 1224 images. Musique 100 BPM : 1 temps = 0,6 s = 18 images, 1 mesure = 2,4 s.
+         Coupes : S1 0–7,2 · S2 7,2–13,2 · S3 13,2–21,0 · S4 21,0–27,6 · S5 27,6–34,2 · S6 34,2–40,8.
+LOOK:    fond #FFFFFF plat + trame de points Ø2 px #E4E4E7 au pas de 48 px (papier technique, aucun dégradé).
+         Encre #111111 : traits de structure 2,5 px, détails 1,5 px, cellules 1 px #D4D4D8, fond de panneau #F3F3F4.
+         Accent #FF5700 réservé à la chaleur et à l'action : points chauds, ligne de scan, cercles de détection,
+         coches, courbe positive, séparateur final. Une seule zone orange dominante par plan.
+         Vue thermique sobre : panneau #FFF1E8, cellules #FFD2BC, points chauds en dégradé radial #FF5700 → transparent.
+         Titres Montserrat 600, 64 px (5,9 % de la hauteur), interlignage 1,1, approche -1,5 %.
+         Étiquettes Poppins 500, 28–30 px, #111111 ou #6B6B70. Rien sous 28 px.
+         Médium : schéma technique tracé à la plume. Tout apparaît par tracé (stroke-dashoffset), jamais par fondu global.
+         Profondeur : une seule ombre, sous le rapport (0 18 px, flou 40 px, opacité 8 %). Pas de grain, pas de vignettage.
+OBJECTS: bâtiment agricole/industriel en projection oblique (façade, pignon, toit monopente avec 6 x 3 panneaux à cellules) ;
+         soleil trait (cercle + 8 rayons) ; graphique de rendement (axes, courbe qui chute, zone de perte) ;
+         flamme trait ; bouclier d'assurance avec coche ; champ de 7 x 3 panneaux vu de dessus (6 x 4 cellules chacun) ;
+         drone quadrirotor vu de dessus (corps, 4 bras, 4 rotors, objectif IR orange) ; panneau zoomé avec cadre alu,
+         cellules, rubans, boîte de jonction ; rapport A4 avec vignette du panneau, checklist, courbe.
+MOTION:  arrivées expo.out / power4.out ; caméra et zooms power2.inOut ; sorties et zoom-traversant power3.in.
+         Tracés : 0,5–0,9 s power2.inOut, décalés de 0,04–0,08 s. Mots : 0,067 s d'écart. Sorties 40–50 % plus courtes.
+         Ressort du point final : back.out(1.4) (≈ amortissement 0,8). Aucune boucle de respiration sur les textes.
+SHOTS:
+  S1  0,0–7,2   La ligne de sol se trace, puis façade, pignon, toit, 18 panneaux (cascade), soleil. Un point chaud orange
+                naît sur un panneau (1,2 s) puis pulse 2 fois. Titre mot à mot : « Certaines anomalies sont invisibles à
+                l'œil nu. » lisible 3,0–6,5. Sortie : le bâtiment se dé-trace, seule la ligne de sol reste.
+  S2  7,2–13,2  La ligne de sol devient l'axe X (morphing), l'axe Y monte, la courbe de rendement chute ; zone de perte
+                orange 18 %. Flamme puis bouclier se tracent. Les 3 termes passent du gris à l'encre au rythme des visuels.
+                Sortie : flou 8 px + fondu, mot par mot.
+  S3  13,2–21,0 Le champ de panneaux se trace (vue de dessus). Le drone entre par la gauche (expo.out), HUD : réticule,
+                ligne de rappel « Caméra infrarouge », échelle froid/chaud. Le HUD se retire, le drone balaie de gauche
+                à droite : la ligne de scan orange révèle la vue thermique et 4 anomalies. Titre « La thermographie rend
+                visible l'invisible. » Sortie : le drone quitte le cadre, zoom traversant (power3.in) sur le panneau défectueux.
+  S4  21,0–27,6 Le zoom se pose (power3.out) : le panneau remplit la moitié gauche, les rubans apparaissent. Point chaud
+                pulsant ; trois cercles orange se tracent seuls avec leurs étiquettes : Point chaud, Cellule défectueuse,
+                Défaut de connexion. Titre « Chaque anomalie est détectée et localisée. » Sortie : étiquettes en fondu,
+                le panneau rétrécit et devient la vignette du rapport (transport).
+  S5  27,6–34,2 La feuille se trace autour de la vignette, checklist cochée en orange (3 clics doux). À droite : titre
+                « Un rapport clair pour agir vite. » et courbe de rendement qui remonte (ancienne courbe en pointillés gris).
+                Le point orange final se pose en ressort. Sortie : tout se floute sauf le point, qui glisse vers la scène finale.
+  S6  34,2–40,8 Le point s'étire en séparateur vertical orange. Logo à gauche (flou → net), slogan mot à mot, message,
+                contact. Tenue ≥ 4 s. Fin sur l'accord résolu de la musique.
+SOUND:   musique originale 100 BPM, la mineur → do majeur : nappes douces + pulsation basse (S1–S2), arpège léger à
+         l'entrée du drone (S3–S5), résolution lumineuse sur le rapport, accord final tenu (S6). Effets : whoosh court
+         (entrée drone), whoosh long bas (scan), whoosh (zoom), 3 tics (cercles), 3 clics doux (coches), impact grave
+         discret (logo). Mixage -16 LUFS, crête ≤ -1 dBTP.
+BANNED:  fond sombre ; lueur, néon, particules ; dégradés violet/bleu ; verre ; tout centré ; tout en fondu+montée ;
+         texte qui bouge pendant la lecture ; icônes dans des cercles ; trois cartes alignées ; logo dans un coin ;
+         3D ; effets flashy ; chiffres inventés (aucun pourcentage ni température affichés).
+QA:      t=0 (vignette non vide) · 4,5 (bâtiment + point chaud + titre) · 11,5 (graphique + 2 icônes + 3 termes) ·
+         15,6 (drone + HUD lisible) · 18,4 (scan à mi-course, thermique à gauche seulement) · 20,9/21,0 (raccord zoom) ·
+         24,8 (3 cercles + étiquettes) · 27,5/27,6 (raccord vignette) · 32,0 (rapport complet) · 34,1/34,2 (raccord point) ·
+         38,0 (carton final lisible).
+```
