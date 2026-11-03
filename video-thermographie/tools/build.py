@@ -1706,9 +1706,31 @@ def build_index(sfx_offsets):
       ></div>"""
         for sid, start, dur in SCENES
     )
+    # voix off (tools/voiceover.py) : une piste par phrase, et la musique s'efface sous la voix
+    vo_path = os.path.join(ROOT, "assets", "audio", "vo", "vo.json")
+    vo = json.load(open(vo_path, encoding="utf-8")) if os.path.exists(vo_path) else []
+    music_attr = ""
+    if vo:
+        duck, base, pts_ = 0.32, 1.0, [{"t": 0, "v": 1.0}]
+        segs = []
+        for v in vo:
+            s0, s1 = v["start"] - 0.3, v["start"] + v["dur"] + 0.45
+            if segs and s0 <= segs[-1][1]:
+                segs[-1][1] = s1
+            else:
+                segs.append([s0, s1])
+        for s0, s1 in segs:
+            pts_ += [{"t": round(max(s0, 0), 3), "v": base}, {"t": round(s0 + 0.3, 3), "v": duck},
+                     {"t": round(s1 - 0.45, 3), "v": duck}, {"t": round(min(s1, TOTAL), 3), "v": base}]
+        lane = {"version": 1, "lanes": [{"target": "volume", "points": pts_}]}
+        music_attr = f' data-automation="{attr_json(lane)}"'
     audio = [
-        f'      <audio id="music" class="clip" src="assets/audio/music.wav" data-start="0" data-duration="{n(TOTAL)}" data-track-index="2" data-volume="1"></audio>'
+        f'      <audio id="music" class="clip" src="assets/audio/music.wav" data-start="0" data-duration="{n(TOTAL)}" data-track-index="2" data-volume="1"{music_attr}></audio>'
     ]
+    for v in vo:
+        audio.append(
+            f'      <audio id="vo-{v["id"]}" class="clip" src="{v["file"]}" data-start="{n(v["start"])}" data-duration="{n(v["dur"] - 0.005)}" data-track-index="6" data-volume="1"></audio>'
+        )
     for i, (aid, fname, t, vol) in enumerate(SFX):
         t = max(0.0, t + 1 / 30 - sfx_offsets.get(fname, 0.0))
         dur = float(

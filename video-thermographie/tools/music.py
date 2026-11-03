@@ -103,11 +103,9 @@ for start, end, bass, notes in CHORDS:
 # ------------------------------------------------------------------ bass pulse
 for start, end, bass, notes in CHORDS:
     f = mtof(bass)
-    # S1: every 2 beats, S2: every beat (tension), S3-S5: 8ths, S6: one long note
+    # S1: every 2 beats, S2-S6: 8ths (pulsation), S7: one long note
     if start < 7.2:
         step = BEAT * 2
-    elif start < 13.8:
-        step = BEAT
     elif start < 46.8:
         step = BEAT / 2
     else:
@@ -196,8 +194,95 @@ def reverb(x, seconds=2.6, mix=0.24, seed=1):
     return x * (1 - mix) + wet * mix * 1.6
 
 
-L = reverb(L, seed=11)
-Rch = reverb(Rch, seed=12)
+# ------------------------------------------------------------------ légère section rythmique
+DL = np.zeros(N)
+DR = np.zeros(N)
+
+
+def dadd(sig, start, pan=0.0, gain=1.0):
+    i0 = int(round(start * SR))
+    if i0 >= N:
+        return
+    sig = sig[: N - i0] * gain
+    DL[i0 : i0 + len(sig)] += sig * np.cos((pan + 1) * np.pi / 4)
+    DR[i0 : i0 + len(sig)] += sig * np.sin((pan + 1) * np.pi / 4)
+
+
+def kick():
+    n = int(0.45 * SR)
+    t = np.arange(n) / SR
+    f = 46 + 90 * np.exp(-t / 0.032)
+    ph = 2 * np.pi * np.cumsum(f) / SR
+    body = np.sin(ph) + 0.25 * np.sin(2 * ph)
+    click = rng.standard_normal(n) * np.exp(-t / 0.002) * 0.25
+    return np.tanh((body * np.exp(-t / 0.22) + click) * 1.4)
+
+
+def clap():
+    n = int(0.3 * SR)
+    t = np.arange(n) / SR
+    noise = rng.standard_normal(n)
+    # passe-bande grossier : différence de deux passe-bas à un pôle
+    def lp(x, fc):
+        a = np.exp(-2 * np.pi * fc / SR)
+        y = np.zeros_like(x)
+        acc = 0.0
+        for i in range(len(x)):
+            acc = a * acc + (1 - a) * x[i]
+            y[i] = acc
+        return y
+    bp = lp(noise, 4200) - lp(noise, 900)
+    env = np.zeros(n)
+    for d in (0.0, 0.011, 0.022):
+        k = t >= d
+        env[k] += np.exp(-(t[k] - d) / (0.008 if d < 0.02 else 0.11))
+    return bp * env
+
+
+def tick(decay=0.018):
+    n = int(0.1 * SR)
+    t = np.arange(n) / SR
+    noise = rng.standard_normal(n)
+    hp = np.diff(np.concatenate([[0], noise]))
+    hp = np.diff(np.concatenate([[0], hp]))
+    return hp * np.exp(-t / decay)
+
+
+K, C = kick(), clap()
+beats = int(TOTAL / BEAT)
+for b in range(beats):
+    t0 = b * BEAT
+    in_bar = b % 4
+    if 2.4 <= t0 < 7.2 and in_bar in (0, 2):  # intro : battement discret
+        dadd(K, t0, 0, 0.32)
+    elif 7.2 <= t0 < 46.8:  # S2 -> S6 : pulsation à la noire
+        dadd(K, t0, 0, 0.42)
+    elif abs(t0 - 46.8) < 1e-6:  # dernier temps fort sur le logo
+        dadd(K, t0, 0, 0.42)
+    if 13.8 <= t0 < 46.8 and in_bar in (1, 3):  # clap discret sur 2 et 4
+        dadd(C, t0, 0.1, 0.16)
+for k in range(int(TOTAL / (BEAT / 4))):  # charleston : croches, doubles-croches fantômes
+    t0 = k * BEAT / 4
+    if not (7.2 <= t0 < 46.8):
+        continue
+    if k % 2 == 1:
+        dadd(tick(), t0, 0.3, 0.05 if k % 4 == 2 else 0.035)
+    elif t0 >= 20.4 and k % 4 != 0:
+        dadd(tick(0.01), t0, -0.3, 0.016)
+# léger « pompage » des nappes sur la grosse caisse (S2 -> S6)
+pump = np.ones(N)
+tt = np.arange(N) / SR
+for b in range(beats):
+    t0 = b * BEAT
+    if 7.2 <= t0 < 46.8:
+        i0 = int(t0 * SR)
+        i1 = min(N, i0 + int(BEAT * SR))
+        pump[i0:i1] *= 1 - 0.22 * np.exp(-(tt[i0:i1] - t0) / 0.12)
+
+L = reverb(L, seed=11) * pump
+Rch = reverb(Rch, seed=12) * pump
+L = L + reverb(DL, seconds=1.2, mix=0.12, seed=21)
+Rch = Rch + reverb(DR, seconds=1.2, mix=0.12, seed=22)
 
 # ------------------------------------------------------------------ master
 st = np.stack([L, Rch], axis=1)
