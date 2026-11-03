@@ -1,5 +1,14 @@
 # REVIEW
 
+## Passage 3 — déclinaisons 9:16 et 1:1
+- Version 16:9 inchangée : fichiers régénérés identiques à l’octet près (vérifié par `git diff`).
+- Même film dans les deux cadres : mêmes dessins, textes, minutage, transitions, musique. Adaptations de mise en page
+  seulement : blocs empilés ; en S3 la caméra suit le drone (le champ de panneaux ne tient pas en largeur) ;
+  en S4 les étiquettes passent sous le panneau, reliées par des traits verticaux ; slogan sur 3 lignes, coordonnées
+  sur 3 lignes ; en 1:1 le soleil de S1 passe à droite du titre pour ne pas le toucher.
+- Tous les raccords conservés et recalculés par format (sol → axe, zoom traversant, vignette du rapport, point → bille).
+- `hyperframes check` : 0 erreur, 0 avertissement sur chaque déclinaison (textes ≥ 28 px).
+
 ## Passage 2 — retours client
 - Slogan : « Inspections techniques aériennes, révélez l’invisible. » (faute de frappe « ispections » corrigée), « l’invisible » en orange.
 - Contact ajouté : www.flyscanair.com · 06 22 80 57 69 · contact@flyscanair.com (séparateurs orange).

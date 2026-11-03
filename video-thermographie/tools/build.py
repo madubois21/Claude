@@ -6,12 +6,16 @@ est calculée ici pour que les raccords entre scènes tombent au pixel près.
 Relancer ce script ÉCRASE les fichiers HTML : faites vos retouches ici, ou
 retouchez les HTML et ne relancez plus le script.
 
-    python3 tools/build.py
+    python3 tools/build.py          # 16:9 (version principale, à la racine du projet)
+    python3 tools/build.py 9x16     # déclinaison verticale  -> formats/9x16/
+    python3 tools/build.py 1x1      # déclinaison carrée     -> formats/1x1/
 """
 import html
 import json
 import os
+import shutil
 import subprocess
+import sys
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -25,7 +29,46 @@ TH_PANEL = "#FFF1E8"
 TH_PANEL_B = "#FFEADF"
 TH_CELL = "#FFC9AE"
 
-W, H = 1920, 1080
+FMT = (sys.argv[1] if len(sys.argv) > 1 else "16x9").lower()
+assert FMT in ("16x9", "9x16", "1x1"), FMT
+WIDE = FMT == "16x9"
+SW, SH = 1920, 1080  # scène de référence (monde 16:9) dans laquelle tout est dessiné
+W, H = {"16x9": (1920, 1080), "9x16": (1080, 1920), "1x1": (1080, 1080)}[FMT]
+OUT = ROOT if WIDE else os.path.join(ROOT, "formats", FMT)
+CANVAS = "" if WIDE else f' style="width: {W}px; height: {H}px"'
+
+# Mise en page des déclinaisons. Mêmes dessins, textes, minutage et transitions :
+# seuls l'échelle et la position des blocs changent. Une boîte = (échelle, tx, ty)
+# appliquée à la scène de référence 1920 x 1080.
+LAYOUTS = {
+    "9x16": dict(
+        s1_box=(1.15, -1047, 500), s1_title=(108, 330, 74), s1_sun=(1300, 210),
+        s2_head=(108, 330, 50), s2_chart=(0.83, -90.8, 395.9), s2_icons=(1.0, -1030, 820),
+        s2_fs=dict(tick=34, label=38, ilabel=32),
+        s3_cam=(-35, 832, -245.9, 1000), s3_hud=(556, 597), s3_title=(108, 330, 58),
+        handoff=(220, 641, 640),
+        s4_settle=(60, 560, 960), s4_title=(108, 330, 56), s4_title_text="Chaque anomalie est|détectée et localisée.",
+        s4_rows=(1370, 1450, 1530), s4_fs=36, s4_lab=(("c", 0, 400), ("c", 0, 420), ("r", 1020, 440)),
+        s5_title=(108, 300, 64), s5_doc=(0.8, 124, 423.2), s5_chart=(0.8, -556, 975.6),
+        s5_fs=dict(item=35, head=36, tick=36, label=38, cat=36, catlh=44),
+        s6=dict(s=0.7, y=520, slogan=(890, 60), msg=(1150, 38), contact=(1250, 34, 52),
+                slogan_text="Inspections techniques|aériennes,|révélez *l’invisible*."),
+    ),
+    "1x1": dict(
+        s1_box=(0.98, -817.3, 87.6), s1_title=(108, 120, 56), s1_sun=(1640, 230),
+        s2_head=(108, 100, 40), s2_chart=(0.8, -68, 144), s2_icons=(0.72, -317.6, -238.4),
+        s2_fs=dict(tick=35, label=38, ilabel=40),
+        s3_cam=(-35, 832, 87.4, 1000), s3_hud=(556, 236), s3_title=(108, 108, 52),
+        handoff=(270, 380, 540),
+        s4_settle=(204, 230, 672), s4_title=(108, 90, 46), s4_title_text="Chaque anomalie est|détectée et localisée.",
+        s4_rows=(800, 862, 924), s4_fs=32, s4_lab=(("c", 0, 360), ("c", 0, 380), ("r", 1000, 400)),
+        s5_title=(108, 150, 52), s5_doc=(0.7, -90, 232.8), s5_chart=(0.58, -10, 175.6),
+        s5_fs=dict(item=40, head=40, tick=49, label=49, cat=49, catlh=58),
+        s6=dict(s=0.6, y=175, slogan=(470, 50), msg=(680, 34), contact=(762, 30, 42),
+                slogan_text="Inspections techniques|aériennes,|révélez *l’invisible*."),
+    ),
+}
+L = LAYOUTS.get(FMT)
 
 
 def n(x):
@@ -134,10 +177,29 @@ def write_scene(sid, title, variables, css, body, js):
   </script>
 </template>
 """
-    path = os.path.join(ROOT, "compositions", f"{sid}.html")
+    path = os.path.join(OUT, "compositions", f"{sid}.html")
     with open(path, "w", encoding="utf-8") as fh:
         fh.write(doc)
     print("wrote", os.path.relpath(path, ROOT))
+
+
+def box(content, b):
+    """Place un bloc de la scène de référence dans le cadre de la déclinaison."""
+    if b is None:
+        return content
+    sc, tx, ty = b
+    return (
+        f'    <div class="box" data-layout-allow-overflow style="position: absolute; left: 0; top: 0; width: {SW}px; height: {SH}px; '
+        f'transform-origin: 0 0; transform: translate({n(tx)}px, {n(ty)}px) scale({sc})">\n{content}\n    </div>'
+    )
+
+
+def tstyle(spec, default):
+    """Style inline d'un titre : celui du 16:9, ou (left, top, taille) de la déclinaison."""
+    if L is None:
+        return default
+    left, top, size = spec
+    return f"left: {left}px; top: {top}px; font-size: {size}px"
 
 
 def svar(vid, label, default):
@@ -276,13 +338,25 @@ def marks_svg(prefix, drawable):
     return "".join(out)
 
 
-# viewBoxes for the zoom hand-offs
-S3_END_VB = (HX - 645 / 3, HY - 320 / 3, W / 3, H / 3)  # hero at 645,320 x3
-k4 = 630 / S4PW
-S4_START_VB = (S4X - 645 / k4, S4Y - 320 / k4, W / k4, H / k4)
-THUMB = (260, 200, 520)  # x, y, width of report thumbnail
+# viewBoxes for the zoom hand-offs (rectangles à l'écran du panneau défectueux)
+HAND = L["handoff"] if L else (645, 320, 630)  # raccord S3 -> S4
+k3 = HAND[2] / PW
+S3_END_VB = (HX - HAND[0] / k3, HY - HAND[1] / k3, W / k3, H / k3)
+k4 = HAND[2] / S4PW
+S4_START_VB = (S4X - HAND[0] / k4, S4Y - HAND[1] / k4, W / k4, H / k4)
+SETTLE = L["s4_settle"] if L else (S4X, S4Y, S4PW)  # panneau posé en S4
+ks = SETTLE[2] / S4PW
+S4_SETTLE_VB = (S4X - SETTLE[0] / ks, S4Y - SETTLE[1] / ks, W / ks, H / ks)
+THUMB = (260, 200, 520)  # x, y, width of report thumbnail (scène de référence)
 k5 = THUMB[2] / S4PW
-S4_END_VB = (S4X - THUMB[0] / k5, S4Y - THUMB[1] / k5, W / k5, H / k5)
+THUMB_LOCAL_VB = (S4X - THUMB[0] / k5, S4Y - THUMB[1] / k5, SW / k5, SH / k5)
+if L:  # vignette vue à l'écran à travers la boîte du rapport
+    _ds, _dx, _dy = L["s5_doc"]
+    THUMB_SCREEN = (_ds * THUMB[0] + _dx, _ds * THUMB[1] + _dy, _ds * THUMB[2])
+else:
+    THUMB_SCREEN = THUMB
+k5s = THUMB_SCREEN[2] / S4PW
+S4_END_VB = (S4X - THUMB_SCREEN[0] / k5s, S4Y - THUMB_SCREEN[1] / k5s, W / k5s, H / k5s)
 
 
 def vb(t):
@@ -292,9 +366,9 @@ def vb(t):
 # --------------------------------------------------------------------------
 # Logo (vector redraw of the Fly Scan'Air PNG) — logo coords 1270 x 430
 # --------------------------------------------------------------------------
-LOGO_S = 0.72
+LOGO_S = L["s6"]["s"] if L else 0.72
 LOGO_X = (W - 1270 * LOGO_S) / 2
-LOGO_Y = 196
+LOGO_Y = L["s6"]["y"] if L else 196
 BALL_L = (30, 218)
 BALL_R = (1087.5, 170)  # = le point du « ı » (Comfortaa 700, 174 px, mesuré)
 
@@ -321,6 +395,14 @@ def logo_screen(x, y):
 # --------------------------------------------------------------------------
 # S1 — Le problème invisible
 # --------------------------------------------------------------------------
+def s1_ground():
+    """Ligne de sol : en déclinaison, elle couvre le cadre (40 -> W-40 px à l'écran)."""
+    if L is None:
+        return 120, 1800
+    sc, tx, _ = L["s1_box"]
+    return (40 - tx) / sc, (W - 40 - tx) / sc
+
+
 def build_s1():
     # building (oblique projection)
     front = (980, 640, 700, 240)
@@ -357,7 +439,7 @@ def build_s1():
     hv = v0 + 1 * (ph + gv) + ph * 1.5 / 3
     hy = 240 * hv
 
-    sun_c = (1300, 210)
+    sun_c = L["s1_sun"] if L else (1300, 210)
     rays = []
     for i in range(8):
         import math
@@ -367,10 +449,11 @@ def build_s1():
         x2, y2 = sun_c[0] + 72 * math.cos(a), sun_c[1] + 72 * math.sin(a)
         rays.append(f'<line class="d s1-ray" pathLength="1" x1="{n(x1)}" y1="{n(y1)}" x2="{n(x2)}" y2="{n(y2)}"/>')
 
-    body = f"""    <svg class="world" viewBox="0 0 {W} {H}" width="{W}" height="{H}">
+    gx1, gx2 = s1_ground()
+    svg = f"""    <svg class="world" viewBox="0 0 {SW} {SH}" width="{SW}" height="{SH}">
       <defs>{thermal_defs("s1")}</defs>
       <g fill="none" stroke="{INK}" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-        <line id="s1-ground" class="d" pathLength="1" x1="120" y1="880" x2="1800" y2="880"/>
+        <line id="s1-ground" class="d" pathLength="1" x1="{n(gx1)}" y1="880" x2="{n(gx2)}" y2="880"/>
         <g id="s1-walls" stroke="none" fill="#FFFFFF">
           <rect class="s1-wfill" x="{front[0]}" y="{front[1]}" width="{front[2]}" height="{front[3]}"/>
           <polygon class="s1-wfill" points="{pts(side)}"/>
@@ -402,8 +485,9 @@ def build_s1():
         <circle id="s1-ring" cx="{n(hu)}" cy="{n(hy)}" r="22" fill="none" stroke="{ACC}" stroke-width="2"/>
         <circle id="s1-ring2" cx="{n(hu)}" cy="{n(hy)}" r="22" fill="none" stroke="{ACC}" stroke-width="2"/>
       </g>
-    </svg>
-    <div id="s1-title" class="title" style="left: 140px; top: 352px">Certaines anomalies<br />sont invisibles<br />à l’œil nu.</div>"""
+    </svg>"""
+    body = box(svg, L["s1_box"] if L else None) + f"""
+    <div id="s1-title" class="title" style="{tstyle(L and L["s1_title"], "left: 140px; top: 352px")}">Certaines anomalies<br />sont invisibles<br />à l’œil nu.</div>"""
 
     css = """
     #root .s1-pline { stroke: #111111; }
@@ -540,19 +624,89 @@ def build_s2():
     <div id="s2-lab-s1" class="label" style="left: {n(xend + 22)}px; top: {n(gd[1] - 20)}px; color: #111111">Avec défauts</div>
     <div id="s2-lab-f" class="label" style="left: {FX - 110}px; top: 735px; width: 220px; text-align: center">Incendie</div>
     <div id="s2-lab-s" class="label" style="left: {SX - 120}px; top: 735px; width: 240px; text-align: center">Assurance</div>"""
+    g0 = dict(x1=120, x2=1800, y=880)  # position de départ de l'axe = ligne de sol de S1
+    if L:
+        # la ligne de sol de S1 (à l'écran) exprimée dans la boîte du graphique
+        s1s, s1tx, s1ty = L["s1_box"]
+        c_s, c_x, c_y = L["s2_chart"]
+        gx1, gx2 = s1_ground()
+        g0 = dict(
+            x1=(s1s * gx1 + s1tx - c_x) / c_s,
+            x2=(s1s * gx2 + s1tx - c_x) / c_s,
+            y=(s1s * 880 + s1ty - c_y) / c_s,
+        )
+        chart = f"""    <svg class="world" viewBox="0 0 {SW} {SH}" width="{SW}" height="{SH}">
+      <defs>
+        <clipPath id="s2-clip"><rect id="s2-cliprect" x="{S2_X0}" y="300" width="0" height="560"/></clipPath>
+        <linearGradient id="s2-lossg" x1="0" x2="0" y1="0" y2="1">
+          <stop offset="0" stop-color="{ACC}" stop-opacity="0.08"/>
+          <stop offset="1" stop-color="{ACC}" stop-opacity="0.22"/>
+        </linearGradient>
+      </defs>
+      <g id="s2-grid" stroke="#E4E4E7" stroke-width="1.5" stroke-dasharray="6 8">{"".join(grid)}</g>
+      <g id="s2-yt" class="tick">{"".join(yticks)}</g>
+      <g id="s2-xt" class="tick">{"".join(xticks)}</g>
+      <path id="s2-loss" clip-path="url(#s2-clip)" d="{loss}" fill="url(#s2-lossg)"/>
+      <g fill="none" stroke="{INK}" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <line id="s2-x" x1="{n(g0["x1"])}" y1="{n(g0["y"])}" x2="{n(g0["x2"])}" y2="{n(g0["y"])}"/>
+        <polyline id="s2-xa" class="d" pathLength="1" points="{ax_x1 - 12},{S2_Y0 - 9} {ax_x1},{S2_Y0} {ax_x1 - 12},{S2_Y0 + 9}"/>
+        <line id="s2-y" class="d" pathLength="1" x1="{S2_X0}" y1="{S2_Y0}" x2="{S2_X0}" y2="{ax_y1}"/>
+        <polyline id="s2-ya" class="d" pathLength="1" points="{S2_X0 - 9},{ax_y1 + 12} {S2_X0},{ax_y1} {S2_X0 + 9},{ax_y1 + 12}"/>
+        <path id="s2-saine" class="d" pathLength="1" d="{p_saine}" stroke="#A1A1AA" stroke-width="4"/>
+        <path id="s2-defaut" class="d" pathLength="1" d="{p_defaut}" stroke="{ACC}" stroke-width="4.5"/>
+      </g>
+      <circle id="s2-end0" cx="{n(gs[0])}" cy="{n(gs[1])}" r="9" fill="#FFFFFF" stroke="#A1A1AA" stroke-width="3.5"/>
+      <circle id="s2-end1" cx="{n(gd[0])}" cy="{n(gd[1])}" r="9" fill="#FFFFFF" stroke="{ACC}" stroke-width="3.5"/>
+    </svg>
+    <div id="s2-lab-y" class="label" style="left: 200px; top: 266px">Rendement (%)</div>
+    <div id="s2-lab-x" class="label" style="left: 820px; top: 918px; width: 300px; text-align: right">Temps (mois)</div>
+    <div id="s2-lab-s0" class="label" style="left: {n(xend + 22)}px; top: {n(gs[1] - 24)}px">Saine</div>
+    <div id="s2-lab-s1" class="label" style="left: {n(xend + 22)}px; top: {n(gd[1] - 24)}px; color: #111111">Avec défauts</div>"""
+        icons = f"""    <svg class="world" viewBox="0 0 {SW} {SH}" width="{SW}" height="{SH}">
+      <g fill="none" stroke="{INK}" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <g transform="translate({FX} {IY})">
+          <path id="s2-flame" class="d" pathLength="1" d="{flame_o}"/>
+          <path id="s2-flamei" d="{flame_i}" fill="{ACC}" stroke="none"/>
+        </g>
+        <g transform="translate({SX} {IY})">
+          <path id="s2-shield" class="d" pathLength="1" d="{shield}"/>
+          <path id="s2-check" class="d" pathLength="1" d="{check}" stroke-width="3"/>
+        </g>
+      </g>
+    </svg>
+    <div id="s2-lab-f" class="label ilab" style="left: {FX - 130}px; top: 735px; width: 260px; text-align: center">Incendie</div>
+    <div id="s2-lab-s" class="label ilab" style="left: {SX - 140}px; top: 735px; width: 280px; text-align: center">Assurance</div>"""
+        hl, ht, hs = L["s2_head"]
+        body = (
+            box(chart, L["s2_chart"]) + "\n" + box(icons, L["s2_icons"]) + f"""
+    <div id="s2-head" class="head" style="left: {hl}px; top: {ht}px; font-size: {hs}px">
+      <div class="hrow"><i class="sq"></i><span id="s2-t1" class="term">Perte de rendement</span></div>
+      <div class="hrow"><i class="sq"></i><span id="s2-t2" class="term">Risque incendie</span></div>
+      <div class="hrow"><i class="sq"></i><span id="s2-t3" class="term">Défauts invisibles</span></div>
+    </div>"""
+        )
     css = """
     #root .head { position: absolute; left: 140px; top: 150px; font-weight: 700; font-size: 46px; letter-spacing: -0.01em; white-space: nowrap; display: flex; align-items: center; }
     #root .term { color: #D4D4D8; }
     #root .sq { display: inline-block; width: 14px; height: 14px; background: #FF5700; margin: 0 28px; }
     #root .tick text { font-family: "Comfortaa", sans-serif; font-weight: 600; font-size: 28px; fill: #6B6B70; }
     #root #s2-end0, #root #s2-end1, #root #s2-flamei, #root #s2-grid, #root #s2-yt, #root #s2-xt { opacity: 0; }"""
+    if L:
+        fs = L["s2_fs"]
+        css += f"""
+    #root .head {{ flex-direction: column; align-items: flex-start; }}
+    #root .hrow {{ display: flex; align-items: center; line-height: 1.45; }}
+    #root .hrow .sq {{ margin: 0 22px 0 0; }}
+    #root .tick text {{ font-size: {fs["tick"]}px; }}
+    #root .label {{ font-size: {fs["label"]}px; }}
+    #root .label.ilab {{ font-size: {fs["ilabel"]}px; }}"""
     js = """
       $("#s2-t1").textContent = txt("s2-t1", "Perte de rendement");
       $("#s2-t2").textContent = txt("s2-t2", "Risque incendie");
       $("#s2-t3").textContent = txt("s2-t3", "Défauts invisibles");
       const head = $("#s2-head");
       // 1. la ligne de sol devient l'axe des temps, l'axe du rendement se dessine
-      tl.fromTo($("#s2-x"), { attr: { x1: 120, x2: 1800, y1: 880, y2: 880 } }, { attr: { x1: __X0__, x2: __AX1__, y1: __Y0__, y2: __Y0__ }, duration: 0.7, ease: "power2.inOut" }, 0);
+      tl.fromTo($("#s2-x"), { attr: { x1: __GX1__, x2: __GX2__, y1: __GY__, y2: __GY__ } }, { attr: { x1: __X0__, x2: __AX1__, y1: __Y0__, y2: __Y0__ }, duration: 0.7, ease: "power2.inOut" }, 0);
       draw(0.35, $("#s2-y"), 0.55, "power3.out");
       draw(0.7, [$("#s2-xa"), $("#s2-ya")], 0.25, "power2.out", 0.05);
       blurIn(0.3, head, 0.2, 0, 6);
@@ -578,8 +732,10 @@ def build_s2():
       tl.fromTo($("#s2-t3"), { color: "#D4D4D8" }, { color: "#111111", duration: 0.3 }, 3.85);
       // 5. sortie : flou + fondu
       blurOut(5.45, [head, ...$$(".label")], 0.2, 0.02);
-      blurOut(5.5, R.querySelector("svg.world"), 0.25, 0, 8);"""
-    js = (js.replace("__X0__", str(S2_X0)).replace("__AX1__", str(ax_x1)).replace("__Y0__", str(S2_Y0))
+      blurOut(5.5, __SVGS__, 0.25, 0, 8);"""
+    js = (js.replace("__GX1__", n(g0["x1"])).replace("__GX2__", n(g0["x2"])).replace("__GY__", n(g0["y"]))
+          .replace("__SVGS__", '$$("svg.world")' if L else 'R.querySelector("svg.world")')
+          .replace("__X0__", str(S2_X0)).replace("__AX1__", str(ax_x1)).replace("__Y0__", str(S2_Y0))
           .replace("__CW__", n(xend - S2_X0 + 12)))
     write_scene(
         "s2",
@@ -652,7 +808,13 @@ def build_s3():
         for x, y in anom_xs
     )
     fy0, fy1 = FY0 - 20, FY0 + ROWS * PH + (ROWS - 1) * GY + 20
-    body = f"""    <svg id="s3-svg" class="world zoom" viewBox="0 0 {W} {H}" width="{W}" height="{H}">
+    if L:  # caméra : cadre vertical / carré qui suit le drone
+        cx0, cx1, cy, cvw = L["s3_cam"]
+        S3_VB0 = (cx0, cy, cvw, cvw * H / W)
+        S3_VB1 = (cx1, cy, cvw, cvw * H / W)
+    else:
+        S3_VB0 = (0, 0, W, H)
+    body = f"""    <svg id="s3-svg" class="world zoom" viewBox="{vb(S3_VB0)}" width="{W}" height="{H}"{CANVAS}>
       <defs>
         {thermal_defs("s3")}
         <linearGradient id="s3-trail" x1="0" x2="1" y1="0" y2="0">
@@ -677,7 +839,7 @@ def build_s3():
       <div id="s3-tag" class="tag">Caméra infrarouge</div>
       <div id="s3-scale" class="scale"><span>Froid</span><i></i><span>Chaud</span></div>
     </div>
-    <div id="s3-title" class="title" style="left: 140px; top: 120px">Le scan infrarouge révèle<br />chaque échauffement.</div>"""
+    <div id="s3-title" class="title" style="{tstyle(L and L["s3_title"], "left: 140px; top: 120px")}">Le scan infrarouge révèle<br />chaque échauffement.</div>"""
     css = """
     #root #s3-hud { position: absolute; left: 480px; top: 306px; display: flex; align-items: center; gap: 36px; }
     #root .tag { font-family: "Comfortaa", sans-serif; font-weight: 600; font-size: 30px; line-height: 1; padding: 10px 16px; background: #FFFFFF; border: 1.5px solid #111111; color: #111111; white-space: nowrap; }
@@ -685,6 +847,9 @@ def build_s3():
     #root .scale i { display: block; width: 200px; height: 12px; background: linear-gradient(90deg, #E4E4E7 0%, #FFD2BC 55%, #FF5700 100%); }
     #root #s3-tag, #root #s3-scale, #root #s3-leaddot, #root #s3-scan, #root .s3-ring { opacity: 0; }
     #root .s3-pfill, #root .s3-cells { opacity: 0; }"""
+    if L:
+        css += f"""
+    #root #s3-hud {{ left: {L["s3_hud"][0]}px; top: {L["s3_hud"][1]}px; flex-direction: column; align-items: flex-start; gap: 12px; }}"""
     js = f"""
       const title = words($("#s3-title"), txt("s3-title", "Le scan infrarouge révèle|chaque *échauffement*."));
       const HOVER = {HOVER_X}, END = {SCAN_END_X}, Y = {DRONE_Y};
@@ -723,6 +888,11 @@ def build_s3():
       tl.to($("#s3-drone"), {{ x: 2250, duration: 0.5, ease: "power3.in" }}, 6.6);
       blurOut(6.95, title, 0.16, 0.02);
       tl.to($("#s3-svg"), {{ attr: {{ viewBox: "{vb(S3_END_VB)}" }}, duration: 0.62, ease: "power3.in" }}, 7.18);"""
+    if L:
+        marker = '      tl.fromTo($("#s3-cliprect"),'
+        cam = (f'      tl.fromTo($("#s3-svg"), {{ attr: {{ viewBox: "{vb(S3_VB0)}" }} }}, '
+               f'{{ attr: {{ viewBox: "{vb(S3_VB1)}" }}, duration: TD, ease: "power1.inOut" }}, T0);\n')
+        js = js.replace(marker, cam + marker, 1)
     write_scene(
         "s3",
         "Scène 3 — Inspection drone",
@@ -736,6 +906,27 @@ def build_s3():
 # --------------------------------------------------------------------------
 # S4 — Détection des anomalies
 # --------------------------------------------------------------------------
+def s4_callouts(names):
+    """Déclinaisons : étiquettes sous le panneau, reliées par des traits verticaux."""
+    vx, vy, vw, _ = S4_SETTLE_VB
+    k = W / vw
+    fs = L["s4_fs"]
+    lh = round(fs * 1.2)
+    leaders, dots, labels = [], [], []
+    for i, ((cx, cy, r), row, (align, xr, wbox)) in enumerate(zip(MARKS, L["s4_rows"], L["s4_lab"])):
+        scx = (cx - vx) * k
+        wy0 = cy + r
+        wy1 = (row - lh / 2 - 8) / k + vy
+        leaders.append(f'<polyline id="s4-ld{i}" class="d" pathLength="1" points="{n(cx)},{n(wy0)} {n(cx)},{n(wy1)}" fill="none" stroke="{INK}" stroke-width="1.5"/>')
+        dots.append(f'<circle id="s4-dot{i}" cx="{n(cx)}" cy="{n(wy1)}" r="{n(5 / k)}" fill="{INK}"/>')
+        left, ta = (scx - wbox / 2, "center") if align == "c" else (xr - wbox, "right")
+        labels.append(
+            f'<div id="{names[i][0]}" class="lab4" style="left: {n(left)}px; top: {n(row - lh / 2)}px; '
+            f'width: {wbox}px; text-align: {ta}">{names[i][1]}</div>'
+        )
+    return leaders, dots, labels
+
+
 def build_s4():
     neigh = []
     hr, hc = HERO
@@ -763,8 +954,11 @@ def build_s4():
         leaders.append(f'<polyline id="s4-ld{i}" class="d" pathLength="1" points="{n(sx)},{n(ly)} 1160,{n(ly)}" fill="none" stroke="{INK}" stroke-width="1.5"/>')
         dots.append(f'<circle id="s4-dot{i}" cx="1160" cy="{n(ly)}" r="5" fill="{INK}"/>')
         labels.append(f'<div id="{names[i][0]}" class="lab4" style="left: 1182px; top: {n(ly - 21)}px">{names[i][1]}</div>')
+    if L:
+        leaders, dots, labels = s4_callouts(names)
     hx, hy = MARKS[0][0], MARKS[0][1]
-    body = f"""    <svg id="s4-svg" class="world zoom" viewBox="{vb(S4_START_VB)}" width="{W}" height="{H}">
+    s4t = L["s4_title_text"] if L else "Chaque anomalie est détectée et localisée."
+    body = f"""    <svg id="s4-svg" class="world zoom" viewBox="{vb(S4_START_VB)}" width="{W}" height="{H}"{CANVAS}>
       <defs>{thermal_defs("s4")}</defs>
       <g id="s4-neigh">{"".join(neigh)}</g>
       {hero_panel_svg("s4")}
@@ -773,19 +967,22 @@ def build_s4():
       <g id="s4-leaders">{"".join(leaders)}{"".join(dots)}</g>
     </svg>
     {"".join(labels)}
-    <div id="s4-title" class="title" style="left: 120px; top: 86px; font-size: 56px">Chaque anomalie est détectée et localisée.</div>"""
+    <div id="s4-title" class="title" style="{tstyle(L and L["s4_title"], "left: 120px; top: 86px; font-size: 56px")}">Chaque anomalie est détectée et localisée.</div>"""
     css = """
     #root .lab4 { position: absolute; font-family: "Comfortaa", sans-serif; font-weight: 600; font-size: 36px; line-height: 42px; color: #111111; white-space: nowrap; }
     #root #s4-bus, #root #s4-inner, #root #s4-ring { opacity: 0; }
     #root #s4-leaders circle { opacity: 0; }"""
+    if L:
+        css += f"""
+    #root .lab4 {{ font-size: {L["s4_fs"]}px; line-height: {round(L["s4_fs"] * 1.2)}px; }}"""
     js = f"""
-      const title = words($("#s4-title"), txt("s4-title", "Chaque anomalie est détectée et localisée."));
+      const title = words($("#s4-title"), txt("s4-title", "{s4t}"));
       txt("s4-l1", "") && ($("#s4-l1").textContent = txt("s4-l1", ""));
       txt("s4-l2", "") && ($("#s4-l2").textContent = txt("s4-l2", ""));
       txt("s4-l3", "") && ($("#s4-l3").textContent = txt("s4-l3", ""));
       const svg = $("#s4-svg");
       // 1. le zoom se pose sur le panneau défectueux
-      tl.fromTo(svg, {{ attr: {{ viewBox: "{vb(S4_START_VB)}" }} }}, {{ attr: {{ viewBox: "0 0 {W} {H}" }}, duration: 0.95, ease: "power3.out" }}, 0);
+      tl.fromTo(svg, {{ attr: {{ viewBox: "{vb(S4_START_VB)}" }} }}, {{ attr: {{ viewBox: "{vb(S4_SETTLE_VB)}" }}, duration: 0.95, ease: "power3.out" }}, 0);
       fadeOut(0.2, $("#s4-neigh"), 0.6, 0, "power1.inOut");
       fadeIn(0.55, [$("#s4-inner"), $("#s4-bus")], 0.6);
       // 2. titre : du gris à l'encre, mot à mot
@@ -813,7 +1010,7 @@ def build_s4():
         "s4",
         "Scène 4 — Détection des anomalies",
         [
-            svar("s4-title", "Scène 4 — titre", "Chaque anomalie est détectée et localisée."),
+            svar("s4-title", "Scène 4 — titre", s4t),
             svar("s4-l1", "Scène 4 — étiquette 1", "Point chaud"),
             svar("s4-l2", "Scène 4 — étiquette 2", "Cellule défectueuse"),
             svar("s4-l3", "Scène 4 — étiquette 3", "Défaut de connexion"),
@@ -860,7 +1057,7 @@ def build_s5():
         )
         cats.append(f'<div id="s5-cat{i}" class="cat" style="left: {cx - 170}px; top: {S5_AY + 18}px">{name.replace("|", "<br />")}</div>')
     body = f"""    <div id="s5-paper" style="left: {dx}px; top: {dy}px; width: {dw}px; height: {dh}px"></div>
-    <svg class="world" viewBox="0 0 {W} {H}" width="{W}" height="{H}">
+    <svg class="world" viewBox="0 0 {SW} {SH}" width="{SW}" height="{SH}">
       <g fill="none" stroke="{INK}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <path id="s5-doc" class="d" pathLength="1" d="{doc_path}"/>
         <line id="s5-rule" class="d" pathLength="1" x1="260" y1="178" x2="780" y2="178" stroke-width="1.5"/>
@@ -870,13 +1067,13 @@ def build_s5():
         <line class="d s5-foot" pathLength="1" x1="260" y1="910" x2="560" y2="910" stroke="#E4E4E7" stroke-width="8"/>
       </g>
     </svg>
-    <svg id="s5-thumb" class="world zoom" viewBox="{vb(S4_END_VB)}" width="{W}" height="{H}">
+    <svg id="s5-thumb" class="world zoom" viewBox="{vb(THUMB_LOCAL_VB)}" width="{SW}" height="{SH}">
       <defs>{thermal_defs("s5")}</defs>
       {hero_panel_svg("s5", with_ids=False)}
       <g id="s5-marks">{marks_svg("s5", False)}</g>
     </svg>
-    <svg id="s5-chart" class="world" viewBox="0 0 {W} {H}" width="{W}" height="{H}">
-      <defs><clipPath id="s5-clip"><rect x="0" y="0" width="{W}" height="{S5_AY}"/></clipPath></defs>
+    <svg id="s5-chart" class="world" viewBox="0 0 {SW} {SH}" width="{SW}" height="{SH}">
+      <defs><clipPath id="s5-clip"><rect x="{-4000 if L else 0}" y="{-4000 if L else 0}" width="{SW + 8000 if L else SW}" height="{S5_AY + 4000 if L else S5_AY}"/></clipPath></defs>
       <g id="s5-axes">
         <g id="s5-grid" stroke="#E4E4E7" stroke-width="1.5" stroke-dasharray="6 8">{"".join(grid)}</g>
         <g id="s5-yt" class="tick">{"".join(yticks)}</g>
@@ -893,7 +1090,15 @@ def build_s5():
     {"".join(texts)}
     <div id="s5-lab-y" class="label" style="left: 1010px; top: 318px">Production (kWh/an)</div>
     {"".join(cats)}
-    <div id="s5-title" class="title" style="left: 960px; top: 150px">Un rapport clair<br />pour agir vite.</div>"""
+    <div id="s5-title" class="title" style="{tstyle(L and L["s5_title"], "left: 960px; top: 150px")}">Un rapport clair<br />pour agir vite.</div>"""
+    if L:  # rapport et graphique deviennent deux blocs empilés
+        i_chart = body.index('    <svg id="s5-chart"')
+        i_head = body.index('    <div id="s5-h"')
+        i_lab = body.index('    <div id="s5-lab-y"')
+        i_title = body.index('    <div id="s5-title"')
+        doc_part = body[:i_chart] + body[i_head:i_lab]
+        chart_part = body[i_chart:i_head] + body[i_lab:i_title]
+        body = box(doc_part.rstrip(), L["s5_doc"]) + "\n" + box(chart_part.rstrip(), L["s5_chart"]) + "\n" + body[i_title:]
     css = """
     #root #s5-paper { position: absolute; background: #FFFFFF; box-shadow: 0 18px 40px rgba(17, 17, 17, 0.08); opacity: 0; }
     #root .dochead { position: absolute; font-family: "Comfortaa", sans-serif; font-weight: 700; font-size: 30px; line-height: 40px; color: #111111; white-space: nowrap; }
@@ -901,6 +1106,14 @@ def build_s5():
     #root .tick text { font-family: "Comfortaa", sans-serif; font-weight: 600; font-size: 28px; fill: #6B6B70; }
     #root .cat { position: absolute; width: 340px; text-align: center; font-family: "Comfortaa", sans-serif; font-weight: 600; font-size: 28px; line-height: 36px; color: #111111; }
     #root #s5-grid, #root #s5-yt { opacity: 0; }"""
+    if L:
+        fs = L["s5_fs"]
+        css += f"""
+    #root .item {{ font-size: {fs["item"]}px; }}
+    #root .dochead {{ font-size: {fs["head"]}px; }}
+    #root .tick text {{ font-size: {fs["tick"]}px; }}
+    #root .label {{ font-size: {fs["label"]}px; }}
+    #root .cat {{ font-size: {fs["cat"]}px; line-height: {fs["catlh"]}px; }}"""
     js = """
       const title = words($("#s5-title"), txt("s5-title", "Un rapport clair|pour *agir vite*."));
       ["s5-i0", "s5-i1", "s5-i2"].forEach((id, i) => { const v = txt(id, ""); if (v) $("#" + id).textContent = v; });
@@ -936,8 +1149,12 @@ def build_s5():
       blurOut(5.9, [R.querySelector("svg.world"), $("#s5-thumb"), $("#s5-paper"), $("#s5-axes"), $("#s5-bar0")], 0.22, 0.02);
       tl.to(keep, { attr: { x: kx - 10, y: ky - 10, width: 20, height: 20, rx: 10 }, duration: 0.32, ease: "power2.inOut" }, 5.85);
       tl.to(keep, { attr: { x: __TX__, y: __TY__ }, duration: 0.5, ease: "power2.inOut" }, 6.08);"""
+    tx_dot, ty_dot = ball_x - 10, ball_y - 10
+    if L:  # cible du point exprimée dans la boîte du graphique
+        cs, cx_, cy_ = L["s5_chart"]
+        tx_dot, ty_dot = (ball_x - cx_) / cs - 10, (ball_y - cy_) / cs - 10
     js = (js.replace("__AY__", str(S5_AY)).replace("__BX__", str(S5_BARS[1][2]))
-          .replace("__TX__", n(ball_x - 10)).replace("__TY__", n(ball_y - 10)))
+          .replace("__TX__", n(tx_dot)).replace("__TY__", n(ty_dot)))
     write_scene(
         "s5",
         "Scène 5 — Rapport et bénéfices",
@@ -958,7 +1175,9 @@ def build_s5():
 # --------------------------------------------------------------------------
 def build_s6():
     bx, by = logo_screen(*BALL_L)
-    body = f"""    <svg class="world" viewBox="0 0 {W} {H}" width="{W}" height="{H}">
+    dot_r = 10 * (L["s5_chart"][0] if L else 1)
+    slogan_text = L["s6"]["slogan_text"] if L else "Inspections techniques aériennes,|révélez *l’invisible*."
+    body = f"""    <svg class="world" viewBox="0 0 {W} {H}" width="{W}" height="{H}"{CANVAS}>
       <defs>
         <radialGradient id="s6-ball" cx="0.36" cy="0.34" r="0.7">
           <stop offset="0" stop-color="#FF9C84"/>
@@ -982,7 +1201,7 @@ def build_s6():
         <circle id="s6-ballr" cx="{BALL_R[0]}" cy="{BALL_R[1]}" r="12" fill="url(#s6-ball)"/>
         <circle id="s6-balll" cx="{BALL_L[0]}" cy="{BALL_L[1]}" r="12" fill="url(#s6-ball)"/>
       </g>
-      <circle id="s6-dot" cx="{n(bx)}" cy="{n(by)}" r="10" fill="{ACC}"/>
+      <circle id="s6-dot" cx="{n(bx)}" cy="{n(by)}" r="{n(dot_r)}" fill="{ACC}"/>
     </svg>
     <div id="s6-slogan" class="title cta1">Inspections techniques aériennes,<br />révélez l’invisible.</div>
     <div id="s6-msg" class="cta2">Faites contrôler votre installation.</div>
@@ -993,8 +1212,15 @@ def build_s6():
     #root .cta3 { position: absolute; left: 0; width: 1920px; top: 808px; text-align: center; font-family: "Comfortaa", sans-serif; font-weight: 600; font-size: 32px; color: #6B6B70; display: flex; justify-content: center; align-items: center; }
     #root .cta3 .sq { display: inline-block; width: 10px; height: 10px; background: #FF5700; margin: 0 24px; }
     #root #s6-scan, #root #s6-ballr, #root #s6-balll { opacity: 0; }"""
+    if L:
+        c6 = L["s6"]
+        css += f"""
+    #root .cta1 {{ width: {W}px; top: {c6["slogan"][0]}px; font-size: {c6["slogan"][1]}px; }}
+    #root .cta2 {{ width: {W}px; top: {c6["msg"][0]}px; font-size: {c6["msg"][1]}px; }}
+    #root .cta3 {{ width: {W}px; top: {c6["contact"][0]}px; font-size: {c6["contact"][1]}px; flex-direction: column; line-height: {c6["contact"][2]}px; }}
+    #root .cta3 .sq {{ display: none; }}"""
     js = f"""
-      const slogan = words($("#s6-slogan"), txt("s6-slogan", "Inspections techniques aériennes,|révélez *l’invisible*."));
+      const slogan = words($("#s6-slogan"), txt("s6-slogan", "{slogan_text}"));
       const msg = words($("#s6-msg"), txt("s6-msg", "Faites contrôler votre installation."));
       const contact = txt("s6-contact", "www.flyscanair.com|06 22 80 57 69|contact@flyscanair.com");
       const cEl = $("#s6-contact");
@@ -1022,7 +1248,7 @@ def build_s6():
         "s6",
         "Scène 6 — Call to action",
         [
-            svar("s6-slogan", "Scène 6 — slogan", "Inspections techniques aériennes,|révélez *l’invisible*."),
+            svar("s6-slogan", "Scène 6 — slogan", slogan_text),
             svar("s6-msg", "Scène 6 — message", "Faites contrôler votre installation."),
             svar("s6-contact", "Scène 6 — contact (| sépare les éléments)", "www.flyscanair.com|06 22 80 57 69|contact@flyscanair.com"),
         ],
@@ -1094,7 +1320,7 @@ def build_index(sfx_offsets):
 <html lang="fr" data-composition-variables="{attr_json(variables)}">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=1920, height=1080" />
+    <meta name="viewport" content="width={W}, height={H}" />
     <title>Fly Scan’Air — Inspection thermographique par drone</title>
     <script src="assets/vendor/gsap-3.15.0.min.js"></script>
     <style>
@@ -1112,8 +1338,8 @@ def build_index(sfx_offsets):
       html,
       body {{
         margin: 0;
-        width: 1920px;
-        height: 1080px;
+        width: {W}px;
+        height: {H}px;
         overflow: hidden;
         background: var(--color-ground);
       }}
@@ -1154,7 +1380,7 @@ def build_index(sfx_offsets):
   </body>
 </html>
 """
-    with open(os.path.join(ROOT, "index.html"), "w", encoding="utf-8") as fh:
+    with open(os.path.join(OUT, "index.html"), "w", encoding="utf-8") as fh:
         fh.write(doc)
     print("wrote index.html")
 
@@ -1164,6 +1390,15 @@ if __name__ == "__main__":
     p = os.path.join(ROOT, "assets", "audio", "sfx", "peaks.json")
     if os.path.exists(p):
         offsets = json.load(open(p))
+    if not WIDE:  # projet autonome de la déclinaison : mêmes médias, mêmes polices
+        os.makedirs(os.path.join(OUT, "compositions"), exist_ok=True)
+        shutil.copytree(os.path.join(ROOT, "assets"), os.path.join(OUT, "assets"), dirs_exist_ok=True)
+        shutil.copy(os.path.join(ROOT, "hyperframes.json"), OUT)
+        pkg = json.load(open(os.path.join(ROOT, "package.json")))
+        pkg["name"] = f"video-thermographie-{FMT}"
+        json.dump(pkg, open(os.path.join(OUT, "package.json"), "w"), indent=2)
+        json.dump({"id": f"video-thermographie-{FMT}", "name": f"video-thermographie-{FMT}"},
+                  open(os.path.join(OUT, "meta.json"), "w"), indent=2)
     build_s1()
     build_s2()
     build_s3()

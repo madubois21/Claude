@@ -1,0 +1,143 @@
+<template>
+  <!-- Scène 6 — Call to action -->
+  <style>
+    @font-face { font-family: "Comfortaa"; src: url("assets/fonts/comfortaa-var.woff2") format("woff2"); font-weight: 300 700; font-style: normal; }
+    #root { position: absolute; inset: 0; overflow: hidden; font-family: "Comfortaa", sans-serif; color: #111111; }
+    #root svg.world { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; overflow: visible; }
+    #root svg.zoom * { vector-effect: non-scaling-stroke; }
+    #root .d { stroke-dasharray: 1 1.2; }
+    #root .title { position: absolute; font-weight: 700; font-size: 64px; line-height: 1.12; letter-spacing: -0.01em; color: #111111; white-space: nowrap; }
+    #root .w { display: inline-block; }
+    #root .acc { color: #FF5700; }
+    #root .label { position: absolute; font-family: "Comfortaa", sans-serif; font-weight: 600; font-size: 32px; line-height: 1.2; color: #6B6B70; white-space: nowrap; }
+
+    #root .cta1 { left: 0; width: 1920px; top: 552px; text-align: center; font-size: 56px; line-height: 1.18; }
+    #root .cta2 { position: absolute; left: 0; width: 1920px; top: 722px; text-align: center; font-family: "Comfortaa", sans-serif; font-weight: 600; font-size: 38px; color: #111111; }
+    #root .cta3 { position: absolute; left: 0; width: 1920px; top: 808px; text-align: center; font-family: "Comfortaa", sans-serif; font-weight: 600; font-size: 32px; color: #6B6B70; display: flex; justify-content: center; align-items: center; }
+    #root .cta3 .sq { display: inline-block; width: 10px; height: 10px; background: #FF5700; margin: 0 24px; }
+    #root #s6-scan, #root #s6-ballr, #root #s6-balll { opacity: 0; }
+    #root .cta1 { width: 1080px; top: 890px; font-size: 60px; }
+    #root .cta2 { width: 1080px; top: 1150px; font-size: 38px; }
+    #root .cta3 { width: 1080px; top: 1250px; font-size: 34px; flex-direction: column; line-height: 52px; }
+    #root .cta3 .sq { display: none; }
+  </style>
+  <div
+    id="root"
+    data-composition-id="s6"
+    data-width="1080"
+    data-height="1920"
+    data-composition-variables="[{&quot;id&quot;: &quot;s6-slogan&quot;, &quot;type&quot;: &quot;string&quot;, &quot;label&quot;: &quot;Scène 6 — slogan&quot;, &quot;default&quot;: &quot;Inspections techniques|aériennes,|révélez *l’invisible*.&quot;}, {&quot;id&quot;: &quot;s6-msg&quot;, &quot;type&quot;: &quot;string&quot;, &quot;label&quot;: &quot;Scène 6 — message&quot;, &quot;default&quot;: &quot;Faites contrôler votre installation.&quot;}, {&quot;id&quot;: &quot;s6-contact&quot;, &quot;type&quot;: &quot;string&quot;, &quot;label&quot;: &quot;Scène 6 — contact (| sépare les éléments)&quot;, &quot;default&quot;: &quot;www.flyscanair.com|06 22 80 57 69|contact@flyscanair.com&quot;}]"
+  >
+    <svg class="world" viewBox="0 0 1080 1920" width="1080" height="1920" style="width: 1080px; height: 1920px">
+      <defs>
+        <radialGradient id="s6-ball" cx="0.36" cy="0.34" r="0.7">
+          <stop offset="0" stop-color="#FF9C84"/>
+          <stop offset="0.35" stop-color="#E0402F"/>
+          <stop offset="1" stop-color="#A51F17"/>
+        </radialGradient>
+        <linearGradient id="s6-word" gradientUnits="userSpaceOnUse" x1="140" y1="0" x2="1198" y2="0">
+          <stop offset="0" stop-color="#E2392D"/>
+          <stop offset="0.47" stop-color="#E9862A"/>
+          <stop offset="0.6" stop-color="#E8842A"/>
+          <stop offset="1" stop-color="#DC382D"/>
+        </linearGradient>
+        <clipPath id="s6-clip"><rect id="s6-cliprect" x="120" y="100" width="0" height="260"/></clipPath>
+      </defs>
+      <g id="s6-logo" transform="translate(95.5 520) scale(0.7)">
+        <path id="s6-coil" stroke-dashoffset="1.05" class="d" pathLength="1" d="M30 218 H95 Q125 218 125 248 V375 A35 35 0 0 0 195 375 V75 A35 35 0 0 1 265 75 V375 A35 35 0 0 0 335 375 V75 A35 35 0 0 1 405 75 V375 A35 35 0 0 0 475 375 V75 A35 35 0 0 1 545 75 V375 A35 35 0 0 0 615 375 V75 A35 35 0 0 1 685 75 V290 Q685 335 730 335 H1200 Q1245 335 1245 290 V215 Q1245 170 1200 170 H1087.5" fill="none" stroke="#6D6C74" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+        <g clip-path="url(#s6-clip)">
+          <text id="s6-word" x="140" y="292" font-family="Comfortaa" font-weight="700" font-size="174" fill="url(#s6-word)" stroke="url(#s6-word)" stroke-width="10" stroke-linejoin="round" paint-order="stroke">Fly Scan’Aır</text>
+        </g>
+        <line id="s6-scan" x1="0" y1="118" x2="0" y2="336" stroke="#FF5700" stroke-width="4"/>
+        <circle id="s6-ballr" cx="1087.5" cy="170" r="12" fill="url(#s6-ball)"/>
+        <circle id="s6-balll" cx="30" cy="218" r="12" fill="url(#s6-ball)"/>
+      </g>
+      <circle id="s6-dot" cx="116.5" cy="672.6" r="8" fill="#FF5700"/>
+    </svg>
+    <div id="s6-slogan" class="title cta1">Inspections techniques aériennes,<br />révélez l’invisible.</div>
+    <div id="s6-msg" class="cta2">Faites contrôler votre installation.</div>
+    <div id="s6-contact" class="cta3">www.flyscanair.com · 06 22 80 57 69 · contact@flyscanair.com</div>
+  </div>
+  <script>
+    (function () {
+      const R = document.querySelector('[data-composition-id="s6"]') || document;
+      const $ = (s) => R.querySelector(s);
+      const $$ = (s) => Array.from(R.querySelectorAll(s));
+      let V = {};
+      try {
+        V = (window.__hyperframes && window.__hyperframes.getVariables && window.__hyperframes.getVariables()) || {};
+      } catch (e) {}
+      const txt = (id, d) => (typeof V[id] === "string" && V[id].trim().length ? V[id] : d);
+      // "a b|c *d*." -> word spans; "|" = line break, *x* = accent colour
+      function words(el, text) {
+        el.textContent = "";
+        const out = [];
+        let inAcc = false;
+        text.split("|").forEach((line, li) => {
+          if (li) el.appendChild(document.createElement("br"));
+          line.trim().split(/\s+/).forEach((w, i) => {
+            if (i) el.appendChild(document.createTextNode(" "));
+            const s = document.createElement("span");
+            s.className = "w";
+            if (w.startsWith("*")) { inAcc = true; w = w.slice(1); }
+            const m = w.match(/^(.*?)\*([^\s*]*)$/);
+            const core = m ? m[1] : w, tail = m ? m[2] : "";
+            if (inAcc) {
+              const a = document.createElement("span");
+              a.className = "acc";
+              a.textContent = core;
+              s.appendChild(a);
+            } else {
+              s.textContent = core;
+            }
+            if (tail) s.appendChild(document.createTextNode(tail));
+            if (m) inAcc = false;
+            el.appendChild(s);
+            out.push(s);
+          });
+        });
+        return out;
+      }
+      const tl = gsap.timeline({ paused: true });
+      const draw = (t, els, d = 0.8, ease = "power2.inOut", stagger = 0) =>
+        tl.fromTo(els, { attr: { "stroke-dashoffset": 1.05 } }, { attr: { "stroke-dashoffset": 0 }, duration: d, ease, stagger }, t);
+      const undraw = (t, els, d = 0.5, ease = "power3.in", stagger = 0) =>
+        tl.to(els, { attr: { "stroke-dashoffset": -1.15 }, duration: d, ease, stagger }, t);
+      const solid = (t, els) => tl.set(els, { strokeDasharray: "none" }, t);
+      const blurIn = (t, els, d = 0.15, stagger = 0.067, px = 6) =>
+        tl.fromTo(els, { opacity: 0, filter: "blur(" + px + "px)" }, { opacity: 1, filter: "blur(0px)", duration: d, ease: "power2.out", stagger }, t);
+      const blurOut = (t, els, d = 0.18, stagger = 0.03, px = 8) =>
+        tl.to(els, { opacity: 0, filter: "blur(" + px + "px)", duration: d, ease: "power2.in", stagger }, t);
+      const fadeIn = (t, els, d = 0.4, stagger = 0, ease = "power1.out") =>
+        tl.fromTo(els, { opacity: 0 }, { opacity: 1, duration: d, ease, stagger }, t);
+      const fadeOut = (t, els, d = 0.3, stagger = 0, ease = "power1.in") =>
+        tl.to(els, { opacity: 0, duration: d, ease, stagger }, t);
+
+      const slogan = words($("#s6-slogan"), txt("s6-slogan", "Inspections techniques|aériennes,|révélez *l’invisible*."));
+      const msg = words($("#s6-msg"), txt("s6-msg", "Faites contrôler votre installation."));
+      const contact = txt("s6-contact", "www.flyscanair.com|06 22 80 57 69|contact@flyscanair.com");
+      const cEl = $("#s6-contact");
+      cEl.textContent = "";
+      contact.split("|").forEach((part, i) => {
+        if (i) { const q = document.createElement("i"); q.className = "sq"; cEl.appendChild(q); }
+        const sp = document.createElement("span"); sp.textContent = part.trim(); cEl.appendChild(sp);
+      });
+      // 1. le point orange devient la bille rouge du logo
+      tl.fromTo($("#s6-balll"), { opacity: 0 }, { opacity: 1, duration: 0.35, ease: "power1.inOut" }, 0.0);
+      tl.to($("#s6-dot"), { opacity: 0, duration: 0.35, ease: "power1.inOut" }, 0.0);
+      // 2. le serpentin se trace, la ligne de scan révèle le nom
+      draw(0.2, $("#s6-coil"), 1.7, "power1.inOut");
+      tl.fromTo($("#s6-scan"), { opacity: 0 }, { opacity: 1, duration: 0.12 }, 0.5);
+      tl.fromTo($("#s6-scan"), { x: 120 }, { x: 1230, duration: 1.3, ease: "power1.inOut" }, 0.5);
+      tl.fromTo($("#s6-cliprect"), { attr: { width: 0 } }, { attr: { width: 1110 }, duration: 1.3, ease: "power1.inOut" }, 0.5);
+      tl.to($("#s6-scan"), { opacity: 0, duration: 0.2 }, 1.75);
+      tl.fromTo($("#s6-ballr"), { opacity: 0, scale: 0, transformOrigin: "50% 50%" }, { opacity: 1, scale: 1, duration: 0.4, ease: "back.out(1.6)" }, 1.85);
+      // 3. slogan, message, contact
+      blurIn(2.1, slogan, 0.15, 0.067);
+      tl.fromTo(msg, { opacity: 0 }, { opacity: 1, duration: 0.2 }, 2.6);
+      tl.fromTo(msg, { color: "#D4D4D8" }, { color: "#111111", duration: 0.25, stagger: 0.08 }, 2.7);
+      if (contact) blurIn(3.1, $("#s6-contact"), 0.2);
+      window.__timelines["s6"] = tl;
+    })();
+  </script>
+</template>

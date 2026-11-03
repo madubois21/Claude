@@ -7,8 +7,10 @@ Réalisée avec [HyperFrames](https://hyperframes.heygen.com) : HTML + SVG + GSA
 
 | Livrable | Emplacement |
 | --- | --- |
-| Vidéo finale MP4 HD (version LinkedIn 16:9) | `renders/FlyScanAir_thermographie_16x9.mp4` |
-| Projet source | `index.html` + `compositions/s1.html` … `s6.html` |
+| Vidéo finale MP4 HD (version LinkedIn 16:9) | `renders/FlyScanAir_thermographie_16x9.mp4` (1920 × 1080) |
+| Déclinaison verticale 9:16 | `renders/FlyScanAir_thermographie_9x16.mp4` (1080 × 1920) |
+| Déclinaison carrée 1:1 | `renders/FlyScanAir_thermographie_1x1.mp4` (1080 × 1080) |
+| Projet source | `index.html` + `compositions/s1.html` … `s6.html` (16:9) ; `formats/9x16/` et `formats/1x1/` (projets autonomes des déclinaisons) |
 | Assets graphiques | tout est vectoriel dans les scènes ; logo redessiné en SVG dans `compositions/s6.html` ; police Comfortaa `assets/fonts/` |
 | Musique (originale, libre de droits) | `assets/audio/music.wav` (générée par `tools/music.py`) |
 | Effets sonores | `assets/audio/sfx/` (voir `CREDITS.md`) |
@@ -54,6 +56,17 @@ La géométrie (perspective du toit, champ de panneaux, raccords de zoom au pixe
 
 `python3 tools/music.py` régénère la musique (synthèse déterministe, 100 BPM, la mineur → do majeur).
 
-## Déclinaisons
+## Déclinaisons 9:16 et 1:1
 
-Le 9:16 et le 1:1 ne sont pas encore faits (choix : valider d’abord le style en 16:9).
+Mêmes dessins, textes, minutage, transitions, musique et effets sonores que le 16:9 : seule la mise en page
+s’adapte au cadre (blocs empilés en vertical, caméra qui suit le drone en scène 3, étiquettes de la scène 4
+placées sous le panneau, slogan et coordonnées sur plusieurs lignes). Les réglages de mise en page sont dans
+`LAYOUTS` en tête de `tools/build.py`.
+
+```bash
+python3 tools/build.py 9x16      # régénère formats/9x16/
+python3 tools/build.py 1x1       # régénère formats/1x1/
+```
+
+Chaque dossier de `formats/` est un projet HyperFrames autonome (ses propres `assets/`) : on y lance
+`npx hyperframes preview`, `check` ou `render` comme à la racine.
