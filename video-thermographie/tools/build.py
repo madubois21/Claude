@@ -137,10 +137,18 @@ BASE_JS = """
         return out;
       }
       const tl = gsap.timeline({ paused: true });
+      // SVG de zoom (non-scaling-stroke) : les tirets sont posés à l'échelle de l'écran, le motif suit donc
+      // l'échelle de l'SVG au moment du tracé (data-dash), sinon la fin du trait n'apparaît qu'au passage en plein.
+      const dk = (el) => { const z = el.closest ? el.closest("svg[data-dash]") : null; return z ? parseFloat(z.getAttribute("data-dash")) : 1; };
+      $$("svg[data-dash] .d").forEach((el) => {
+        const k = dk(el);
+        el.style.strokeDasharray = k + " " + 1.2 * k;
+        el.setAttribute("stroke-dashoffset", 1.05 * k);
+      });
       const draw = (t, els, d = 0.8, ease = "power2.inOut", stagger = 0) =>
-        tl.fromTo(els, { attr: { "stroke-dashoffset": 1.05 } }, { attr: { "stroke-dashoffset": 0 }, duration: d, ease, stagger }, t);
+        tl.fromTo(els, { attr: { "stroke-dashoffset": (i, el) => 1.05 * dk(el) } }, { attr: { "stroke-dashoffset": 0 }, duration: d, ease, stagger }, t);
       const undraw = (t, els, d = 0.5, ease = "power3.in", stagger = 0) =>
-        tl.to(els, { attr: { "stroke-dashoffset": -1.15 }, duration: d, ease, stagger }, t);
+        tl.to(els, { attr: { "stroke-dashoffset": (i, el) => -1.15 * dk(el) }, duration: d, ease, stagger }, t);
       const solid = (t, els) => tl.set(els, { strokeDasharray: "none" }, t);
       const blurIn = (t, els, d = 0.15, stagger = 0.067, px = 6) =>
         tl.fromTo(els, { opacity: 0, filter: "blur(" + px + "px)" }, { opacity: 1, filter: "blur(0px)", duration: d, ease: "power2.out", stagger }, t);
@@ -151,6 +159,11 @@ BASE_JS = """
       const fadeOut = (t, els, d = 0.3, stagger = 0, ease = "power1.in") =>
         tl.to(els, { opacity: 0, duration: d, ease, stagger }, t);
 """
+
+
+def dash_k(view_box):
+    """Échelle écran / monde d'un SVG plein cadre pour une viewBox donnée (preserveAspectRatio « meet »)."""
+    return round(min(W / view_box[2], H / view_box[3]), 5)
 
 
 def write_scene(sid, title, variables, css, body, js):
@@ -850,7 +863,7 @@ def build_s3():
         S3_VB1 = (cx1, cy, cvw, cvw * H / W)
     else:
         S3_VB0 = (0, 0, W, H)
-    body = f"""    <svg id="s3-svg" class="world zoom" viewBox="{vb(S3_VB0)}" width="{W}" height="{H}"{CANVAS}>
+    body = f"""    <svg id="s3-svg" class="world zoom" data-dash="{dash_k(S3_VB0)}" viewBox="{vb(S3_VB0)}" width="{W}" height="{H}"{CANVAS}>
       <defs>
         {thermal_defs("s3")}
         <linearGradient id="s3-trail" x1="0" x2="1" y1="0" y2="0">
@@ -997,7 +1010,7 @@ def build_s4():
     hx, hy = MARKS[0][1], MARKS[0][2]
     s4t = L["s4_title_text"] if L else "Chaque anomalie est détectée et localisée."
     fm, fd = L["s4_fs"] if L else (36, 28)
-    body = f"""    <svg id="s4-svg" class="world zoom" viewBox="{vb(S4_START_VB)}" width="{W}" height="{H}"{CANVAS}>
+    body = f"""    <svg id="s4-svg" class="world zoom" data-dash="{dash_k(S4_SETTLE_VB)}" viewBox="{vb(S4_START_VB)}" width="{W}" height="{H}"{CANVAS}>
       <defs>{thermal_defs("s4")}</defs>
       <g id="s4-neigh">{"".join(neigh)}</g>
       {hero_panel_svg("s4")}

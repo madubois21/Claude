@@ -1,5 +1,14 @@
 # REVIEW
 
+## Passage 7b — correctif du tracé des panneaux (9:16 et 1:1)
+- Défaut signalé : en scène 3, le contour de chaque panneau ne se traçait qu'aux trois quarts (bord droit et haut du bord
+  gauche manquants), puis se complétait d'un coup à 1,6 s, après l'arrivée du drone.
+- Cause : dans les SVG de zoom (traits « non-scaling-stroke »), Chromium pose les tirets à l'échelle de l'écran ; en 9:16
+  et 1:1 la caméra de S3 agrandit le champ de ×1,08, le motif normalisé ne couvrait donc que 1/1,08 du contour.
+- Correctif : le motif et le décalage des tracés sont multipliés par l'échelle de l'SVG (, calculé dans
+  ). S3 : contours tracés en entier et en continu ; S4 : cercles tracés sur toute leur durée prévue
+  (ils se fermaient trop tôt en 9:16/1:1). 16:9 inchangé (échelle 1, rendu identique).
+
 ## Passage 7 — voix off et musique
 - Voix off française, 10 phrases générées dans FLORA (Gemini 3.1 Flash TTS, voix « Umbriel », fr-FR ; coût 0,13 $),
   fichiers d'origine conservés (`assets/audio/vo/raw_XX.wav`). Texte complet dans README.md.

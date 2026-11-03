@@ -97,10 +97,18 @@
         return out;
       }
       const tl = gsap.timeline({ paused: true });
+      // SVG de zoom (non-scaling-stroke) : les tirets sont posés à l'échelle de l'écran, le motif suit donc
+      // l'échelle de l'SVG au moment du tracé (data-dash), sinon la fin du trait n'apparaît qu'au passage en plein.
+      const dk = (el) => { const z = el.closest ? el.closest("svg[data-dash]") : null; return z ? parseFloat(z.getAttribute("data-dash")) : 1; };
+      $$("svg[data-dash] .d").forEach((el) => {
+        const k = dk(el);
+        el.style.strokeDasharray = k + " " + 1.2 * k;
+        el.setAttribute("stroke-dashoffset", 1.05 * k);
+      });
       const draw = (t, els, d = 0.8, ease = "power2.inOut", stagger = 0) =>
-        tl.fromTo(els, { attr: { "stroke-dashoffset": 1.05 } }, { attr: { "stroke-dashoffset": 0 }, duration: d, ease, stagger }, t);
+        tl.fromTo(els, { attr: { "stroke-dashoffset": (i, el) => 1.05 * dk(el) } }, { attr: { "stroke-dashoffset": 0 }, duration: d, ease, stagger }, t);
       const undraw = (t, els, d = 0.5, ease = "power3.in", stagger = 0) =>
-        tl.to(els, { attr: { "stroke-dashoffset": -1.15 }, duration: d, ease, stagger }, t);
+        tl.to(els, { attr: { "stroke-dashoffset": (i, el) => -1.15 * dk(el) }, duration: d, ease, stagger }, t);
       const solid = (t, els) => tl.set(els, { strokeDasharray: "none" }, t);
       const blurIn = (t, els, d = 0.15, stagger = 0.067, px = 6) =>
         tl.fromTo(els, { opacity: 0, filter: "blur(" + px + "px)" }, { opacity: 1, filter: "blur(0px)", duration: d, ease: "power2.out", stagger }, t);

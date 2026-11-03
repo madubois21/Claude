@@ -26,7 +26,7 @@
     data-height="1920"
     data-composition-variables="[{&quot;id&quot;: &quot;s3-title&quot;, &quot;type&quot;: &quot;string&quot;, &quot;label&quot;: &quot;Scène 3 — titre&quot;, &quot;default&quot;: &quot;Le scan infrarouge révèle|chaque *échauffement*.&quot;}]"
   >
-    <svg id="s3-svg" class="world zoom" viewBox="-35 -245.9 1000 1777.78" width="1080" height="1920" style="width: 1080px; height: 1920px">
+    <svg id="s3-svg" class="world zoom" data-dash="1.08" viewBox="-35 -245.9 1000 1777.78" width="1080" height="1920" style="width: 1080px; height: 1920px">
       <defs>
         <radialGradient id="s3-hot"><stop offset="0" stop-color="#FF5700" stop-opacity="1"/><stop offset="0.3" stop-color="#FF5700" stop-opacity="0.9"/><stop offset="0.62" stop-color="#FF7A33" stop-opacity="0.42"/><stop offset="1" stop-color="#FF9A66" stop-opacity="0"/></radialGradient><radialGradient id="s3-warm"><stop offset="0" stop-color="#FF5700" stop-opacity="0.62"/><stop offset="1" stop-color="#FF5700" stop-opacity="0.26"/></radialGradient><linearGradient id="s3-band" x1="0" x2="1" y1="0" y2="0"><stop offset="0" stop-color="#FF5700" stop-opacity="0.28"/><stop offset="0.5" stop-color="#FF5700" stop-opacity="0.72"/><stop offset="1" stop-color="#FF5700" stop-opacity="0.28"/></linearGradient>
         <linearGradient id="s3-trail" x1="0" x2="1" y1="0" y2="0">
@@ -100,10 +100,18 @@
         return out;
       }
       const tl = gsap.timeline({ paused: true });
+      // SVG de zoom (non-scaling-stroke) : les tirets sont posés à l'échelle de l'écran, le motif suit donc
+      // l'échelle de l'SVG au moment du tracé (data-dash), sinon la fin du trait n'apparaît qu'au passage en plein.
+      const dk = (el) => { const z = el.closest ? el.closest("svg[data-dash]") : null; return z ? parseFloat(z.getAttribute("data-dash")) : 1; };
+      $$("svg[data-dash] .d").forEach((el) => {
+        const k = dk(el);
+        el.style.strokeDasharray = k + " " + 1.2 * k;
+        el.setAttribute("stroke-dashoffset", 1.05 * k);
+      });
       const draw = (t, els, d = 0.8, ease = "power2.inOut", stagger = 0) =>
-        tl.fromTo(els, { attr: { "stroke-dashoffset": 1.05 } }, { attr: { "stroke-dashoffset": 0 }, duration: d, ease, stagger }, t);
+        tl.fromTo(els, { attr: { "stroke-dashoffset": (i, el) => 1.05 * dk(el) } }, { attr: { "stroke-dashoffset": 0 }, duration: d, ease, stagger }, t);
       const undraw = (t, els, d = 0.5, ease = "power3.in", stagger = 0) =>
-        tl.to(els, { attr: { "stroke-dashoffset": -1.15 }, duration: d, ease, stagger }, t);
+        tl.to(els, { attr: { "stroke-dashoffset": (i, el) => -1.15 * dk(el) }, duration: d, ease, stagger }, t);
       const solid = (t, els) => tl.set(els, { strokeDasharray: "none" }, t);
       const blurIn = (t, els, d = 0.15, stagger = 0.067, px = 6) =>
         tl.fromTo(els, { opacity: 0, filter: "blur(" + px + "px)" }, { opacity: 1, filter: "blur(0px)", duration: d, ease: "power2.out", stagger }, t);
