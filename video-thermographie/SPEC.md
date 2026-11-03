@@ -2,6 +2,7 @@
 
 Source : `Cahier_des_charges.pdf` (structure en 6 scènes, textes S1 et S2 imposés).
 Choix validés avec le client : pas de voix off ; musique originale composée ; 16:9 seul pour ce premier passage.
+Passage 5 : 54 s ; rapport en trois pages (défaut, résultats, couverture normée) ; planning des inspections.
 Passage 4 : 45 s, 7 scènes (ajout plateforme en ligne et fin site web + LinkedIn), rapport « Conforme IEC TS 62446-3 »,
 anomalies nommées selon la note technique, drone simplifié et balayage 1,5 s.
 Passage 2 (retours client) : typographie Comfortaa partout ; slogan « Inspections techniques aériennes, révélez l’invisible. » ;
@@ -11,7 +12,7 @@ contact www.flyscanair.com · 06 22 80 57 69 · contact@flyscanair.com ; plus de
 ```text
 GOAL:    le spectateur comprend qu'un défaut invisible coûte cher et qu'un survol thermique par drone le révèle ; il retient « faire contrôler son installation ».
 OUTPUT:  HyperFrames, 1920 x 1080, 30 fps, MP4 H.264 (version LinkedIn).
-TIME:    45,0 s x 30 = 1350 images (passage 4 ; détail des coupes dans README.md). Musique 100 BPM : 1 temps = 0,6 s = 18 images, 1 mesure = 2,4 s.
+TIME:    54,0 s x 30 = 1620 images (passage 5 ; détail des coupes dans README.md). Musique 100 BPM : 1 temps = 0,6 s = 18 images, 1 mesure = 2,4 s.
          Coupes : S1 0–7,2 · S2 7,2–13,2 · S3 13,2–21,0 · S4 21,0–27,6 · S5 27,6–34,2 · S6 34,2–40,8.
 LOOK:    fond #FFFFFF plat + trame de points Ø2 px #E4E4E7 au pas de 48 px (papier technique, aucun dégradé).
          Encre #111111 : traits de structure 2,5 px, détails 1,5 px, cellules 1 px #D4D4D8, fond de panneau #F3F3F4.

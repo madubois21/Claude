@@ -1,6 +1,6 @@
 # Fly Scan’Air — vidéo motion design « Inspection thermographique par drone »
 
-Vidéo full motion design de 45 s, 16:9 (1920 × 1080, 30 i/s), pensée pour LinkedIn, déclinée en 9:16 et 1:1.
+Vidéo full motion design de 54 s, 16:9 (1920 × 1080, 30 i/s), pensée pour LinkedIn, déclinée en 9:16 et 1:1.
 Réalisée avec [HyperFrames](https://hyperframes.heygen.com) : HTML + SVG + GSAP, rendus en MP4 image par image.
 
 ## Livrables
@@ -24,12 +24,12 @@ Pas de voix off (choix validé) : les textes à l’écran portent le message, c
 | Scène | Fichier | Temps | Contenu |
 | --- | --- | --- | --- |
 | 1 — Le problème invisible | `compositions/s1.html` | 0 – 7,2 s | bâtiment tracé, point chaud, « Certaines anomalies sont invisibles à l’œil nu. » |
-| 2 — Les risques | `compositions/s2.html` | 7,2 – 13,2 s | graphique « Rendement (%) » (installation saine vs avec défauts), icônes incendie + assurance |
-| 3 — Inspection drone | `compositions/s3.html` | 13,2 – 19,8 s | champ de panneaux, drone schématique + HUD, balayage thermique rapide (1,5 s) |
-| 4 — Détection | `compositions/s4.html` | 19,8 – 26,4 s | zoom sur le module : point chaud (hot-spot), diode by-pass défectueuse, boîte de jonction |
-| 5 — Rapport aux normes | `compositions/s5.html` | 26,4 – 32,4 s | rapport thermographique, tampon « Conforme IEC TS 62446-3 », checklist, histogramme production |
-| 6 — Plateforme en ligne | `compositions/s6.html` | 32,4 – 37,8 s | le rapport rejoint la plateforme (plan thermique, rapports, suivi) — « Bientôt disponible » |
-| 7 — Fin | `compositions/s7.html` | 37,8 – 45 s | logo, slogan, message, puis site web (capture animée) + LinkedIn + coordonnées |
+| 2 — Les risques | `compositions/s2.html` | 7,2 – 13,8 s | graphique « Rendement (%) » (installation saine vs avec défauts), icônes incendie + assurance |
+| 3 — Inspection drone | `compositions/s3.html` | 13,8 – 20,4 s | champ de panneaux, drone schématique + HUD, balayage thermique rapide (1,5 s) |
+| 4 — Détection | `compositions/s4.html` | 20,4 – 27,6 s | zoom sur le module : point chaud (hot-spot), diode by-pass défectueuse, boîte de jonction |
+| 5 — Rapport | `compositions/s5.html` | 27,6 – 40,2 s | trois pages : analyse détaillée du défaut n°1 ; résultats et gravité (+ histogramme production) ; couverture « Rapport d’inspection thermique » avec tampon « Conforme IEC TS 62446-3 » et checklist |
+| 6 — Plateforme en ligne | `compositions/s6.html` | 40,2 – 46,8 s | le rapport rejoint la plateforme : plan thermique, rapports, planning des inspections à venir — « Bientôt disponible » |
+| 7 — Fin | `compositions/s7.html` | 46,8 – 54 s | logo, slogan, message, puis site web (capture animée) + LinkedIn + coordonnées |
 
 Charte : fond blanc, traits noirs fins, accent `#FF5700`, typographie Comfortaa (textes et logotype).
 Vocabulaire technique des anomalies repris de la note technique Fly Scan’Air (norme IEC TS 62446-3).
@@ -37,7 +37,7 @@ Vocabulaire technique des anomalies repris de la note technique Fly Scan’Air (
 ## Modifier les textes
 
 Chaque scène déclare ses textes comme variables (`data-composition-variables` sur sa racine) :
-`s1-title`, `s2-t1`…`s2-t3`, `s3-title`, `s4-title`, `s4-l1`…`s4-l3` (« principal|précision »), `s5-title`,
+`s1-title`, `s2-t1`…`s2-t3`, `s3-title`, `s4-title`, `s4-l1`…`s4-l3` (« principal|précision »), `s5-t1`…`s5-t3`,
 `s5-i0`…`s5-i3`, `s6-title`, `s7-slogan`, `s7-msg`, `s7-url`, `s7-contact` (éléments séparés par `|`).
 La mention « Bientôt disponible » de la scène 6 se retire dans `tools/build.py` (élément `s6-tag`) au lancement de la plateforme.
 Dans un texte : `|` force un retour à la ligne, `*mot*` ou `*deux mots*` passe en orange.

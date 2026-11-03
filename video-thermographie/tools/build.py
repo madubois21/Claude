@@ -50,7 +50,7 @@ LAYOUTS = {
         s4_settle=(60, 560, 960), s4_title=(108, 330, 56), s4_title_text="Chaque anomalie est|détectée et localisée.",
         s4_rows=(1380, 1490, 1600), s4_order=(2, 1, 0), s4_fs=(34, 28),
         s4_lab=(("r", 1020, 480), ("c", 0, 480), ("c", 0, 460)),
-        s5_title=(108, 300, 64), s5_doc=(0.8, 124, 423.2), s5_chart=(0.8, -556, 975.6), s5_stamp=36,
+        s5_title=(108, 300, 64), s5_doc=(0.8, 124, 423.2), s5_chart=(0.8, -556, 975.6), s5_stamp=36, s5_pfs=35,
         s5_fs=dict(item=35, head=36, tick=36, label=38, cat=36, catlh=44),
     ),
     "1x1": dict(
@@ -62,8 +62,8 @@ LAYOUTS = {
         s4_settle=(204, 170, 672), s4_title=(108, 90, 40), s4_title_text="Chaque anomalie est détectée et localisée.",
         s4_rows=(750, 825, 900), s4_order=(2, 1, 0), s4_fs=(30, 28),
         s4_lab=(("r", 1000, 420), ("l", 108, 460), ("c", 0, 380)),
-        s5_title=(108, 150, 52), s5_doc=(0.7, -90, 232.8), s5_chart=(0.58, -10, 175.6), s5_stamp=40,
-        s5_fs=dict(item=40, head=40, tick=49, label=49, cat=49, catlh=58, head_left=242),
+        s5_title=(108, 150, 52), s5_doc=(0.7, -90, 232.8), s5_chart=(0.58, -10, 175.6), s5_stamp=40, s5_pfs=40,
+        s5_fs=dict(item=49, head=40, tick=49, label=49, cat=49, catlh=58),
     ),
 }
 L = LAYOUTS.get(FMT)
@@ -774,8 +774,8 @@ def build_s2():
       blurIn(3.9, $("#s2-lab-s"), 0.2);
       tl.fromTo($("#s2-t3"), { color: "#D4D4D8" }, { color: "#111111", duration: 0.3 }, 3.85);
       // 5. sortie : flou + fondu
-      blurOut(5.45, [head, ...$$(".label")], 0.2, 0.02);
-      blurOut(5.5, __SVGS__, 0.25, 0, 8);"""
+      blurOut(6.05, [head, ...$$(".label")], 0.2, 0.02);
+      blurOut(6.1, __SVGS__, 0.25, 0, 8);"""
     js = (js.replace("__GX1__", n(g0["x1"])).replace("__GX2__", n(g0["x2"])).replace("__GY__", n(g0["y"]))
           .replace("__SVGS__", '$$("svg.world")' if L else 'R.querySelector("svg.world")')
           .replace("__X0__", str(S2_X0)).replace("__AX1__", str(ax_x1)).replace("__Y0__", str(S2_Y0))
@@ -1044,11 +1044,11 @@ def build_s4():
       }});
       solid(4.0, $$("#s4-marks > *"));
       // 5. sortie : la vignette part dans le rapport
-      blurOut(5.55, [...title, $("#s4-l1"), $("#s4-l2"), $("#s4-l3")], 0.18, 0.02);
-      undraw(5.55, $$("#s4-leaders polyline"), 0.2, "power3.in");
-      fadeOut(5.55, $$("#s4-leaders circle"), 0.15);
-      fadeOut(5.8, [$("#s4-bus"), $("#s4-inner")], 0.4);
-      tl.to(svg, {{ attr: {{ viewBox: "{vb(S4_END_VB)}" }}, duration: 0.72, ease: "power2.inOut" }}, 5.83);"""
+      blurOut(6.15, [...title, $("#s4-l1"), $("#s4-l2"), $("#s4-l3")], 0.18, 0.02);
+      undraw(6.15, $$("#s4-leaders polyline"), 0.2, "power3.in");
+      fadeOut(6.15, $$("#s4-leaders circle"), 0.15);
+      fadeOut(6.4, [$("#s4-bus"), $("#s4-inner")], 0.4);
+      tl.to(svg, {{ attr: {{ viewBox: "{vb(S4_END_VB)}" }}, duration: 0.72, ease: "power2.inOut" }}, 6.43);"""
     write_scene(
         "s4",
         "Scène 4 — Détection des anomalies (vocabulaire de la note technique)",
@@ -1078,28 +1078,118 @@ S5_BW = 210
 P6_DOC = (661, 185, 34)  # centre x, centre y, hauteur
 
 
+S5_CATS = [  # gravité (inspirée de la catégorisation IEC du rapport type), couleurs Fly Scan'Air
+    (5, "Critique", "#FF5700", 1),
+    (4, "Important", "#FF8A4C", 2),
+    (3, "Impact physique", "#FFBE9A", 1),
+    (2, "Usure anormale", "#A1A1AA", 2),
+    (1, "Esthétique", "#D4D4D8", 1),
+]
+
+
+def mini_logo(x, y, sc, prefix):
+    """Logo Fly Scan'Air statique, petit format (couverture du rapport)."""
+    return (
+        f'<defs><linearGradient id="{prefix}-word" gradientUnits="userSpaceOnUse" x1="140" y1="0" x2="1198" y2="0">'
+        '<stop offset="0" stop-color="#E2392D"/><stop offset="0.47" stop-color="#E9862A"/>'
+        '<stop offset="0.6" stop-color="#E8842A"/><stop offset="1" stop-color="#DC382D"/></linearGradient></defs>'
+        f'<g transform="translate({n(x)} {n(y)}) scale({sc})">'
+        f'<path d="{logo_coil_path()}" fill="none" stroke="#6D6C74" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>'
+        f'<text x="140" y="292" font-family="Comfortaa" font-weight="700" font-size="174" fill="url(#{prefix}-word)" '
+        f'stroke="url(#{prefix}-word)" stroke-width="10" stroke-linejoin="round" paint-order="stroke">Fly Scan’Aır</text>'
+        f'<circle cx="{BALL_L[0]}" cy="{BALL_L[1]}" r="12" fill="#D8352A"/><circle cx="{BALL_R[0]}" cy="{BALL_R[1]}" r="12" fill="#D8352A"/>'
+        "</g>"
+    )
+
+
 def build_s5():
     dx, dy, dw, dh = 220, 96, 600, 848
     doc_path = f"M{dx} {dy} H{dx + dw} V{dy + dh} H{dx} Z"
-    rows = [632, 697, 762, 827]
-    items = ["Anomalies localisées", "Priorités d’intervention", "Recommandations", "Justificatif assurance"]
-    boxes, checks, texts = [], [], []
-    for i, (y, t) in enumerate(zip(rows, items)):
-        boxes.append(f'<rect class="d s5-box" pathLength="1" x="260" y="{y - 17}" width="34" height="34" rx="4"/>')
-        checks.append(f'<polyline id="s5-k{i}" class="d" pathLength="1" points="266,{y + 1} 275,{y + 10} 290,{y - 9}" stroke="{ACC}" stroke-width="4"/>')
-        texts.append(f'<div id="s5-i{i}" class="item" style="left: 318px; top: {y - 21}px">{t}</div>')
-    # tampon « conforme à la norme », posé sur le rapport
+    pfs = L["s5_pfs"] if L else 30  # corps de texte des pages
+    foot = (f'<line class="s5-foot" x1="260" y1="890" x2="660" y2="890" stroke="#E4E4E7" stroke-width="8" stroke-linecap="round"/>'
+            f'<line class="s5-foot" x1="260" y1="914" x2="560" y2="914" stroke="#E4E4E7" stroke-width="8" stroke-linecap="round"/>')
+    rule = '<line class="d s5-rule" pathLength="1" x1="260" y1="178" x2="780" y2="178" stroke="#111111" stroke-width="1.5"/>'
+    # ---- page 1 : analyse détaillée (la vignette du panneau arrive de la scène 4)
+    p1 = f"""      <div id="s5-p1" class="s5-page">
+      <svg class="world" viewBox="0 0 {SW} {SH}" width="{SW}" height="{SH}">{rule}{foot}
+        <g id="s5-badge"><rect x="640" y="{655 - pfs}" width="140" height="{pfs + 20}" rx="8" fill="#FF8A4C"/>
+        <text class="pg b" x="710" y="{655 + 2}" text-anchor="middle" font-size="{pfs}">Cat. 4</text></g>
+      </svg>
+      <svg id="s5-thumb" class="world zoom" viewBox="{vb(THUMB_LOCAL_VB)}" width="{SW}" height="{SH}">
+        <defs>{thermal_defs("s5")}</defs>
+        {hero_panel_svg("s5", with_ids=False)}
+        <g id="s5-marks">{marks_svg("s5", False)}</g>
+      </svg>
+      <div class="dochead" style="left: 260px; top: 128px">Analyse détaillée</div>
+      <div class="pgt b s5-f" style="left: 260px; top: {655 - pfs * 1.05:.0f}px; font-size: {pfs + 4}px">Défaut n°1</div>
+      <div class="pgt s5-f" style="left: 260px; top: {715 - pfs:.0f}px">Point chaud (hot-spot)</div>
+      <div class="pgt s5-f" style="left: 260px; top: {770 - pfs:.0f}px">ΔT 11,2 °C · MaxT 58 °C</div>
+      <div class="pgt s5-f" style="left: 260px; top: {825 - pfs:.0f}px"><span class="acc">→</span> Contrôle électrique</div>
+      </div>"""
+    # ---- page 2 : résultats + gravité
+    cards, swatches, bars = [], [], []
+    for i in range(3):  # trois lignes de statistiques, séparées par un filet
+        cards.append(f'<line class="d s5-card" pathLength="1" x1="260" y1="{254 + i * 54}" x2="780" y2="{254 + i * 54}" stroke="#E4E4E7" stroke-width="2"/>')
+    rows_html = []
+    for i, (k, lab, col, cnt) in enumerate(S5_CATS):
+        y = 452 + i * 72
+        ink = "#FFFFFF" if k >= 4 else "#111111"
+        swatches.append(f'<g class="s5-sw"><rect x="260" y="{y - 22}" width="44" height="44" rx="8" fill="{col}"/>'
+                        f'<text class="pg b" x="282" y="{y + pfs * 0.36:.1f}" text-anchor="middle" font-size="{pfs}" fill="{ink}">{k}</text></g>')
+        bars.append(f'<rect class="s5-gbar" x="680" y="{y - 9}" width="{cnt * 46}" height="18" rx="9" fill="{col}" data-w="{cnt * 46}"/>')
+        rows_html.append(f'<div class="pgt s5-cl" style="left: 322px; top: {y - pfs * 0.62:.0f}px">{lab}</div>')
+    p2 = f"""      <div id="s5-p2" class="s5-page">
+      <svg class="world" viewBox="0 0 {SW} {SH}" width="{SW}" height="{SH}">{rule}{foot}{"".join(cards)}{"".join(swatches)}{"".join(bars)}</svg>
+      <div class="dochead" style="left: 260px; top: 128px">Résultats</div>
+      <div id="s5-n0" class="num" style="left: 260px; top: 202px">0</div>
+      <div id="s5-n1" class="num" style="left: 260px; top: 256px">0</div>
+      <div id="s5-n2" class="num" style="left: 260px; top: 310px">0 / 7</div>
+      <div class="pgt s5-cardl" style="left: 410px; top: {230 - pfs * 0.62:.0f}px">défauts détectés</div>
+      <div class="pgt s5-cardl" style="left: 410px; top: {284 - pfs * 0.62:.0f}px">modules impactés</div>
+      <div class="pgt s5-cardl" style="left: 410px; top: {338 - pfs * 0.62:.0f}px">défauts résolus</div>
+      <div id="s5-sub" class="pgt b" style="left: 260px; top: {400 - pfs:.0f}px">Gravité des défauts</div>
+      {"".join(rows_html)}
+      </div>"""
+    # ---- page 3 : couverture + tampon de conformité
     sf = L["s5_stamp"] if L else 30
     sw_, sh_ = sf * 10.4, sf * 3.6
     stamp = (
-        f'<g transform="translate(640 516) rotate(-7)"><g id="s5-stamp">'
-        f'<rect x="{n(-sw_ / 2)}" y="{n(-sh_ / 2)}" width="{n(sw_)}" height="{n(sh_)}" rx="10" fill="#FFFFFF" fill-opacity="0.9" stroke="{ACC}" stroke-width="3"/>'
+        f'<g transform="translate(520 548) rotate(-7)"><g id="s5-stamp">'
+        f'<rect x="{n(-sw_ / 2)}" y="{n(-sh_ / 2)}" width="{n(sw_)}" height="{n(sh_)}" rx="10" fill="#FFFFFF" fill-opacity="0.92" stroke="{ACC}" stroke-width="3"/>'
         f'<rect x="{n(-sw_ / 2 + 7)}" y="{n(-sh_ / 2 + 7)}" width="{n(sw_ - 14)}" height="{n(sh_ - 14)}" rx="6" fill="none" stroke="{ACC}" stroke-width="1.5"/>'
         f'<text class="stamp" x="0" y="{n(-sf * 0.25)}" text-anchor="middle" font-size="{sf}" letter-spacing="3">CONFORME</text>'
         f'<text class="stamp" x="0" y="{n(sf * 1.05)}" text-anchor="middle" font-size="{sf}">IEC TS 62446-3</text>'
         f'</g></g>'
     )
-    grid, yticks, bars, cats = [], [], [], []
+    illus = []
+    for r in range(2):
+        for c in range(4):
+            x, y = 300 + c * 113, 440 + r * 112
+            illus.append(f'<rect class="d s5-ill" pathLength="1" x="{x}" y="{y}" width="100" height="98" fill="#F3F3F4" stroke="#111111" stroke-width="1.5"/>')
+    p3 = f"""      <div id="s5-p3" class="s5-page">
+      <svg class="world" viewBox="0 0 {SW} {SH}" width="{SW}" height="{SH}">
+        <line id="s5-acc" class="d" pathLength="1" x1="260" y1="150" x2="420" y2="150" stroke="{ACC}" stroke-width="5" stroke-linecap="round"/>
+        {"".join(illus)}
+        <rect id="s5-hotc" x="526" y="552" width="100" height="98" fill="url(#s5-hot)"/>
+        <g id="s5-mlogo">{mini_logo(520 - 1270 * 0.33 / 2, 742, 0.33, "s5m")}</g>
+      </svg>
+      <svg class="world" viewBox="0 0 {SW} {SH}" width="{SW}" height="{SH}">{stamp}</svg>
+      <div id="s5-ct" class="covt" style="left: 260px; top: 200px">Rapport d’inspection<br />thermique</div>
+      <div id="s5-cs" class="pgt grey" style="left: 260px; top: 340px">Centrale photovoltaïque</div>
+      </div>"""
+    doc_part = f"""    <div id="s5-docw" style="position: absolute; left: 0; top: 0; width: {SW}px; height: {SH}px">
+    <div class="s5-sheet" style="left: {dx + 22}px; top: {dy + 22}px; width: {dw}px; height: {dh}px"></div>
+    <div class="s5-sheet" style="left: {dx + 11}px; top: {dy + 11}px; width: {dw}px; height: {dh}px"></div>
+    <div id="s5-paper" style="left: {dx}px; top: {dy}px; width: {dw}px; height: {dh}px"></div>
+    <svg class="world" viewBox="0 0 {SW} {SH}" width="{SW}" height="{SH}">
+      <path id="s5-doc" class="d" pathLength="1" d="{doc_path}" fill="none" stroke="{INK}" stroke-width="2" stroke-linejoin="round"/>
+    </svg>
+{p1}
+{p2}
+{p3}
+    </div>"""
+    # ---- colonne de droite : graphique de production (page 2), checklist (page 3)
+    grid, yticks, gbars, cats = [], [], [], []
     for v in range(0, 25001, 5000):
         y = S5_AY - v * S5_K
         if v:
@@ -1108,34 +1198,18 @@ def build_s5():
         yticks.append(f'<text x="{S5_AX - 20}" y="{n(y + 10)}" text-anchor="end">{label}</text>')
     for i, (name, v, cx, col) in enumerate(S5_BARS):
         h = v * S5_K
-        bars.append(
+        gbars.append(
             f'<rect id="s5-bar{i}" x="{cx - S5_BW / 2}" y="{n(S5_AY - h)}" width="{S5_BW}" height="{n(h + 12)}" rx="10" '
             f'fill="{col}" data-top="{n(S5_AY - h)}" data-h="{n(h + 12)}"/>'
         )
         cats.append(f'<div id="s5-cat{i}" class="cat" style="left: {cx - 170}px; top: {S5_AY + 18}px">{name.replace("|", "<br />")}</div>')
-    doc_part = f"""    <div id="s5-docw" style="position: absolute; left: 0; top: 0; width: {SW}px; height: {SH}px">
-    <div id="s5-paper" style="left: {dx}px; top: {dy}px; width: {dw}px; height: {dh}px"></div>
-    <svg class="world" viewBox="0 0 {SW} {SH}" width="{SW}" height="{SH}">
-      <g fill="none" stroke="{INK}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <path id="s5-doc" class="d" pathLength="1" d="{doc_path}"/>
-        <line id="s5-rule" class="d" pathLength="1" x1="260" y1="178" x2="780" y2="178" stroke-width="1.5"/>
-        {"".join(boxes)}
-        {"".join(checks)}
-        <line class="d s5-foot" pathLength="1" x1="260" y1="890" x2="660" y2="890" stroke="#E4E4E7" stroke-width="8"/>
-        <line class="d s5-foot" pathLength="1" x1="260" y1="914" x2="560" y2="914" stroke="#E4E4E7" stroke-width="8"/>
-      </g>
-    </svg>
-    <svg id="s5-thumb" class="world zoom" viewBox="{vb(THUMB_LOCAL_VB)}" width="{SW}" height="{SH}">
-      <defs>{thermal_defs("s5")}</defs>
-      {hero_panel_svg("s5", with_ids=False)}
-      <g id="s5-marks">{marks_svg("s5", False)}</g>
-    </svg>
-    <svg class="world" viewBox="0 0 {SW} {SH}" width="{SW}" height="{SH}">{stamp}</svg>
-    <div id="s5-h" class="dochead" style="left: 260px; top: 128px">Rapport thermographique</div>
-    {"".join(texts)}
-    </div>"""
+    items = ["Anomalies localisées", "Priorités d’intervention", "Recommandations", "Justificatif assurance"]
+    crow = [440, 520, 600, 680]
+    cboxes = "".join(f'<rect class="d s5-box" pathLength="1" x="1010" y="{y - 17}" width="34" height="34" rx="4" fill="none" stroke="{INK}" stroke-width="2"/>' for y in crow)
+    cchecks = "".join(f'<polyline id="s5-k{i}" class="d" pathLength="1" points="1016,{y + 1} 1025,{y + 10} 1040,{y - 9}" fill="none" stroke="{ACC}" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>' for i, y in enumerate(crow))
+    ctexts = "".join(f'<div id="s5-i{i}" class="item" style="left: 1068px; top: {y - 21}px">{t}</div>' for i, (y, t) in enumerate(zip(crow, items)))
     chart_part = f"""    <svg id="s5-chart" class="world" viewBox="0 0 {SW} {SH}" width="{SW}" height="{SH}">
-      <defs><clipPath id="s5-clip"><rect x="0" y="0" width="{SW}" height="{S5_AY}"/></clipPath></defs>
+      <defs><clipPath id="s5-clip"><rect x="{-4000 if L else 0}" y="{-4000 if L else 0}" width="{SW + 8000 if L else SW}" height="{S5_AY + 4000 if L else S5_AY}"/></clipPath></defs>
       <g id="s5-axes">
         <g id="s5-grid" stroke="#E4E4E7" stroke-width="1.5" stroke-dasharray="6 8">{"".join(grid)}</g>
         <g id="s5-yt" class="tick">{"".join(yticks)}</g>
@@ -1146,31 +1220,45 @@ def build_s5():
           <polyline id="s5-aya" class="d" pathLength="1" points="{S5_AX - 9},387 {S5_AX},375 {S5_AX + 9},387"/>
         </g>
       </g>
-      <g clip-path="url(#s5-clip)">{"".join(bars)}</g>
+      <g clip-path="url(#s5-clip)">{"".join(gbars)}</g>
     </svg>
     <div id="s5-lab-y" class="label" style="left: 1010px; top: 318px">Production (kWh/an)</div>
-    {"".join(cats)}"""
-    title = f"""    <div id="s5-title" class="title" style="{tstyle(L and L["s5_title"], "left: 960px; top: 150px")}">Un rapport aux normes,<br />pour agir vite.</div>"""
-    body = (box(doc_part, L["s5_doc"] if L else None) + "\n" + box(chart_part, L["s5_chart"] if L else None) + "\n" + title)
-    css = """
-    #root #s5-paper { position: absolute; background: #FFFFFF; box-shadow: 0 18px 40px rgba(17, 17, 17, 0.08); opacity: 0; }
-    #root .dochead { position: absolute; font-family: "Comfortaa", sans-serif; font-weight: 700; font-size: 30px; line-height: 40px; color: #111111; white-space: nowrap; }
-    #root .item { position: absolute; font-family: "Comfortaa", sans-serif; font-weight: 600; font-size: 30px; line-height: 42px; color: #111111; white-space: nowrap; }
-    #root .tick text { font-family: "Comfortaa", sans-serif; font-weight: 600; font-size: 28px; fill: #6B6B70; }
-    #root .stamp { font-family: "Comfortaa", sans-serif; font-weight: 700; fill: #FF5700; }
-    #root .cat { position: absolute; width: 340px; text-align: center; font-family: "Comfortaa", sans-serif; font-weight: 600; font-size: 28px; line-height: 36px; color: #111111; }
-    #root #s5-grid, #root #s5-yt, #root #s5-stamp { opacity: 0; }"""
+    {"".join(cats)}
+    <svg id="s5-check" class="world" viewBox="0 0 {SW} {SH}" width="{SW}" height="{SH}">{cboxes}{cchecks}</svg>
+    {ctexts}"""
+    tst = tstyle(L and L["s5_title"], "left: 960px; top: 150px")
+    titles = "\n".join(f'    <div id="s5-t{i}" class="title" style="{tst}">{t}</div>' for i, t in (
+        (1, "Chaque défaut est<br />localisé et qualifié."),
+        (2, "Classés par gravité,<br />avec l’action à mener."),
+        (3, "Un rapport aux normes,<br />pour agir vite."),
+    ))
+    body = box(doc_part, L["s5_doc"] if L else None) + "\n" + box(chart_part, L["s5_chart"] if L else None) + "\n" + titles
+    css = f"""
+    #root #s5-paper, #root .s5-sheet {{ position: absolute; background: #FFFFFF; opacity: 0; }}
+    #root #s5-paper {{ box-shadow: 0 18px 40px rgba(17, 17, 17, 0.08); }}
+    #root .s5-sheet {{ border: 1.5px solid #D4D4D8; }}
+    #root .s5-page {{ position: absolute; left: 0; top: 0; width: {SW}px; height: {SH}px; }}
+    #root #s5-p2, #root #s5-p3 {{ opacity: 0; }}
+    #root .dochead {{ position: absolute; font-family: "Comfortaa", sans-serif; font-weight: 700; font-size: {pfs}px; line-height: 40px; color: #111111; white-space: nowrap; }}
+    #root .pgt {{ position: absolute; font-family: "Comfortaa", sans-serif; font-weight: 600; font-size: {pfs}px; line-height: 1.25; color: #111111; white-space: nowrap; }}
+    #root .pgt.b, #root .pg.b {{ font-weight: 700; }}
+    #root .pgt.grey {{ color: #6B6B70; }}
+    #root .pg {{ font-family: "Comfortaa", sans-serif; }}
+    #root .num {{ position: absolute; font-family: "Comfortaa", sans-serif; font-weight: 700; font-size: 44px; line-height: 54px; color: #111111; white-space: nowrap; }}
+    #root #s5-n0 {{ color: #FF5700; }}
+    #root .covt {{ position: absolute; font-family: "Comfortaa", sans-serif; font-weight: 700; font-size: 44px; line-height: 54px; color: #111111; white-space: nowrap; }}
+    #root .item {{ position: absolute; font-family: "Comfortaa", sans-serif; font-weight: 600; font-size: 30px; line-height: 42px; color: #111111; white-space: nowrap; }}
+    #root .tick text {{ font-family: "Comfortaa", sans-serif; font-weight: 600; font-size: 28px; fill: #6B6B70; }}
+    #root .stamp {{ font-family: "Comfortaa", sans-serif; font-weight: 700; fill: #FF5700; }}
+    #root .cat {{ position: absolute; width: 340px; text-align: center; font-family: "Comfortaa", sans-serif; font-weight: 600; font-size: 28px; line-height: 36px; color: #111111; }}
+    #root #s5-grid, #root #s5-yt, #root #s5-stamp, #root .s5-foot, #root #s5-hotc, #root #s5-mlogo, #root .s5-sw, #root #s5-badge {{ opacity: 0; }}"""
     if L:
         fs = L["s5_fs"]
         css += f"""
     #root .item {{ font-size: {fs["item"]}px; }}
-    #root .dochead {{ font-size: {fs["head"]}px; }}
     #root .tick text {{ font-size: {fs["tick"]}px; }}
     #root .label {{ font-size: {fs["label"]}px; }}
     #root .cat {{ font-size: {fs["cat"]}px; line-height: {fs["catlh"]}px; }}"""
-        if "head_left" in fs:
-            css += f"""
-    #root #s5-h {{ left: {fs["head_left"]}px !important; }}"""
     # le rapport rejoint la ligne « Nouveau rapport » de la plateforme (raccord S5 -> S6)
     ws, wtx, wty = P6["win"]
     icx, icy, ich = ws * P6_DOC[0] + wtx, ws * P6_DOC[1] + wty, ws * P6_DOC[2]
@@ -1178,45 +1266,85 @@ def build_s5():
     dcx, dcy = dx + dw / 2, dy + dh / 2
     carry = dict(x=(icx - btx) / bs - dcx, y=(icy - bty) / bs - dcy, scale=ich / (dh * bs))
     js = """
-      const title = words($("#s5-title"), txt("s5-title", "Un rapport *aux normes*,|pour agir vite."));
+      const t1 = words($("#s5-t1"), txt("s5-t1", "Chaque défaut est|localisé et *qualifié*."));
+      const t2 = words($("#s5-t2"), txt("s5-t2", "Classés par *gravité*,|avec l’action à mener."));
+      const t3 = words($("#s5-t3"), txt("s5-t3", "Un rapport *aux normes*,|pour agir vite."));
       ["s5-i0", "s5-i1", "s5-i2", "s5-i3"].forEach((id) => { const v = txt(id, ""); if (v) $("#" + id).textContent = v; });
-      // 1. la feuille se dessine autour de la vignette
+      const P1 = $("#s5-p1"), P2 = $("#s5-p2"), P3 = $("#s5-p3");
+      const pageOut = (t, el) => tl.to(el, { opacity: 0, x: -30, filter: "blur(6px)", duration: 0.22, ease: "power2.in" }, t);
+      const pageIn = (t, el) => tl.fromTo(el, { opacity: 0, x: 30, filter: "blur(6px)" }, { opacity: 1, x: 0, filter: "blur(0px)", duration: 0.32, ease: "power3.out" }, t);
+      // 1. la feuille se dessine autour de la vignette ; les autres pages du rapport se devinent derrière
       draw(0, $("#s5-doc"), 1.1, "power2.inOut");
       fadeIn(0.2, $("#s5-paper"), 0.7);
-      blurIn(0.55, $("#s5-h"), 0.2);
-      draw(0.65, $("#s5-rule"), 0.45, "power2.out");
-      // 2. titre
-      blurIn(0.9, title, 0.15, 0.067);
-      // 3. checklist cochée
-      draw(1.1, $$(".s5-box"), 0.35, "power2.out", 0.1);
-      blurIn(1.2, [$("#s5-i0"), $("#s5-i1"), $("#s5-i2"), $("#s5-i3")], 0.18, 0.15);
-      [1.7, 1.95, 2.2, 2.45].forEach((t, i) => draw(t, $("#s5-k" + i), 0.22, "power2.out"));
-      draw(1.6, $$(".s5-foot"), 0.4, "power2.out", 0.1);
-      // 4. le tampon « conforme IEC TS 62446-3 » s'appose
-      tl.fromTo($("#s5-stamp"), { opacity: 0, scale: 1.45, transformOrigin: "50% 50%" }, { opacity: 1, scale: 1, duration: 0.32, ease: "back.out(1.8)" }, 2.7);
-      // 5. graphique production : installation saine vs avec défauts
-      draw(2.3, [$("#s5-ay"), $("#s5-ax")], 0.55, "power3.out", 0.08);
-      draw(2.7, [$("#s5-aya"), $("#s5-axa")], 0.22, "power2.out", 0.05);
-      fadeIn(2.55, [$("#s5-grid"), $("#s5-yt")], 0.4, 0.08);
-      blurIn(2.6, $("#s5-lab-y"), 0.18);
+      fadeIn(0.6, $$(".s5-sheet"), 0.5, 0.12);
+      // PAGE 1 — analyse détaillée du défaut
+      blurIn(0.55, P1.querySelector(".dochead"), 0.2);
+      draw(0.65, P1.querySelector(".s5-rule"), 0.45, "power2.out");
+      blurIn(0.9, t1, 0.15, 0.067);
+      blurIn(1.2, $$("#s5-p1 .s5-f"), 0.18, 0.16);
+      tl.fromTo($("#s5-badge"), { opacity: 0, scale: 0.6, transformOrigin: "50% 50%" }, { opacity: 1, scale: 1, duration: 0.3, ease: "back.out(1.8)" }, 1.3);
+      fadeIn(1.7, $$("#s5-p1 .s5-foot"), 0.3, 0.1);
+      // PAGE 2 — résultats et gravité
+      blurOut(4.0, t1, 0.16, 0.02);
+      pageOut(4.0, P1);
+      pageIn(4.2, P2);
+      draw(4.25, P2.querySelector(".s5-rule"), 0.4, "power2.out");
+      blurIn(4.3, t2, 0.15, 0.067);
+      draw(4.4, $$(".s5-card"), 0.4, "power2.out", 0.1);
+      [["#s5-n0", 7], ["#s5-n1", 5]].forEach(([id, v], i) => {
+        const el = $(id), o = { v: 0 };
+        tl.fromTo(o, { v: 0 }, { v, duration: 0.6, ease: "power2.out", onUpdate: () => { el.textContent = Math.round(o.v); } }, 4.55 + i * 0.12);
+      });
+      blurIn(4.5, [$("#s5-n0"), $("#s5-n1"), $("#s5-n2"), ...$$(".s5-cardl")], 0.2, 0.06);
+      blurIn(5.0, $("#s5-sub"), 0.18);
+      fadeIn(5.1, $$(".s5-sw"), 0.25, 0.1);
+      blurIn(5.15, $$(".s5-cl"), 0.18, 0.1);
+      $$(".s5-gbar").forEach((b, i) => {
+        tl.fromTo(b, { attr: { width: 0 } }, { attr: { width: parseFloat(b.getAttribute("data-w")) }, duration: 0.5, ease: "power3.out" }, 5.3 + i * 0.1);
+      });
+      fadeIn(5.6, $$("#s5-p2 .s5-foot"), 0.3, 0.1);
+      //   graphique de production (fourni par le client)
+      draw(4.7, [$("#s5-ay"), $("#s5-ax")], 0.55, "power3.out", 0.08);
+      draw(5.1, [$("#s5-aya"), $("#s5-axa")], 0.22, "power2.out", 0.05);
+      fadeIn(4.95, [$("#s5-grid"), $("#s5-yt")], 0.4, 0.08);
+      blurIn(5.0, $("#s5-lab-y"), 0.18);
       [0, 1].forEach((i) => {
         const b = $("#s5-bar" + i);
         const top = parseFloat(b.getAttribute("data-top")), h = parseFloat(b.getAttribute("data-h"));
-        tl.fromTo(b, { attr: { y: __AY__, height: 0 } }, { attr: { y: top, height: h }, duration: 0.75, ease: "power3.out" }, 2.95 + i * 0.3);
-        blurIn(3.2 + i * 0.3, $("#s5-cat" + i), 0.18);
+        tl.fromTo(b, { attr: { y: __AY__, height: 0 } }, { attr: { y: top, height: h }, duration: 0.75, ease: "power3.out" }, 5.35 + i * 0.3);
+        blurIn(5.6 + i * 0.3, $("#s5-cat" + i), 0.18);
       });
-      // 6. sortie : le graphique se floute, le rapport file dans la plateforme
-      blurOut(5.15, [...title, $("#s5-lab-y"), $("#s5-cat0"), $("#s5-cat1")], 0.2, 0.015);
-      blurOut(5.2, [$("#s5-chart")], 0.22, 0);
-      fadeOut(5.42, [$("#s5-h"), $("#s5-i0"), $("#s5-i1"), $("#s5-i2"), $("#s5-i3"), $("#s5-stamp")], 0.1);
-      tl.to($("#s5-docw"), { x: __CX__, y: __CY__, scale: __CS__, transformOrigin: "__OX__px __OY__px", duration: 0.48, ease: "power2.inOut" }, 5.45);"""
+      // PAGE 3 — couverture du rapport, conforme à la norme
+      blurOut(8.2, t2, 0.16, 0.02);
+      blurOut(8.2, [$("#s5-chart"), $("#s5-lab-y"), $("#s5-cat0"), $("#s5-cat1")], 0.2, 0.02);
+      pageOut(8.2, P2);
+      pageIn(8.4, P3);
+      blurIn(8.5, t3, 0.15, 0.067);
+      draw(8.5, $("#s5-acc"), 0.4, "power2.out");
+      blurIn(8.55, $("#s5-ct"), 0.2);
+      blurIn(8.75, $("#s5-cs"), 0.2);
+      draw(8.6, $$(".s5-ill"), 0.4, "power2.out", 0.05);
+      fadeIn(9.0, $("#s5-hotc"), 0.3);
+      fadeIn(9.1, $("#s5-mlogo"), 0.35);
+      tl.fromTo($("#s5-stamp"), { opacity: 0, scale: 1.45, transformOrigin: "50% 50%" }, { opacity: 1, scale: 1, duration: 0.32, ease: "back.out(1.8)" }, 9.4);
+      //   ce que contient le rapport
+      draw(9.6, $$(".s5-box"), 0.3, "power2.out", 0.1);
+      blurIn(9.7, [$("#s5-i0"), $("#s5-i1"), $("#s5-i2"), $("#s5-i3")], 0.18, 0.15);
+      [10.0, 10.25, 10.5, 10.75].forEach((t, i) => draw(t, $("#s5-k" + i), 0.22, "power2.out"));
+      // 4. sortie : le rapport file dans la plateforme
+      blurOut(11.75, [...t3, $("#s5-i0"), $("#s5-i1"), $("#s5-i2"), $("#s5-i3")], 0.2, 0.015);
+      blurOut(11.8, [$("#s5-check")], 0.2, 0);
+      fadeOut(11.83, [$("#s5-ct"), $("#s5-cs"), $("#s5-stamp"), $("#s5-mlogo")], 0.1);
+      tl.to($("#s5-docw"), { x: __CX__, y: __CY__, scale: __CS__, transformOrigin: "__OX__px __OY__px", duration: 0.48, ease: "power2.inOut" }, 11.85);"""
     js = (js.replace("__AY__", str(S5_AY)).replace("__CX__", n(carry["x"])).replace("__CY__", n(carry["y"]))
           .replace("__CS__", f'{carry["scale"]:.5f}').replace("__OX__", n(dcx)).replace("__OY__", n(dcy)))
     write_scene(
         "s5",
-        "Scène 5 — Rapport aux normes (IEC TS 62446-3)",
+        "Scène 5 — Rapport d'inspection thermique : défaut, résultats, couverture conforme IEC TS 62446-3",
         [
-            svar("s5-title", "Scène 5 — titre", "Un rapport *aux normes*,|pour agir vite."),
+            svar("s5-t1", "Scène 5 — titre page 1", "Chaque défaut est|localisé et *qualifié*."),
+            svar("s5-t2", "Scène 5 — titre page 2", "Classés par *gravité*,|avec l’action à mener."),
+            svar("s5-t3", "Scène 5 — titre page 3", "Un rapport *aux normes*,|pour agir vite."),
             svar("s5-i0", "Scène 5 — ligne 1", items[0]),
             svar("s5-i1", "Scène 5 — ligne 2", items[1]),
             svar("s5-i2", "Scène 5 — ligne 3", items[2]),
@@ -1293,9 +1421,15 @@ def build_s6():
         <circle id="s6-adot" cx="148" cy="{470 - ui * 0.34:.1f}" r="7" fill="{ACC}"/>
         <text id="s6-anom" class="ui" x="166" y="470">3 anomalies à traiter</text>
         {"".join(rows)}
-        <text id="s6-suivi" class="ui" x="630" y="470">Suivi de production</text>
-        <line id="s6-base" x1="630" y1="622" x2="1030" y2="622" stroke="#E4E4E7" stroke-width="2"/>
-        <path id="s6-spark" class="d" pathLength="1" d="M630 604 C690 596 730 566 790 574 S890 548 950 538 S1010 520 1030 516" stroke="{INK}" stroke-width="2.5"/>
+        <text id="s6-plan" class="ui" x="630" y="470">Inspections à venir</text>
+        <line id="s6-tline" class="d" pathLength="1" x1="640" y1="548" x2="1020" y2="548" stroke="{INK}" stroke-width="2"/>
+        {"".join(f'<line class="s6-tick" x1="{x}" y1="538" x2="{x}" y2="558" stroke="{INK}" stroke-width="2"/>' for x in (660, 780, 900, 1010))}
+        {"".join(f'<text class="ui sm s6-mon" x="{x}" y="612" text-anchor="middle">{m}</text>' for x, m in zip((660, 780, 900, 1010), ("Jan", "Avr", "Juil", "Oct")))}
+        <circle class="s6-pm" cx="660" cy="548" r="9" fill="{INK}"/>
+        <circle class="s6-pm" cx="780" cy="548" r="9" fill="{INK}"/>
+        <circle id="s6-nring" cx="900" cy="548" r="12" fill="none" stroke="{ACC}" stroke-width="2"/>
+        <circle id="s6-next" cx="900" cy="548" r="11" fill="#FFFFFF" stroke="{ACC}" stroke-width="4"/>
+        <circle id="s6-pm2" cx="1010" cy="548" r="9" fill="#FFFFFF" stroke="#A1A1AA" stroke-width="3"/>
         {rings}
       </g>
       {mks}
@@ -1308,7 +1442,7 @@ def build_s6():
     #root .ui {{ font-family: "Comfortaa", sans-serif; font-weight: 700; font-size: {ui}px; fill: #111111; stroke: none; }}
     #root .ui.sm {{ font-weight: 600; fill: #6B6B70; }}
     #root .tag6 {{ position: absolute; font-family: "Comfortaa", sans-serif; font-weight: 700; font-size: 30px; line-height: 1; padding: 10px 16px; border: 2px solid #FF5700; border-radius: 8px; color: #FF5700; background: #FFFFFF; white-space: nowrap; }}
-    #root #s6-fill, #root #s6-dots, #root .s6-mod, #root .s6-mk, #root .s6-ring, #root .s6-doc2, #root .s6-bars, #root #s6-st0, #root .ui, #root #s6-adot {{ opacity: 0; }}"""
+    #root #s6-fill, #root #s6-dots, #root .s6-mod, #root .s6-mk, #root .s6-ring, #root .s6-doc2, #root .s6-bars, #root #s6-st0, #root .ui, #root #s6-adot, #root .s6-tick, #root .s6-pm, #root #s6-next, #root #s6-pm2, #root #s6-nring {{ opacity: 0; }}"""
     # le point orange du plan devient la bille du logo (raccord S6 -> S7)
     bx_, by_ = logo_screen(*BALL_L)
     tgt = ((bx_ - wtx) / ws, (by_ - wty) / ws, 12 * LOGO_S / ws)
@@ -1327,7 +1461,7 @@ def build_s6():
       blurIn(0.6, [$("#s6-h1"), $("#s6-h2")], 0.2, 0.12);
       fadeIn(0.7, $$(".s6-mod"), 0.3, 0.03);
       tl.fromTo($$(".s6-mk"), {{ opacity: 0, scale: 0, transformOrigin: "50% 50%" }}, {{ opacity: 1, scale: 1, duration: 0.3, ease: "back.out(2)", stagger: 0.12 }}, 1.3);
-      [1.7, 2.7, 3.7].forEach((t) => {{
+      [1.7, 2.7, 3.7, 4.7].forEach((t) => {{
         tl.fromTo($$(".s6-ring"), {{ opacity: 0.85, scale: 1, transformOrigin: "50% 50%" }}, {{ opacity: 0, scale: 2.8, duration: 0.9, ease: "power2.out", immediateRender: false }}, t);
       }});
       blurIn(1.5, $("#s6-cap"), 0.18);
@@ -1338,12 +1472,17 @@ def build_s6():
       blurIn(1.15, $("#s6-new"), 0.18);
       fadeIn(1.25, $("#s6-st0"), 0.15);
       fadeIn(1.1, [...$$(".s6-doc2"), ...$$(".s6-bars")], 0.3, 0.1);
-      blurIn(1.9, $("#s6-suivi"), 0.18);
-      draw(2.0, $("#s6-spark"), 0.7, "power2.inOut");
+      blurIn(1.9, $("#s6-plan"), 0.18);
+      draw(2.0, $("#s6-tline"), 0.6, "power2.inOut");
+      fadeIn(2.25, [...$$(".s6-tick"), ...$$(".s6-mon")], 0.25, 0.05);
+      tl.fromTo([...$$(".s6-pm"), $("#s6-next"), $("#s6-pm2")], {{ opacity: 0, scale: 0, transformOrigin: "50% 50%" }}, {{ opacity: 1, scale: 1, duration: 0.3, ease: "back.out(2)", stagger: 0.14 }}, 2.45);
+      [3.1, 4.1, 5.1].forEach((t) => {{
+        tl.fromTo($("#s6-nring"), {{ opacity: 0.9, scale: 1, transformOrigin: "50% 50%" }}, {{ opacity: 0, scale: 2.4, duration: 0.9, ease: "power2.out", immediateRender: false }}, t);
+      }});
       // 4. sortie : tout se floute ; un point du plan file vers le logo
-      blurOut(4.6, [...title, $("#s6-tag")], 0.18, 0.02);
-      tl.to([$("#s6-ui"), $("#s6-mk1"), $("#s6-mk2")], {{ opacity: 0, filter: "blur(8px)", duration: 0.22, ease: "power2.in" }}, 4.62);
-      tl.to($("#s6-mk0"), {{ attr: {{ cx: {n(tgt[0])}, cy: {n(tgt[1])}, r: {n(tgt[2])} }}, duration: 0.6, ease: "power2.inOut" }}, 4.75);"""
+      blurOut(5.8, [...title, $("#s6-tag")], 0.18, 0.02);
+      tl.to([$("#s6-ui"), $("#s6-mk1"), $("#s6-mk2")], {{ opacity: 0, filter: "blur(8px)", duration: 0.22, ease: "power2.in" }}, 5.82);
+      tl.to($("#s6-mk0"), {{ attr: {{ cx: {n(tgt[0])}, cy: {n(tgt[1])}, r: {n(tgt[2])} }}, duration: 0.6, ease: "power2.inOut" }}, 5.95);"""
     write_scene(
         "s6",
         "Scène 6 — Plateforme en ligne (bientôt disponible)",
@@ -1492,28 +1631,30 @@ def build_s7():
 # --------------------------------------------------------------------------
 # index.html
 # --------------------------------------------------------------------------
-SCENES = [("s1", 0, 7.2), ("s2", 7.2, 6.0), ("s3", 13.2, 6.6), ("s4", 19.8, 6.6), ("s5", 26.4, 6.0),
-          ("s6", 32.4, 5.4), ("s7", 37.8, 7.2)]
-TOTAL = 45.0
+SCENES = [("s1", 0, 7.2), ("s2", 7.2, 6.6), ("s3", 13.8, 6.6), ("s4", 20.4, 7.2), ("s5", 27.6, 12.6),
+          ("s6", 40.2, 6.6), ("s7", 46.8, 7.2)]
+TOTAL = 54.0
 
 # (id, file, hit time in the film, volume): the file's measured peak lands one frame after its picture
 SFX = [
-    ("sfx-drone", "whoosh-short.mp3", 13.2 + 0.72, 0.5),
-    ("sfx-scan", "whoosh-cinematic.mp3", 13.2 + 3.95, 0.3),
-    ("sfx-zoom", "whoosh-high.mp3", 13.2 + 6.55, 0.45),
-    ("sfx-tick1", "key-press.mp3", 19.8 + 2.0, 0.5),
-    ("sfx-tick2", "key-press.mp3", 19.8 + 2.9, 0.45),
-    ("sfx-tick3", "key-press.mp3", 19.8 + 3.8, 0.5),
-    ("sfx-carry", "whoosh-low.mp3", 19.8 + 6.2, 0.35),
-    ("sfx-check1", "click-soft.mp3", 26.4 + 1.82, 0.6),
-    ("sfx-check2", "click-soft.mp3", 26.4 + 2.07, 0.55),
-    ("sfx-check3", "click-soft.mp3", 26.4 + 2.32, 0.6),
-    ("sfx-check4", "click-soft.mp3", 26.4 + 2.57, 0.55),
-    ("sfx-stamp", "pop.mp3", 26.4 + 2.78, 0.45),
-    ("sfx-doc", "whoosh-short.mp3", 26.4 + 5.69, 0.3),
-    ("sfx-logo", "impact-bass-1.mp3", 37.8 + 1.55, 0.22),
-    ("sfx-top", "whoosh-low.mp3", 37.8 + 4.0, 0.22),
-    ("sfx-type", "typing.mp3", 37.8 + 4.42, 0.35),
+    ("sfx-drone", "whoosh-short.mp3", 13.8 + 0.72, 0.5),
+    ("sfx-scan", "whoosh-cinematic.mp3", 13.8 + 3.95, 0.3),
+    ("sfx-zoom", "whoosh-high.mp3", 13.8 + 6.55, 0.45),
+    ("sfx-tick1", "key-press.mp3", 20.4 + 2.0, 0.5),
+    ("sfx-tick2", "key-press.mp3", 20.4 + 2.9, 0.45),
+    ("sfx-tick3", "key-press.mp3", 20.4 + 3.8, 0.5),
+    ("sfx-carry", "whoosh-low.mp3", 20.4 + 6.8, 0.35),
+    ("sfx-page2", "whoosh-high.mp3", 27.6 + 4.15, 0.18),
+    ("sfx-page3", "whoosh-high.mp3", 27.6 + 8.35, 0.18),
+    ("sfx-stamp", "pop.mp3", 27.6 + 9.48, 0.45),
+    ("sfx-check1", "click-soft.mp3", 27.6 + 10.12, 0.6),
+    ("sfx-check2", "click-soft.mp3", 27.6 + 10.37, 0.55),
+    ("sfx-check3", "click-soft.mp3", 27.6 + 10.62, 0.6),
+    ("sfx-check4", "click-soft.mp3", 27.6 + 10.87, 0.55),
+    ("sfx-doc", "whoosh-short.mp3", 27.6 + 12.09, 0.3),
+    ("sfx-logo", "impact-bass-1.mp3", 46.8 + 1.55, 0.22),
+    ("sfx-top", "whoosh-low.mp3", 46.8 + 4.0, 0.22),
+    ("sfx-type", "typing.mp3", 46.8 + 4.42, 0.35),
 ]
 
 

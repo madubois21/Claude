@@ -1,5 +1,17 @@
 # REVIEW
 
+## Passage 5 — rythme et rapport
+- Durée 45 s → 54 s (cahier : 50–55 s demandés par le client). Temps ajouté : rapport (6 → 12,6 s), graphique S2 et
+  anomalies S4 (+0,6 s chacun), plateforme (+1,2 s). Scène 3 inchangée (balayage rapide conservé). Musique recalée.
+- S5 inspirée du rapport type fourni (structure : analyse détaillée d'un défaut, résultats, catégorisation par gravité,
+  couverture), redessinée dans la charte Fly Scan'Air (blanc, noir, dégradé gris → orange pour les 5 niveaux de gravité).
+  Aucune mention du logiciel d'origine ni des données du client du rapport type (nom, site, mesures).
+- Valeurs du rapport illustratives et cohérentes avec la vidéo : 7 défauts (anomalies visibles en S3), 5 modules,
+  0/7 résolus, défaut n°1 « Point chaud (hot-spot) », ΔT 11,2 °C, MaxT 58 °C, catégorie 4.
+- S6 : « Suivi de production » remplacé par « Inspections à venir » (frise Jan / Avr / Juil / Oct : passées en noir,
+  prochaine en orange pulsant, suivante en gris). Mois illustratifs.
+- `hyperframes check` : 0 erreur, 0 avertissement sur les trois formats.
+
 ## Passage 4 — retours client (rapport, plateforme, site, LinkedIn, anomalies, drone)
 - Durée : 45,0 s (maximum du cahier des charges). Musique recalée sur les nouvelles scènes.
 - S3 : drone simplifié (corps, deux bras, quatre rotors, objectif) ; balayage 2,7 s → 1,5 s ; entrée du drone plus vive.
