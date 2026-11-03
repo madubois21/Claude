@@ -1,19 +1,22 @@
 <template>
   <!-- Scène 5 — Rapport et bénéfices -->
   <style>
-    #root { position: absolute; inset: 0; overflow: hidden; font-family: "Montserrat", sans-serif; color: #111111; }
+    @font-face { font-family: "Comfortaa"; src: url("assets/fonts/comfortaa-var.woff2") format("woff2"); font-weight: 300 700; font-style: normal; }
+    #root { position: absolute; inset: 0; overflow: hidden; font-family: "Comfortaa", sans-serif; color: #111111; }
     #root svg.world { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; overflow: visible; }
     #root svg.zoom * { vector-effect: non-scaling-stroke; }
     #root .d { stroke-dasharray: 1 1.2; }
-    #root .title { position: absolute; font-weight: 600; font-size: 64px; line-height: 1.1; letter-spacing: -0.015em; color: #111111; white-space: nowrap; }
+    #root .title { position: absolute; font-weight: 700; font-size: 64px; line-height: 1.12; letter-spacing: -0.01em; color: #111111; white-space: nowrap; }
     #root .w { display: inline-block; }
     #root .acc { color: #FF5700; }
-    #root .label { position: absolute; font-family: "Poppins", sans-serif; font-weight: 500; font-size: 32px; line-height: 1.2; color: #6B6B70; white-space: nowrap; }
+    #root .label { position: absolute; font-family: "Comfortaa", sans-serif; font-weight: 600; font-size: 32px; line-height: 1.2; color: #6B6B70; white-space: nowrap; }
 
     #root #s5-paper { position: absolute; background: #FFFFFF; box-shadow: 0 18px 40px rgba(17, 17, 17, 0.08); opacity: 0; }
-    #root .dochead { position: absolute; font-family: "Poppins", sans-serif; font-weight: 600; font-size: 30px; line-height: 40px; color: #111111; white-space: nowrap; }
-    #root .item { position: absolute; font-family: "Poppins", sans-serif; font-weight: 500; font-size: 30px; line-height: 42px; color: #111111; white-space: nowrap; }
-    #root #s5-dot { opacity: 0; }
+    #root .dochead { position: absolute; font-family: "Comfortaa", sans-serif; font-weight: 700; font-size: 30px; line-height: 40px; color: #111111; white-space: nowrap; }
+    #root .item { position: absolute; font-family: "Comfortaa", sans-serif; font-weight: 600; font-size: 30px; line-height: 42px; color: #111111; white-space: nowrap; }
+    #root .tick text { font-family: "Comfortaa", sans-serif; font-weight: 600; font-size: 28px; fill: #6B6B70; }
+    #root .cat { position: absolute; width: 340px; text-align: center; font-family: "Comfortaa", sans-serif; font-weight: 600; font-size: 28px; line-height: 36px; color: #111111; }
+    #root #s5-grid, #root #s5-yt { opacity: 0; }
   </style>
   <div
     id="root"
@@ -39,20 +42,23 @@
       <g id="s5-marks"><circle id="s5-c0" pathLength="1" cx="360" cy="504.29" r="110" fill="none" stroke="#FF5700" stroke-width="3" transform="rotate(-90 360 504.29)"/><circle id="s5-c1" pathLength="1" cx="680" cy="687.14" r="135" fill="none" stroke="#FF5700" stroke-width="3" transform="rotate(-90 680 687.14)"/><circle id="s5-c2" pathLength="1" cx="1000" cy="778.57" r="80" fill="none" stroke="#FF5700" stroke-width="3" transform="rotate(-90 1000 778.57)"/></g>
     </svg>
     <svg id="s5-chart" class="world" viewBox="0 0 1920 1080" width="1920" height="1080">
-      <defs><clipPath id="s5-clip"><rect id="s5-cliprect" x="955" y="380" width="0" height="500"/></clipPath></defs>
-      <g fill="none" stroke-linecap="round" stroke-linejoin="round">
-        <line id="s5-ax" stroke-dashoffset="1.05" class="d" pathLength="1" x1="960" y1="860" x2="1760" y2="860" stroke="#111111" stroke-width="2.5"/>
-        <line id="s5-ay" stroke-dashoffset="1.05" class="d" pathLength="1" x1="960" y1="860" x2="960" y2="420" stroke="#111111" stroke-width="2.5"/>
-        <path clip-path="url(#s5-clip)" d="M960 520 C1150 515 1300 640 1500 730 C1600 770 1700 790 1760 795" stroke="#B4B4BB" stroke-width="2.5" stroke-dasharray="9 10"/>
-        <path id="s5-curve" stroke-dashoffset="1.05" class="d" pathLength="1" d="M960 520 C1150 512 1300 505 1450 470 C1580 440 1680 420 1745 405" stroke="#FF5700" stroke-width="4"/>
+      <defs><clipPath id="s5-clip"><rect x="0" y="0" width="1920" height="850"/></clipPath></defs>
+      <g id="s5-axes">
+        <g id="s5-grid" stroke="#E4E4E7" stroke-width="1.5" stroke-dasharray="6 8"><line x1="1060" y1="762" x2="1770" y2="762"/><line x1="1060" y1="674" x2="1770" y2="674"/><line x1="1060" y1="586" x2="1770" y2="586"/><line x1="1060" y1="498" x2="1770" y2="498"/><line x1="1060" y1="410" x2="1770" y2="410"/></g>
+        <g id="s5-yt" class="tick"><text x="1040" y="860" text-anchor="end">0</text><text x="1040" y="772" text-anchor="end">5 000</text><text x="1040" y="684" text-anchor="end">10 000</text><text x="1040" y="596" text-anchor="end">15 000</text><text x="1040" y="508" text-anchor="end">20 000</text><text x="1040" y="420" text-anchor="end">25 000</text></g>
+        <g fill="none" stroke="#111111" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <line id="s5-ax" stroke-dashoffset="1.05" class="d" pathLength="1" x1="1060" y1="850" x2="1790" y2="850"/>
+          <polyline id="s5-axa" stroke-dashoffset="1.05" class="d" pathLength="1" points="1778,841 1790,850 1778,859"/>
+          <line id="s5-ay" stroke-dashoffset="1.05" class="d" pathLength="1" x1="1060" y1="850" x2="1060" y2="375"/>
+          <polyline id="s5-aya" stroke-dashoffset="1.05" class="d" pathLength="1" points="1051,387 1060,375 1069,387"/>
+        </g>
       </g>
-      <circle id="s5-dot" cx="1745" cy="405" r="10" fill="#FF5700"/>
+      <g clip-path="url(#s5-clip)"><rect id="s5-bar0" x="1145.0" y="498" width="210" height="364" rx="10" fill="#CDCDD2" data-top="498" data-h="364"/><rect id="s5-bar1" x="1475.0" y="561.36" width="210" height="300.64" rx="10" fill="#FF5700" data-top="561.36" data-h="300.64"/></g>
     </svg>
     <div id="s5-h" stroke-dashoffset="1.05" class="dochead" style="left: 260px; top: 128px">Rapport d’inspection</div>
     <div id="s5-i0" class="item" style="left: 318px; top: 629px">Anomalies localisées</div><div id="s5-i1" class="item" style="left: 318px; top: 709px">Priorités d’intervention</div><div id="s5-i2" class="item" style="left: 318px; top: 789px">Recommandations</div>
-    <div id="s5-lab-y" class="label" style="left: 982px; top: 400px">Rendement</div>
-    <div id="s5-lab-a" class="label" style="left: 1640px; top: 812px">Avant</div>
-    <div id="s5-lab-b" class="label" style="left: 1560px; top: 350px; color: #111111">Après</div>
+    <div id="s5-lab-y" class="label" style="left: 1010px; top: 318px">Production (kWh/an)</div>
+    <div id="s5-cat0" class="cat" style="left: 1080px; top: 868px">Installation<br />saine</div><div id="s5-cat1" class="cat" style="left: 1410px; top: 868px">Installation<br />avec défauts</div>
     <div id="s5-title" class="title" style="left: 960px; top: 150px">Un rapport clair<br />pour agir vite.</div>
   </div>
   <script>
@@ -126,20 +132,24 @@
       draw(2.2, $("#s5-k1"), 0.25, "power2.out");
       draw(2.6, $("#s5-k2"), 0.25, "power2.out");
       draw(1.7, $$(".s5-foot"), 0.4, "power2.out", 0.1);
-      // 4. la courbe de rendement remonte
+      // 4. graphique production : installation saine vs avec défauts
       draw(2.2, [$("#s5-ay"), $("#s5-ax")], 0.55, "power3.out", 0.08);
+      draw(2.6, [$("#s5-aya"), $("#s5-axa")], 0.22, "power2.out", 0.05);
+      fadeIn(2.45, [$("#s5-grid"), $("#s5-yt")], 0.4, 0.08);
       blurIn(2.55, $("#s5-lab-y"), 0.18);
-      tl.fromTo($("#s5-cliprect"), { attr: { width: 0 } }, { attr: { width: 810 }, duration: 0.8, ease: "power1.inOut" }, 2.75);
-      blurIn(3.4, $("#s5-lab-a"), 0.18);
-      draw(3.3, $("#s5-curve"), 1.0, "power2.inOut");
-      tl.fromTo($("#s5-dot"), { opacity: 0, scale: 0, transformOrigin: "50% 50%" }, { opacity: 1, scale: 1, duration: 0.4, ease: "back.out(1.4)" }, 4.25);
-      blurIn(4.4, $("#s5-lab-b"), 0.18);
-      // 5. sortie : tout se floute, le point orange file vers le logo
-      const keep = $("#s5-dot");
-      blurOut(5.85, [...title, $("#s5-h"), $("#s5-i0"), $("#s5-i1"), $("#s5-i2"), $("#s5-lab-y"), $("#s5-lab-a"), $("#s5-lab-b")], 0.2, 0.015);
-      blurOut(5.9, [R.querySelector("svg.world"), $("#s5-thumb"), $("#s5-paper")], 0.22, 0.02);
-      tl.to($$("#s5-chart > g"), { opacity: 0, filter: "blur(8px)", duration: 0.22, ease: "power2.in" }, 5.9);
-      tl.to(keep, { x: -1281.1, y: 9.76, duration: 0.6, ease: "power2.inOut" }, 5.95);
+      [0, 1].forEach((i) => {
+        const b = $("#s5-bar" + i);
+        const top = parseFloat(b.getAttribute("data-top")), h = parseFloat(b.getAttribute("data-h"));
+        tl.fromTo(b, { attr: { y: 850, height: 0 } }, { attr: { y: top, height: h }, duration: 0.75, ease: "power3.out" }, 2.85 + i * 0.35);
+        blurIn(3.15 + i * 0.35, $("#s5-cat" + i), 0.18);
+      });
+      // 5. sortie : tout se floute ; la barre orange se replie en point et file vers le logo
+      const keep = $("#s5-bar1");
+      const kx = 1580, ky = parseFloat(keep.getAttribute("data-top"));
+      blurOut(5.85, [...title, $("#s5-h"), $("#s5-i0"), $("#s5-i1"), $("#s5-i2"), $("#s5-lab-y"), $("#s5-cat0"), $("#s5-cat1")], 0.2, 0.015);
+      blurOut(5.9, [R.querySelector("svg.world"), $("#s5-thumb"), $("#s5-paper"), $("#s5-axes"), $("#s5-bar0")], 0.22, 0.02);
+      tl.to(keep, { attr: { x: kx - 10, y: ky - 10, width: 20, height: 20, rx: 10 }, duration: 0.32, ease: "power2.inOut" }, 5.85);
+      tl.to(keep, { attr: { x: 514.4, y: 342.96 }, duration: 0.5, ease: "power2.inOut" }, 6.08);
       window.__timelines["s5"] = tl;
     })();
   </script>

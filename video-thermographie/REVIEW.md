@@ -1,37 +1,36 @@
-# REVIEW — passage 1 (16:9)
+# REVIEW
 
-## Choix créatifs
-- Structure, textes S1/S2 et 6 transitions repris du cahier des charges. Les textes des scènes 3 à 6 sont des propositions,
-  modifiables comme variables : « Le scan infrarouge révèle chaque échauffement. », « Chaque anomalie est détectée et localisée. »,
-  « Un rapport clair pour agir vite. », slogan provisoire « Rendre visible l’invisible. », message « Faites contrôler votre installation. ».
-- Un seul monde dessiné, avec des raccords « causés » : la ligne de sol de S1 devient l’axe du graphique de S2 ; le zoom traversant de S3
-  se pose en S4 ; le panneau de S4 rétrécit et devient la vignette du rapport S5 ; le point orange final de S5 devient la bille du logo S6.
-- Logo Fly Scan’Air redessiné en vectoriel (le PNG n’est arrivé que comme aperçu dans la conversation, pas comme fichier) : serpentin gris
-  tracé en direct, nom révélé par la même ligne de scan orange qu’en S3. Police : Fredoka 700, la plus proche disponible.
-- Aucun chiffre inventé : pas de pourcentage de perte, pas de température.
-- Musique originale (synthèse, 100 BPM), changements d’accords calés sur chaque scène ; 11 effets sonores ciblés.
+## Passage 2 — retours client
+- Slogan : « Inspections techniques aériennes, révélez l’invisible. » (faute de frappe « ispections » corrigée), « l’invisible » en orange.
+- Contact ajouté : www.flyscanair.com · 06 22 80 57 69 · contact@flyscanair.com (séparateurs orange).
+- Typographie Comfortaa sur tous les textes et sur le logotype. Comfortaa Bold étant plus fine que les lettres du logo d’origine,
+  le logotype reçoit un contour de 10 px du même dégradé pour retrouver la graisse de l’original.
+- Logo : « Aır » sans point sur le i ; la bille rouge du serpentin est placée exactement au-dessus de la tige (position mesurée).
+- Cercle (réticule) autour du drone supprimé ; la ligne de rappel « Caméra infrarouge » part maintenant du drone par la marge gauche.
+- S2 : graphique « Rendement (%) » du client redessiné au trait (axes fléchés, graduations, grille pointillée, courbes
+  « Saine » grise et « Avec défauts » orange, zone de perte orange). La ligne de sol de S1 devient toujours l’axe des temps.
+- S5 : histogramme « Production (kWh/an) » du client (Installation saine / avec défauts), barres qui montent ;
+  la barre orange se replie en point et devient la bille du logo (nouveau raccord S5 → S6).
+- Valeurs lues sur l’image fournie : rendement 98,2 → 95,2 % (saine) et 98,2 → 85,2 % (avec défauts) ; production 20 000 et
+  ≈ 16 400 kWh/an. À corriger dans `tools/build.py` (`S2_SAINE`, `S2_DEFAUT`, `S5_BARS`) si les chiffres exacts diffèrent.
 
-## Mesuré / regardé
+## Mesuré / regardé (passage 2)
 - `hyperframes check` : 0 erreur, 0 avertissement (lint, runtime, mise en page, contraste, rythme, audio).
-- Planches de raccords : les 5 coupes sont continues (aucun saut visible à ±0,1 s).
-- Planche téléphone (360 px) : titres lisibles ; étiquettes agrandies à 30–36 px après ce passage.
-- Son : mesuré, **pas écouté**. Premier rendu à −17,3 LUFS (trop bas) → musique remontée à −15 LUFS (crête −1,5 dBTP) ;
-  pics des effets calés une image après l’action à l’écran.
-- Images décodées du MP4 vérifiées : polices chargées (Montserrat, Poppins, Fredoka), couleurs et tracés conformes.
+- Planches de raccords et de temps forts relues ; raccord S5 → S6 continu (le point arrive sur la bille du logo).
+- Son inchangé depuis le passage 1 : mesuré, **pas écouté**.
 
-## Corrigé pendant la revue
-- Le tracé progressif sautait (GSAP arrondit `strokeDashoffset` en CSS) → animation de l’attribut SVG.
-- Astérisques visibles dans « agir vite » → accents multi-mots.
-- Reste de trait du HUD pendant le zoom S3 → masqué après retrait.
-- Sortie S1 qui dépassait la coupe → raccourcie.
-- Étiquette « Avant » posée sur la courbe → déplacée ; carton final recentré verticalement.
-- GSAP chargé depuis un CDN bloqué au rendu → embarqué dans `assets/vendor/`.
+## Passage 1
+- Choix : structure, textes S1/S2 et 6 transitions du cahier des charges ; textes S3–S5 proposés (modifiables en variables) ;
+  un seul monde dessiné avec des raccords causés (sol → axe, zoom traversant, vignette du rapport, point → bille du logo) ;
+  musique originale (100 BPM) + 11 effets sonores ciblés.
+- Corrigé en revue : tracé progressif (attribut SVG au lieu du CSS arrondi par GSAP), accents multi-mots, reste de trait
+  pendant le zoom S3, sortie S1 trop longue, carton final recentré, GSAP embarqué (CDN bloqué au rendu), musique remontée
+  de −17,3 à −15 LUFS.
 
 ## Point le plus faible
-- S2 : le troisième terme « Défauts invisibles » s’allume avec le bouclier d’assurance, dont le lien n’est pas direct.
-  Avec plus de temps : un troisième pictogramme discret (œil barré), ou le libellé « Garantie & assurance ».
-- Le logo est une reconstitution : à valider face à l’original (ou fournir le fichier SVG/PNG pour un contrôle au pixel).
+- S2 : « Défauts invisibles » s’allume avec le bouclier d’assurance, dont le lien n’est pas direct.
+- Le logo reste une reconstitution vectorielle : à valider face au fichier d’origine.
 
 ## Gardé volontairement
-- Fin centrée (carton logo) : seul plan centré du film, les autres sont asymétriques.
-- HUD sobre autour du drone (demandé par le cahier des charges, transition 5).
+- Fin centrée (carton logo) : seul plan centré du film.
+- HUD sobre (ligne de rappel + échelle froid/chaud) autour du drone, demandé par le cahier des charges (transition 5).

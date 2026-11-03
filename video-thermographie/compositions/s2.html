@@ -1,19 +1,21 @@
 <template>
-  <!-- Scène 2 — Les risques -->
+  <!-- Scène 2 — Les risques (graphique rendement fourni par le client) -->
   <style>
-    #root { position: absolute; inset: 0; overflow: hidden; font-family: "Montserrat", sans-serif; color: #111111; }
+    @font-face { font-family: "Comfortaa"; src: url("assets/fonts/comfortaa-var.woff2") format("woff2"); font-weight: 300 700; font-style: normal; }
+    #root { position: absolute; inset: 0; overflow: hidden; font-family: "Comfortaa", sans-serif; color: #111111; }
     #root svg.world { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; overflow: visible; }
     #root svg.zoom * { vector-effect: non-scaling-stroke; }
     #root .d { stroke-dasharray: 1 1.2; }
-    #root .title { position: absolute; font-weight: 600; font-size: 64px; line-height: 1.1; letter-spacing: -0.015em; color: #111111; white-space: nowrap; }
+    #root .title { position: absolute; font-weight: 700; font-size: 64px; line-height: 1.12; letter-spacing: -0.01em; color: #111111; white-space: nowrap; }
     #root .w { display: inline-block; }
     #root .acc { color: #FF5700; }
-    #root .label { position: absolute; font-family: "Poppins", sans-serif; font-weight: 500; font-size: 32px; line-height: 1.2; color: #6B6B70; white-space: nowrap; }
+    #root .label { position: absolute; font-family: "Comfortaa", sans-serif; font-weight: 600; font-size: 32px; line-height: 1.2; color: #6B6B70; white-space: nowrap; }
 
-    #root .head { position: absolute; left: 140px; top: 150px; font-weight: 600; font-size: 50px; letter-spacing: -0.015em; white-space: nowrap; display: flex; align-items: center; }
+    #root .head { position: absolute; left: 140px; top: 150px; font-weight: 700; font-size: 46px; letter-spacing: -0.01em; white-space: nowrap; display: flex; align-items: center; }
     #root .term { color: #D4D4D8; }
-    #root .sq { display: inline-block; width: 14px; height: 14px; background: #FF5700; margin: 0 30px; }
-    #root #s2-end, #root #s2-flamei { opacity: 0; }
+    #root .sq { display: inline-block; width: 14px; height: 14px; background: #FF5700; margin: 0 28px; }
+    #root .tick text { font-family: "Comfortaa", sans-serif; font-weight: 600; font-size: 28px; fill: #6B6B70; }
+    #root #s2-end0, #root #s2-end1, #root #s2-flamei, #root #s2-grid, #root #s2-yt, #root #s2-xt { opacity: 0; }
   </style>
   <div
     id="root"
@@ -24,34 +26,44 @@
   >
     <svg class="world" viewBox="0 0 1920 1080" width="1920" height="1080">
       <defs>
-        <clipPath id="s2-clip"><rect id="s2-cliprect" x="520" y="380" width="0" height="440"/></clipPath>
+        <clipPath id="s2-clip"><rect id="s2-cliprect" x="250" y="300" width="0" height="560"/></clipPath>
+        <linearGradient id="s2-lossg" x1="0" x2="0" y1="0" y2="1">
+          <stop offset="0" stop-color="#FF5700" stop-opacity="0.08"/>
+          <stop offset="1" stop-color="#FF5700" stop-opacity="0.22"/>
+        </linearGradient>
       </defs>
-      <g clip-path="url(#s2-clip)">
-        <path id="s2-loss" d="M520 432 L1050 420 L1050 780 C980 770 900 742 820 680 C720 600 640 440 520 432 Z" fill="#FF5700" fill-opacity="0.16"/>
-        <line x1="520" y1="432" x2="1050" y2="420" stroke="#A1A1AA" stroke-width="2" stroke-dasharray="8 9"/>
-      </g>
+      <g id="s2-grid" stroke="#E4E4E7" stroke-width="1.5" stroke-dasharray="6 8"><line x1="250" y1="730" x2="1110" y2="730"/><line x1="250" y1="610" x2="1110" y2="610"/><line x1="250" y1="490" x2="1110" y2="490"/><line x1="250" y1="370" x2="1110" y2="370"/></g>
+      <g id="s2-yt" class="tick"><text x="228" y="860" text-anchor="end">80</text><text x="228" y="740" text-anchor="end">85</text><text x="228" y="620" text-anchor="end">90</text><text x="228" y="500" text-anchor="end">95</text><text x="228" y="380" text-anchor="end">100</text></g>
+      <g id="s2-xt" class="tick"><line x1="250" y1="850" x2="250" y2="860" stroke="#111111" stroke-width="2"/><text x="250" y="896" text-anchor="middle">Jan</text><line x1="400" y1="850" x2="400" y2="860" stroke="#111111" stroke-width="2"/><text x="400" y="896" text-anchor="middle">Fév</text><line x1="550" y1="850" x2="550" y2="860" stroke="#111111" stroke-width="2"/><text x="550" y="896" text-anchor="middle">Mar</text><line x1="700" y1="850" x2="700" y2="860" stroke="#111111" stroke-width="2"/><text x="700" y="896" text-anchor="middle">Avr</text><line x1="850" y1="850" x2="850" y2="860" stroke="#111111" stroke-width="2"/><text x="850" y="896" text-anchor="middle">Mai</text><line x1="1000" y1="850" x2="1000" y2="860" stroke="#111111" stroke-width="2"/><text x="1000" y="896" text-anchor="middle">Jun</text></g>
+      <path id="s2-loss" clip-path="url(#s2-clip)" d="M250 413.2 C275 414.4 350 417.2 400 420.4 C450 423.6 500 427.2 550 432.4 C600 437.6 650 447.2 700 451.6 C750 456 800 456.4 850 458.8 C900 461.2 965 461.6 1000 466 C1035 470.4 1050 482 1060 485.2 L1060 725.2 C1050 724.4 1035 726.4 1000 720.4 C965 714.4 900 707.6 850 689.2 C800 670.8 750 639.2 700 610 C650 580.8 600 540.4 550 514 C500 487.6 450 468.4 400 451.6 C350 434.8 275 419.6 250 413.2 Z" fill="url(#s2-lossg)"/>
       <g fill="none" stroke="#111111" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
         <line id="s2-x" x1="120" y1="880" x2="1800" y2="880"/>
-        <line id="s2-y" stroke-dashoffset="1.05" class="d" pathLength="1" x1="160" y1="880" x2="160" y2="330"/>
-        <path id="s2-curve" stroke-dashoffset="1.05" class="d" pathLength="1" d="M160 440 C300 430 420 425 520 432 C640 440 720 600 820 680 C900 742 980 770 1050 780" stroke-width="3"/>
-        <g transform="translate(1390 590)">
+        <polyline id="s2-xa" stroke-dashoffset="1.05" class="d" pathLength="1" points="1108,841 1120,850 1108,859"/>
+        <line id="s2-y" stroke-dashoffset="1.05" class="d" pathLength="1" x1="250" y1="850" x2="250" y2="330"/>
+        <polyline id="s2-ya" stroke-dashoffset="1.05" class="d" pathLength="1" points="241,342 250,330 259,342"/>
+        <path id="s2-saine" stroke-dashoffset="1.05" class="d" pathLength="1" d="M250 413.2 C275 414.4 350 417.2 400 420.4 C450 423.6 500 427.2 550 432.4 C600 437.6 650 447.2 700 451.6 C750 456 800 456.4 850 458.8 C900 461.2 965 461.6 1000 466 C1035 470.4 1050 482 1060 485.2" stroke="#A1A1AA" stroke-width="4"/>
+        <path id="s2-defaut" stroke-dashoffset="1.05" class="d" pathLength="1" d="M250 413.2 C275 419.6 350 434.8 400 451.6 C450 468.4 500 487.6 550 514 C600 540.4 650 580.8 700 610 C750 639.2 800 670.8 850 689.2 C900 707.6 965 714.4 1000 720.4 C1035 726.4 1050 724.4 1060 725.2" stroke="#FF5700" stroke-width="4.5"/>
+        <g transform="translate(1430 590)">
           <path id="s2-flame" stroke-dashoffset="1.05" class="d" pathLength="1" d="M0 -110 C20 -70 75 -45 75 25 C75 75 42 105 0 105 C-42 105 -75 75 -75 25 C-75 -20 -40 -40 -30 -75 C-10 -45 0 -30 5 -10 C20 -40 15 -80 0 -110 Z"/>
           <path id="s2-flamei" d="M0 28 C18 44 30 60 30 76 C30 93 17 104 0 104 C-17 104 -30 93 -30 76 C-30 58 -14 46 0 28 Z" fill="#FF5700" stroke="none"/>
         </g>
-        <g transform="translate(1680 590)">
+        <g transform="translate(1705 590)">
           <path id="s2-shield" stroke-dashoffset="1.05" class="d" pathLength="1" d="M0 -112 L86 -82 L86 0 C86 60 46 96 0 116 C-46 96 -86 60 -86 0 L-86 -82 Z"/>
           <path id="s2-check" stroke-dashoffset="1.05" class="d" pathLength="1" d="M-36 2 L-8 30 L40 -24" stroke-width="3"/>
         </g>
       </g>
-      <circle id="s2-end" cx="1050" cy="780" r="8" fill="#FF5700"/>
+      <circle id="s2-end0" cx="1060" cy="485.2" r="9" fill="#FFFFFF" stroke="#A1A1AA" stroke-width="3.5"/>
+      <circle id="s2-end1" cx="1060" cy="725.2" r="9" fill="#FFFFFF" stroke="#FF5700" stroke-width="3.5"/>
     </svg>
     <div id="s2-head" class="head">
       <span id="s2-t1" class="term">Perte de rendement</span><i class="sq"></i><span id="s2-t2" class="term">Risque incendie</span><i class="sq"></i><span id="s2-t3" class="term">Défauts invisibles</span>
     </div>
-    <div id="s2-lab-y" class="label" style="left: 182px; top: 300px">Rendement</div>
-    <div id="s2-lab-x" class="label" style="left: 975px; top: 898px">Temps</div>
-    <div id="s2-lab-f" class="label" style="left: 1290px; top: 735px; width: 200px; text-align: center">Incendie</div>
-    <div id="s2-lab-s" class="label" style="left: 1560px; top: 735px; width: 240px; text-align: center">Assurance</div>
+    <div id="s2-lab-y" class="label" style="left: 200px; top: 274px">Rendement (%)</div>
+    <div id="s2-lab-x" class="label" style="left: 900px; top: 922px; width: 220px; text-align: right">Temps (mois)</div>
+    <div id="s2-lab-s0" class="label" style="left: 1082px; top: 465.2px">Saine</div>
+    <div id="s2-lab-s1" class="label" style="left: 1082px; top: 705.2px; color: #111111">Avec défauts</div>
+    <div id="s2-lab-f" class="label" style="left: 1320px; top: 735px; width: 220px; text-align: center">Incendie</div>
+    <div id="s2-lab-s" class="label" style="left: 1585px; top: 735px; width: 240px; text-align: center">Assurance</div>
   </div>
   <script>
     (function () {
@@ -112,28 +124,33 @@
       $("#s2-t2").textContent = txt("s2-t2", "Risque incendie");
       $("#s2-t3").textContent = txt("s2-t3", "Défauts invisibles");
       const head = $("#s2-head");
-      // 1. la ligne de sol devient l'axe des temps
-      tl.fromTo($("#s2-x"), { attr: { x1: 120, x2: 1800 } }, { attr: { x1: 160, x2: 1060 }, duration: 0.7, ease: "power2.inOut" }, 0);
-      draw(0.4, $("#s2-y"), 0.6, "power3.out");
+      // 1. la ligne de sol devient l'axe des temps, l'axe du rendement se dessine
+      tl.fromTo($("#s2-x"), { attr: { x1: 120, x2: 1800, y1: 880, y2: 880 } }, { attr: { x1: 250, x2: 1120, y1: 850, y2: 850 }, duration: 0.7, ease: "power2.inOut" }, 0);
+      draw(0.35, $("#s2-y"), 0.55, "power3.out");
+      draw(0.7, [$("#s2-xa"), $("#s2-ya")], 0.25, "power2.out", 0.05);
       blurIn(0.3, head, 0.2, 0, 6);
-      blurIn(0.8, [$("#s2-lab-y"), $("#s2-lab-x")], 0.2, 0.1);
-      // 2. la courbe de rendement chute
-      draw(0.9, $("#s2-curve"), 1.4, "power1.inOut");
-      tl.fromTo($("#s2-cliprect"), { attr: { width: 0 } }, { attr: { width: 540 }, duration: 1.2, ease: "power1.inOut" }, 1.3);
-      tl.fromTo($("#s2-end"), { opacity: 0, scale: 0, transformOrigin: "50% 50%" }, { opacity: 1, scale: 1, duration: 0.35, ease: "back.out(1.6)" }, 2.25);
-      tl.fromTo($("#s2-t1"), { color: "#D4D4D8" }, { color: "#111111", duration: 0.3 }, 2.0);
+      fadeIn(0.55, [$("#s2-grid"), $("#s2-yt"), $("#s2-xt")], 0.4, 0.08);
+      blurIn(0.75, [$("#s2-lab-y"), $("#s2-lab-x")], 0.2, 0.1);
+      // 2. installation saine vs installation avec défauts
+      draw(0.9, $("#s2-saine"), 1.2, "power1.inOut");
+      draw(1.0, $("#s2-defaut"), 1.3, "power1.inOut");
+      tl.fromTo($("#s2-cliprect"), { attr: { width: 0 } }, { attr: { width: 822 }, duration: 1.3, ease: "power1.inOut" }, 1.0);
+      tl.fromTo($("#s2-end0"), { opacity: 0, scale: 0, transformOrigin: "50% 50%" }, { opacity: 1, scale: 1, duration: 0.35, ease: "back.out(1.6)" }, 2.1);
+      tl.fromTo($("#s2-end1"), { opacity: 0, scale: 0, transformOrigin: "50% 50%" }, { opacity: 1, scale: 1, duration: 0.35, ease: "back.out(1.6)" }, 2.25);
+      blurIn(2.2, [$("#s2-lab-s0"), $("#s2-lab-s1")], 0.18, 0.12);
+      tl.fromTo($("#s2-t1"), { color: "#D4D4D8" }, { color: "#111111", duration: 0.3 }, 1.9);
       // 3. icône incendie
-      draw(2.5, $("#s2-flame"), 0.8);
-      fadeIn(3.0, $("#s2-flamei"), 0.4);
-      blurIn(3.0, $("#s2-lab-f"), 0.2);
-      tl.fromTo($("#s2-t2"), { color: "#D4D4D8" }, { color: "#111111", duration: 0.3 }, 2.9);
+      draw(2.6, $("#s2-flame"), 0.8);
+      fadeIn(3.1, $("#s2-flamei"), 0.4);
+      blurIn(3.1, $("#s2-lab-f"), 0.2);
+      tl.fromTo($("#s2-t2"), { color: "#D4D4D8" }, { color: "#111111", duration: 0.3 }, 3.0);
       // 4. icône assurance
-      draw(3.3, $("#s2-shield"), 0.8);
-      draw(3.95, $("#s2-check"), 0.3, "power2.out");
-      blurIn(3.8, $("#s2-lab-s"), 0.2);
-      tl.fromTo($("#s2-t3"), { color: "#D4D4D8" }, { color: "#111111", duration: 0.3 }, 3.75);
+      draw(3.4, $("#s2-shield"), 0.8);
+      draw(4.05, $("#s2-check"), 0.3, "power2.out");
+      blurIn(3.9, $("#s2-lab-s"), 0.2);
+      tl.fromTo($("#s2-t3"), { color: "#D4D4D8" }, { color: "#111111", duration: 0.3 }, 3.85);
       // 5. sortie : flou + fondu
-      blurOut(5.45, [head, $("#s2-lab-y"), $("#s2-lab-x"), $("#s2-lab-f"), $("#s2-lab-s")], 0.2, 0.03);
+      blurOut(5.45, [head, ...$$(".label")], 0.2, 0.02);
       blurOut(5.5, R.querySelector("svg.world"), 0.25, 0, 8);
       window.__timelines["s2"] = tl;
     })();

@@ -1,14 +1,15 @@
 <template>
   <!-- Scène 1 — Le problème invisible -->
   <style>
-    #root { position: absolute; inset: 0; overflow: hidden; font-family: "Montserrat", sans-serif; color: #111111; }
+    @font-face { font-family: "Comfortaa"; src: url("assets/fonts/comfortaa-var.woff2") format("woff2"); font-weight: 300 700; font-style: normal; }
+    #root { position: absolute; inset: 0; overflow: hidden; font-family: "Comfortaa", sans-serif; color: #111111; }
     #root svg.world { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; overflow: visible; }
     #root svg.zoom * { vector-effect: non-scaling-stroke; }
     #root .d { stroke-dasharray: 1 1.2; }
-    #root .title { position: absolute; font-weight: 600; font-size: 64px; line-height: 1.1; letter-spacing: -0.015em; color: #111111; white-space: nowrap; }
+    #root .title { position: absolute; font-weight: 700; font-size: 64px; line-height: 1.12; letter-spacing: -0.01em; color: #111111; white-space: nowrap; }
     #root .w { display: inline-block; }
     #root .acc { color: #FF5700; }
-    #root .label { position: absolute; font-family: "Poppins", sans-serif; font-weight: 500; font-size: 32px; line-height: 1.2; color: #6B6B70; white-space: nowrap; }
+    #root .label { position: absolute; font-family: "Comfortaa", sans-serif; font-weight: 600; font-size: 32px; line-height: 1.2; color: #6B6B70; white-space: nowrap; }
 
     #root .s1-pline { stroke: #111111; }
     #root .s1-pfill, #root .s1-cells, #root .s1-wfill { opacity: 0; }

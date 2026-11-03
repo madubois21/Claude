@@ -1,20 +1,20 @@
 <template>
   <!-- Scène 6 — Call to action -->
   <style>
-    #root { position: absolute; inset: 0; overflow: hidden; font-family: "Montserrat", sans-serif; color: #111111; }
+    @font-face { font-family: "Comfortaa"; src: url("assets/fonts/comfortaa-var.woff2") format("woff2"); font-weight: 300 700; font-style: normal; }
+    #root { position: absolute; inset: 0; overflow: hidden; font-family: "Comfortaa", sans-serif; color: #111111; }
     #root svg.world { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; overflow: visible; }
     #root svg.zoom * { vector-effect: non-scaling-stroke; }
     #root .d { stroke-dasharray: 1 1.2; }
-    #root .title { position: absolute; font-weight: 600; font-size: 64px; line-height: 1.1; letter-spacing: -0.015em; color: #111111; white-space: nowrap; }
+    #root .title { position: absolute; font-weight: 700; font-size: 64px; line-height: 1.12; letter-spacing: -0.01em; color: #111111; white-space: nowrap; }
     #root .w { display: inline-block; }
     #root .acc { color: #FF5700; }
-    #root .label { position: absolute; font-family: "Poppins", sans-serif; font-weight: 500; font-size: 32px; line-height: 1.2; color: #6B6B70; white-space: nowrap; }
+    #root .label { position: absolute; font-family: "Comfortaa", sans-serif; font-weight: 600; font-size: 32px; line-height: 1.2; color: #6B6B70; white-space: nowrap; }
 
-    @font-face { font-family: "Fredoka"; src: url("assets/fonts/fredoka-700.woff2") format("woff2"); font-weight: 700; font-style: normal; }
-    #root .cta1 { left: 0; width: 1920px; top: 654px; text-align: center; font-size: 60px; }
-    #root .cta2 { position: absolute; left: 0; width: 1920px; top: 756px; text-align: center; font-family: "Montserrat", sans-serif; font-weight: 500; font-size: 40px; color: #111111; }
-    #root .cta3 { position: absolute; left: 0; width: 1920px; top: 836px; text-align: center; font-family: "Poppins", sans-serif; font-weight: 500; font-size: 30px; color: #6B6B70; }
-    #root .cta2 .arrow { color: #FF5700; }
+    #root .cta1 { left: 0; width: 1920px; top: 552px; text-align: center; font-size: 56px; line-height: 1.18; }
+    #root .cta2 { position: absolute; left: 0; width: 1920px; top: 722px; text-align: center; font-family: "Comfortaa", sans-serif; font-weight: 600; font-size: 38px; color: #111111; }
+    #root .cta3 { position: absolute; left: 0; width: 1920px; top: 808px; text-align: center; font-family: "Comfortaa", sans-serif; font-weight: 600; font-size: 32px; color: #6B6B70; display: flex; justify-content: center; align-items: center; }
+    #root .cta3 .sq { display: inline-block; width: 10px; height: 10px; background: #FF5700; margin: 0 24px; }
     #root #s6-scan, #root #s6-ballr, #root #s6-balll { opacity: 0; }
   </style>
   <div
@@ -22,7 +22,7 @@
     data-composition-id="s6"
     data-width="1920"
     data-height="1080"
-    data-composition-variables="[{&quot;id&quot;: &quot;s6-slogan&quot;, &quot;type&quot;: &quot;string&quot;, &quot;label&quot;: &quot;Scène 6 — slogan&quot;, &quot;default&quot;: &quot;Rendre visible l’invisible.&quot;}, {&quot;id&quot;: &quot;s6-msg&quot;, &quot;type&quot;: &quot;string&quot;, &quot;label&quot;: &quot;Scène 6 — message&quot;, &quot;default&quot;: &quot;Faites contrôler votre installation.&quot;}, {&quot;id&quot;: &quot;s6-contact&quot;, &quot;type&quot;: &quot;string&quot;, &quot;label&quot;: &quot;Scène 6 — contact (site, téléphone)&quot;, &quot;default&quot;: &quot;&quot;}]"
+    data-composition-variables="[{&quot;id&quot;: &quot;s6-slogan&quot;, &quot;type&quot;: &quot;string&quot;, &quot;label&quot;: &quot;Scène 6 — slogan&quot;, &quot;default&quot;: &quot;Inspections techniques aériennes,|révélez *l’invisible*.&quot;}, {&quot;id&quot;: &quot;s6-msg&quot;, &quot;type&quot;: &quot;string&quot;, &quot;label&quot;: &quot;Scène 6 — message&quot;, &quot;default&quot;: &quot;Faites contrôler votre installation.&quot;}, {&quot;id&quot;: &quot;s6-contact&quot;, &quot;type&quot;: &quot;string&quot;, &quot;label&quot;: &quot;Scène 6 — contact (| sépare les éléments)&quot;, &quot;default&quot;: &quot;www.flyscanair.com|06 22 80 57 69|contact@flyscanair.com&quot;}]"
   >
     <svg class="world" viewBox="0 0 1920 1080" width="1920" height="1080">
       <defs>
@@ -31,7 +31,7 @@
           <stop offset="0.35" stop-color="#E0402F"/>
           <stop offset="1" stop-color="#A51F17"/>
         </radialGradient>
-        <linearGradient id="s6-word" gradientUnits="userSpaceOnUse" x1="140" y1="0" x2="1200" y2="0">
+        <linearGradient id="s6-word" gradientUnits="userSpaceOnUse" x1="140" y1="0" x2="1198" y2="0">
           <stop offset="0" stop-color="#E2392D"/>
           <stop offset="0.47" stop-color="#E9862A"/>
           <stop offset="0.6" stop-color="#E8842A"/>
@@ -39,20 +39,20 @@
         </linearGradient>
         <clipPath id="s6-clip"><rect id="s6-cliprect" x="120" y="100" width="0" height="260"/></clipPath>
       </defs>
-      <g id="s6-logo" transform="translate(439.3 236) scale(0.82)">
-        <path id="s6-coil" stroke-dashoffset="1.05" class="d" pathLength="1" d="M30 218 H95 Q125 218 125 248 V375 A35 35 0 0 0 195 375 V75 A35 35 0 0 1 265 75 V375 A35 35 0 0 0 335 375 V75 A35 35 0 0 1 405 75 V375 A35 35 0 0 0 475 375 V75 A35 35 0 0 1 545 75 V375 A35 35 0 0 0 615 375 V75 A35 35 0 0 1 685 75 V290 Q685 335 730 335 H1200 Q1245 335 1245 290 V210 Q1245 165 1200 165 H1105" fill="none" stroke="#6D6C74" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+      <g id="s6-logo" transform="translate(502.8 196) scale(0.72)">
+        <path id="s6-coil" stroke-dashoffset="1.05" class="d" pathLength="1" d="M30 218 H95 Q125 218 125 248 V375 A35 35 0 0 0 195 375 V75 A35 35 0 0 1 265 75 V375 A35 35 0 0 0 335 375 V75 A35 35 0 0 1 405 75 V375 A35 35 0 0 0 475 375 V75 A35 35 0 0 1 545 75 V375 A35 35 0 0 0 615 375 V75 A35 35 0 0 1 685 75 V290 Q685 335 730 335 H1200 Q1245 335 1245 290 V215 Q1245 170 1200 170 H1087.5" fill="none" stroke="#6D6C74" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
         <g clip-path="url(#s6-clip)">
-          <text id="s6-word" x="140" y="292" font-family="Fredoka" font-weight="700" font-size="188" fill="url(#s6-word)" textLength="1058" lengthAdjust="spacingAndGlyphs">Fly Scan’Air</text>
+          <text id="s6-word" x="140" y="292" font-family="Comfortaa" font-weight="700" font-size="174" fill="url(#s6-word)" stroke="url(#s6-word)" stroke-width="10" stroke-linejoin="round" paint-order="stroke">Fly Scan’Aır</text>
         </g>
         <line id="s6-scan" x1="0" y1="118" x2="0" y2="336" stroke="#FF5700" stroke-width="4"/>
-        <circle id="s6-ballr" cx="1105" cy="165" r="12" fill="url(#s6-ball)"/>
+        <circle id="s6-ballr" cx="1087.5" cy="170" r="12" fill="url(#s6-ball)"/>
         <circle id="s6-balll" cx="30" cy="218" r="12" fill="url(#s6-ball)"/>
       </g>
-      <circle id="s6-dot" cx="463.9" cy="414.76" r="10" fill="#FF5700"/>
+      <circle id="s6-dot" cx="524.4" cy="352.96" r="10" fill="#FF5700"/>
     </svg>
-    <div id="s6-slogan" class="title cta1">Rendre visible l’invisible.</div>
+    <div id="s6-slogan" class="title cta1">Inspections techniques aériennes,<br />révélez l’invisible.</div>
     <div id="s6-msg" class="cta2">Faites contrôler votre installation.</div>
-    <div id="s6-contact" class="cta3"></div>
+    <div id="s6-contact" class="cta3">www.flyscanair.com · 06 22 80 57 69 · contact@flyscanair.com</div>
   </div>
   <script>
     (function () {
@@ -109,10 +109,15 @@
       const fadeOut = (t, els, d = 0.3, stagger = 0, ease = "power1.in") =>
         tl.to(els, { opacity: 0, duration: d, ease, stagger }, t);
 
-      const slogan = words($("#s6-slogan"), txt("s6-slogan", "Rendre visible l’invisible."));
+      const slogan = words($("#s6-slogan"), txt("s6-slogan", "Inspections techniques aériennes,|révélez *l’invisible*."));
       const msg = words($("#s6-msg"), txt("s6-msg", "Faites contrôler votre installation."));
-      const contact = txt("s6-contact", "");
-      $("#s6-contact").textContent = contact;
+      const contact = txt("s6-contact", "www.flyscanair.com|06 22 80 57 69|contact@flyscanair.com");
+      const cEl = $("#s6-contact");
+      cEl.textContent = "";
+      contact.split("|").forEach((part, i) => {
+        if (i) { const q = document.createElement("i"); q.className = "sq"; cEl.appendChild(q); }
+        const sp = document.createElement("span"); sp.textContent = part.trim(); cEl.appendChild(sp);
+      });
       // 1. le point orange devient la bille rouge du logo
       tl.fromTo($("#s6-balll"), { opacity: 0 }, { opacity: 1, duration: 0.35, ease: "power1.inOut" }, 0.0);
       tl.to($("#s6-dot"), { opacity: 0, duration: 0.35, ease: "power1.inOut" }, 0.0);

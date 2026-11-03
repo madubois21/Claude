@@ -45,14 +45,15 @@ def attr_json(obj):
 # Shared CSS / JS
 # --------------------------------------------------------------------------
 BASE_CSS = """
-    #root { position: absolute; inset: 0; overflow: hidden; font-family: "Montserrat", sans-serif; color: #111111; }
+    @font-face { font-family: "Comfortaa"; src: url("assets/fonts/comfortaa-var.woff2") format("woff2"); font-weight: 300 700; font-style: normal; }
+    #root { position: absolute; inset: 0; overflow: hidden; font-family: "Comfortaa", sans-serif; color: #111111; }
     #root svg.world { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; overflow: visible; }
     #root svg.zoom * { vector-effect: non-scaling-stroke; }
     #root .d { stroke-dasharray: 1 1.2; }
-    #root .title { position: absolute; font-weight: 600; font-size: 64px; line-height: 1.1; letter-spacing: -0.015em; color: #111111; white-space: nowrap; }
+    #root .title { position: absolute; font-weight: 700; font-size: 64px; line-height: 1.12; letter-spacing: -0.01em; color: #111111; white-space: nowrap; }
     #root .w { display: inline-block; }
     #root .acc { color: #FF5700; }
-    #root .label { position: absolute; font-family: "Poppins", sans-serif; font-weight: 500; font-size: 32px; line-height: 1.2; color: #6B6B70; white-space: nowrap; }
+    #root .label { position: absolute; font-family: "Comfortaa", sans-serif; font-weight: 600; font-size: 32px; line-height: 1.2; color: #6B6B70; white-space: nowrap; }
 """
 
 BASE_JS = """
@@ -291,11 +292,11 @@ def vb(t):
 # --------------------------------------------------------------------------
 # Logo (vector redraw of the Fly Scan'Air PNG) — logo coords 1270 x 430
 # --------------------------------------------------------------------------
-LOGO_S = 0.82
+LOGO_S = 0.72
 LOGO_X = (W - 1270 * LOGO_S) / 2
-LOGO_Y = 236
+LOGO_Y = 196
 BALL_L = (30, 218)
-BALL_R = (1105, 165)
+BALL_R = (1087.5, 170)  # = le point du « ı » (Comfortaa 700, 174 px, mesuré)
 
 
 def logo_coil_path():
@@ -309,7 +310,7 @@ def logo_coil_path():
         else:  # top U-turn, then go down
             d.append(f"A35 35 0 0 1 {b} 75")
             d.append("V375" if i < len(xs) - 2 else "V290")
-    d += ["Q685 335 730 335", "H1200", "Q1245 335 1245 290", "V210", "Q1245 165 1200 165", f"H{BALL_R[0]}"]
+    d += ["Q685 335 730 335", "H1200", "Q1245 335 1245 290", "V215", "Q1245 170 1200 170", f"H{BALL_R[0]}"]
     return " ".join(d)
 
 
@@ -451,79 +452,138 @@ def build_s1():
 # --------------------------------------------------------------------------
 # S2 — Les risques
 # --------------------------------------------------------------------------
+def smooth_path(points):
+    """Catmull-Rom -> Bézier cubiques (courbe passant par chaque point)."""
+    d = [f"M{n(points[0][0])} {n(points[0][1])}"]
+    for i in range(len(points) - 1):
+        p0 = points[i - 1] if i > 0 else points[i]
+        p1, p2 = points[i], points[i + 1]
+        p3 = points[i + 2] if i + 2 < len(points) else p2
+        c1 = (p1[0] + (p2[0] - p0[0]) / 6, p1[1] + (p2[1] - p0[1]) / 6)
+        c2 = (p2[0] - (p3[0] - p1[0]) / 6, p2[1] - (p3[1] - p1[1]) / 6)
+        d.append(f"C{n(c1[0])} {n(c1[1])} {n(c2[0])} {n(c2[1])} {n(p2[0])} {n(p2[1])}")
+    return " ".join(d)
+
+
+# Données du graphique « Rendement (%) » fournies par le client (janvier -> juin)
+S2_X0, S2_Y0, S2_DX, S2_DY = 250, 850, 150, 24  # origine (80 %), px par mois, px par point de %
+S2_MONTHS = ["Jan", "Fév", "Mar", "Avr", "Mai", "Jun"]
+S2_SAINE = [(0, 98.2), (1, 97.9), (2, 97.4), (3, 96.6), (4, 96.3), (5, 96.0), (5.4, 95.2)]
+S2_DEFAUT = [(0, 98.2), (1, 96.6), (2, 94.0), (3, 90.0), (4, 86.7), (5, 85.4), (5.4, 85.2)]
+
+
+def s2_xy(m, v):
+    return S2_X0 + m * S2_DX, S2_Y0 - (v - 80) * S2_DY
+
+
 def build_s2():
-    curve = "M160 440 C300 430 420 425 520 432 C640 440 720 600 820 680 C900 742 980 770 1050 780"
-    loss = "M520 432 L1050 420 L1050 780 C980 770 900 742 820 680 C720 600 640 440 520 432 Z"
+    saine = [s2_xy(*p) for p in S2_SAINE]
+    defaut = [s2_xy(*p) for p in S2_DEFAUT]
+    p_saine, p_defaut = smooth_path(saine), smooth_path(defaut)
+    back = smooth_path(defaut[::-1]).replace("M", "L", 1)
+    loss = p_saine + " " + back + " Z"
+    xend = S2_X0 + 5.4 * S2_DX
+    ax_x1, ax_y1 = 1120, 330
+    grid, yticks, xticks = [], [], []
+    for v in (80, 85, 90, 95, 100):
+        y = s2_xy(0, v)[1]
+        if v > 80:
+            grid.append(f'<line x1="{S2_X0}" y1="{n(y)}" x2="{ax_x1 - 10}" y2="{n(y)}"/>')
+        yticks.append(f'<text x="{S2_X0 - 22}" y="{n(y + 10)}" text-anchor="end">{v}</text>')
+    for i, m in enumerate(S2_MONTHS):
+        x = S2_X0 + i * S2_DX
+        xticks.append(f'<line x1="{x}" y1="{S2_Y0}" x2="{x}" y2="{S2_Y0 + 10}" stroke="{INK}" stroke-width="2"/>')
+        xticks.append(f'<text x="{x}" y="{S2_Y0 + 46}" text-anchor="middle">{m}</text>')
+    gs, gd = saine[-1], defaut[-1]
     flame_o = "M0 -110 C20 -70 75 -45 75 25 C75 75 42 105 0 105 C-42 105 -75 75 -75 25 C-75 -20 -40 -40 -30 -75 C-10 -45 0 -30 5 -10 C20 -40 15 -80 0 -110 Z"
     flame_i = "M0 28 C18 44 30 60 30 76 C30 93 17 104 0 104 C-17 104 -30 93 -30 76 C-30 58 -14 46 0 28 Z"
     shield = "M0 -112 L86 -82 L86 0 C86 60 46 96 0 116 C-46 96 -86 60 -86 0 L-86 -82 Z"
     check = "M-36 2 L-8 30 L40 -24"
+    FX, SX, IY = 1430, 1705, 590
     body = f"""    <svg class="world" viewBox="0 0 {W} {H}" width="{W}" height="{H}">
       <defs>
-        <clipPath id="s2-clip"><rect id="s2-cliprect" x="520" y="380" width="0" height="440"/></clipPath>
+        <clipPath id="s2-clip"><rect id="s2-cliprect" x="{S2_X0}" y="300" width="0" height="560"/></clipPath>
+        <linearGradient id="s2-lossg" x1="0" x2="0" y1="0" y2="1">
+          <stop offset="0" stop-color="{ACC}" stop-opacity="0.08"/>
+          <stop offset="1" stop-color="{ACC}" stop-opacity="0.22"/>
+        </linearGradient>
       </defs>
-      <g clip-path="url(#s2-clip)">
-        <path id="s2-loss" d="{loss}" fill="{ACC}" fill-opacity="0.16"/>
-        <line x1="520" y1="432" x2="1050" y2="420" stroke="#A1A1AA" stroke-width="2" stroke-dasharray="8 9"/>
-      </g>
+      <g id="s2-grid" stroke="#E4E4E7" stroke-width="1.5" stroke-dasharray="6 8">{"".join(grid)}</g>
+      <g id="s2-yt" class="tick">{"".join(yticks)}</g>
+      <g id="s2-xt" class="tick">{"".join(xticks)}</g>
+      <path id="s2-loss" clip-path="url(#s2-clip)" d="{loss}" fill="url(#s2-lossg)"/>
       <g fill="none" stroke="{INK}" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
         <line id="s2-x" x1="120" y1="880" x2="1800" y2="880"/>
-        <line id="s2-y" class="d" pathLength="1" x1="160" y1="880" x2="160" y2="330"/>
-        <path id="s2-curve" class="d" pathLength="1" d="{curve}" stroke-width="3"/>
-        <g transform="translate(1390 590)">
+        <polyline id="s2-xa" class="d" pathLength="1" points="{ax_x1 - 12},{S2_Y0 - 9} {ax_x1},{S2_Y0} {ax_x1 - 12},{S2_Y0 + 9}"/>
+        <line id="s2-y" class="d" pathLength="1" x1="{S2_X0}" y1="{S2_Y0}" x2="{S2_X0}" y2="{ax_y1}"/>
+        <polyline id="s2-ya" class="d" pathLength="1" points="{S2_X0 - 9},{ax_y1 + 12} {S2_X0},{ax_y1} {S2_X0 + 9},{ax_y1 + 12}"/>
+        <path id="s2-saine" class="d" pathLength="1" d="{p_saine}" stroke="#A1A1AA" stroke-width="4"/>
+        <path id="s2-defaut" class="d" pathLength="1" d="{p_defaut}" stroke="{ACC}" stroke-width="4.5"/>
+        <g transform="translate({FX} {IY})">
           <path id="s2-flame" class="d" pathLength="1" d="{flame_o}"/>
           <path id="s2-flamei" d="{flame_i}" fill="{ACC}" stroke="none"/>
         </g>
-        <g transform="translate(1680 590)">
+        <g transform="translate({SX} {IY})">
           <path id="s2-shield" class="d" pathLength="1" d="{shield}"/>
           <path id="s2-check" class="d" pathLength="1" d="{check}" stroke-width="3"/>
         </g>
       </g>
-      <circle id="s2-end" cx="1050" cy="780" r="8" fill="{ACC}"/>
+      <circle id="s2-end0" cx="{n(gs[0])}" cy="{n(gs[1])}" r="9" fill="#FFFFFF" stroke="#A1A1AA" stroke-width="3.5"/>
+      <circle id="s2-end1" cx="{n(gd[0])}" cy="{n(gd[1])}" r="9" fill="#FFFFFF" stroke="{ACC}" stroke-width="3.5"/>
     </svg>
     <div id="s2-head" class="head">
       <span id="s2-t1" class="term">Perte de rendement</span><i class="sq"></i><span id="s2-t2" class="term">Risque incendie</span><i class="sq"></i><span id="s2-t3" class="term">Défauts invisibles</span>
     </div>
-    <div id="s2-lab-y" class="label" style="left: 182px; top: 300px">Rendement</div>
-    <div id="s2-lab-x" class="label" style="left: 975px; top: 898px">Temps</div>
-    <div id="s2-lab-f" class="label" style="left: 1290px; top: 735px; width: 200px; text-align: center">Incendie</div>
-    <div id="s2-lab-s" class="label" style="left: 1560px; top: 735px; width: 240px; text-align: center">Assurance</div>"""
+    <div id="s2-lab-y" class="label" style="left: 200px; top: 274px">Rendement (%)</div>
+    <div id="s2-lab-x" class="label" style="left: 900px; top: 922px; width: 220px; text-align: right">Temps (mois)</div>
+    <div id="s2-lab-s0" class="label" style="left: {n(xend + 22)}px; top: {n(gs[1] - 20)}px">Saine</div>
+    <div id="s2-lab-s1" class="label" style="left: {n(xend + 22)}px; top: {n(gd[1] - 20)}px; color: #111111">Avec défauts</div>
+    <div id="s2-lab-f" class="label" style="left: {FX - 110}px; top: 735px; width: 220px; text-align: center">Incendie</div>
+    <div id="s2-lab-s" class="label" style="left: {SX - 120}px; top: 735px; width: 240px; text-align: center">Assurance</div>"""
     css = """
-    #root .head { position: absolute; left: 140px; top: 150px; font-weight: 600; font-size: 50px; letter-spacing: -0.015em; white-space: nowrap; display: flex; align-items: center; }
+    #root .head { position: absolute; left: 140px; top: 150px; font-weight: 700; font-size: 46px; letter-spacing: -0.01em; white-space: nowrap; display: flex; align-items: center; }
     #root .term { color: #D4D4D8; }
-    #root .sq { display: inline-block; width: 14px; height: 14px; background: #FF5700; margin: 0 30px; }
-    #root #s2-end, #root #s2-flamei { opacity: 0; }"""
+    #root .sq { display: inline-block; width: 14px; height: 14px; background: #FF5700; margin: 0 28px; }
+    #root .tick text { font-family: "Comfortaa", sans-serif; font-weight: 600; font-size: 28px; fill: #6B6B70; }
+    #root #s2-end0, #root #s2-end1, #root #s2-flamei, #root #s2-grid, #root #s2-yt, #root #s2-xt { opacity: 0; }"""
     js = """
       $("#s2-t1").textContent = txt("s2-t1", "Perte de rendement");
       $("#s2-t2").textContent = txt("s2-t2", "Risque incendie");
       $("#s2-t3").textContent = txt("s2-t3", "Défauts invisibles");
       const head = $("#s2-head");
-      // 1. la ligne de sol devient l'axe des temps
-      tl.fromTo($("#s2-x"), { attr: { x1: 120, x2: 1800 } }, { attr: { x1: 160, x2: 1060 }, duration: 0.7, ease: "power2.inOut" }, 0);
-      draw(0.4, $("#s2-y"), 0.6, "power3.out");
+      // 1. la ligne de sol devient l'axe des temps, l'axe du rendement se dessine
+      tl.fromTo($("#s2-x"), { attr: { x1: 120, x2: 1800, y1: 880, y2: 880 } }, { attr: { x1: __X0__, x2: __AX1__, y1: __Y0__, y2: __Y0__ }, duration: 0.7, ease: "power2.inOut" }, 0);
+      draw(0.35, $("#s2-y"), 0.55, "power3.out");
+      draw(0.7, [$("#s2-xa"), $("#s2-ya")], 0.25, "power2.out", 0.05);
       blurIn(0.3, head, 0.2, 0, 6);
-      blurIn(0.8, [$("#s2-lab-y"), $("#s2-lab-x")], 0.2, 0.1);
-      // 2. la courbe de rendement chute
-      draw(0.9, $("#s2-curve"), 1.4, "power1.inOut");
-      tl.fromTo($("#s2-cliprect"), { attr: { width: 0 } }, { attr: { width: 540 }, duration: 1.2, ease: "power1.inOut" }, 1.3);
-      tl.fromTo($("#s2-end"), { opacity: 0, scale: 0, transformOrigin: "50% 50%" }, { opacity: 1, scale: 1, duration: 0.35, ease: "back.out(1.6)" }, 2.25);
-      tl.fromTo($("#s2-t1"), { color: "#D4D4D8" }, { color: "#111111", duration: 0.3 }, 2.0);
+      fadeIn(0.55, [$("#s2-grid"), $("#s2-yt"), $("#s2-xt")], 0.4, 0.08);
+      blurIn(0.75, [$("#s2-lab-y"), $("#s2-lab-x")], 0.2, 0.1);
+      // 2. installation saine vs installation avec défauts
+      draw(0.9, $("#s2-saine"), 1.2, "power1.inOut");
+      draw(1.0, $("#s2-defaut"), 1.3, "power1.inOut");
+      tl.fromTo($("#s2-cliprect"), { attr: { width: 0 } }, { attr: { width: __CW__ }, duration: 1.3, ease: "power1.inOut" }, 1.0);
+      tl.fromTo($("#s2-end0"), { opacity: 0, scale: 0, transformOrigin: "50% 50%" }, { opacity: 1, scale: 1, duration: 0.35, ease: "back.out(1.6)" }, 2.1);
+      tl.fromTo($("#s2-end1"), { opacity: 0, scale: 0, transformOrigin: "50% 50%" }, { opacity: 1, scale: 1, duration: 0.35, ease: "back.out(1.6)" }, 2.25);
+      blurIn(2.2, [$("#s2-lab-s0"), $("#s2-lab-s1")], 0.18, 0.12);
+      tl.fromTo($("#s2-t1"), { color: "#D4D4D8" }, { color: "#111111", duration: 0.3 }, 1.9);
       // 3. icône incendie
-      draw(2.5, $("#s2-flame"), 0.8);
-      fadeIn(3.0, $("#s2-flamei"), 0.4);
-      blurIn(3.0, $("#s2-lab-f"), 0.2);
-      tl.fromTo($("#s2-t2"), { color: "#D4D4D8" }, { color: "#111111", duration: 0.3 }, 2.9);
+      draw(2.6, $("#s2-flame"), 0.8);
+      fadeIn(3.1, $("#s2-flamei"), 0.4);
+      blurIn(3.1, $("#s2-lab-f"), 0.2);
+      tl.fromTo($("#s2-t2"), { color: "#D4D4D8" }, { color: "#111111", duration: 0.3 }, 3.0);
       // 4. icône assurance
-      draw(3.3, $("#s2-shield"), 0.8);
-      draw(3.95, $("#s2-check"), 0.3, "power2.out");
-      blurIn(3.8, $("#s2-lab-s"), 0.2);
-      tl.fromTo($("#s2-t3"), { color: "#D4D4D8" }, { color: "#111111", duration: 0.3 }, 3.75);
+      draw(3.4, $("#s2-shield"), 0.8);
+      draw(4.05, $("#s2-check"), 0.3, "power2.out");
+      blurIn(3.9, $("#s2-lab-s"), 0.2);
+      tl.fromTo($("#s2-t3"), { color: "#D4D4D8" }, { color: "#111111", duration: 0.3 }, 3.85);
       // 5. sortie : flou + fondu
-      blurOut(5.45, [head, $("#s2-lab-y"), $("#s2-lab-x"), $("#s2-lab-f"), $("#s2-lab-s")], 0.2, 0.03);
+      blurOut(5.45, [head, ...$$(".label")], 0.2, 0.02);
       blurOut(5.5, R.querySelector("svg.world"), 0.25, 0, 8);"""
+    js = (js.replace("__X0__", str(S2_X0)).replace("__AX1__", str(ax_x1)).replace("__Y0__", str(S2_Y0))
+          .replace("__CW__", n(xend - S2_X0 + 12)))
     write_scene(
         "s2",
-        "Scène 2 — Les risques",
+        "Scène 2 — Les risques (graphique rendement fourni par le client)",
         [
             svar("s2-t1", "Scène 2 — terme 1", "Perte de rendement"),
             svar("s2-t2", "Scène 2 — terme 2", "Risque incendie"),
@@ -556,16 +616,8 @@ def drone_svg():
         "</g>"
         for x, y in rot
     )
-    ticks = "".join(
-        f'<line class="d s3-tick" pathLength="1" x1="{x1}" y1="{y1}" x2="{x2}" y2="{y2}"/>'
-        for x1, y1, x2, y2 in [(0, -175, 0, -197), (175, 0, 197, 0), (0, 175, 0, 197), (-175, 0, -197, 0)]
-    )
     return f"""<g id="s3-drone">
           <ellipse cx="34" cy="46" rx="150" ry="112" fill="#111111" fill-opacity="0.06"/>
-          <g fill="none" stroke="{INK}" stroke-width="1.5" stroke-opacity="0.6">
-            <circle id="s3-reticle" class="d" pathLength="1" r="175" transform="rotate(-90)"/>
-            {ticks}
-          </g>
           {arms}
           {rotors}
           <rect x="-52" y="-36" width="104" height="72" rx="18" fill="#FFFFFF" stroke="{INK}" stroke-width="2.5"/>
@@ -618,8 +670,8 @@ def build_s3():
         <line x1="-12" y1="{fy1}" x2="12" y2="{fy1}" stroke="{ACC}" stroke-width="3"/>
       </g>
       {drone_svg()}
-      <polyline id="s3-leader" class="d" pathLength="1" points="327.5,546 420,331 470,331" fill="none" stroke="{INK}" stroke-width="1.5"/>
-      <circle id="s3-leaddot" cx="327.5" cy="546" r="4" fill="{INK}"/>
+      <polyline id="s3-leader" class="d" pathLength="1" points="{HOVER_X},{DRONE_Y - 40} {HOVER_X},331 470,331" fill="none" stroke="{INK}" stroke-width="1.5"/>
+      <circle id="s3-leaddot" cx="{HOVER_X}" cy="{DRONE_Y - 40}" r="5" fill="{INK}"/>
     </svg>
     <div id="s3-hud">
       <div id="s3-tag" class="tag">Caméra infrarouge</div>
@@ -628,8 +680,8 @@ def build_s3():
     <div id="s3-title" class="title" style="left: 140px; top: 120px">Le scan infrarouge révèle<br />chaque échauffement.</div>"""
     css = """
     #root #s3-hud { position: absolute; left: 480px; top: 306px; display: flex; align-items: center; gap: 36px; }
-    #root .tag { font-family: "Poppins", sans-serif; font-weight: 500; font-size: 30px; line-height: 1; padding: 10px 16px; background: #FFFFFF; border: 1.5px solid #111111; color: #111111; white-space: nowrap; }
-    #root .scale { display: flex; align-items: center; gap: 14px; font-family: "Poppins", sans-serif; font-weight: 500; font-size: 30px; color: #6B6B70; }
+    #root .tag { font-family: "Comfortaa", sans-serif; font-weight: 600; font-size: 30px; line-height: 1; padding: 10px 16px; background: #FFFFFF; border: 1.5px solid #111111; color: #111111; white-space: nowrap; }
+    #root .scale { display: flex; align-items: center; gap: 14px; font-family: "Comfortaa", sans-serif; font-weight: 600; font-size: 30px; color: #6B6B70; }
     #root .scale i { display: block; width: 200px; height: 12px; background: linear-gradient(90deg, #E4E4E7 0%, #FFD2BC 55%, #FF5700 100%); }
     #root #s3-tag, #root #s3-scale, #root #s3-leaddot, #root #s3-scan, #root .s3-ring { opacity: 0; }
     #root .s3-pfill, #root .s3-cells { opacity: 0; }"""
@@ -645,12 +697,10 @@ def build_s3():
       // 2. le drone entre ; les rotors tournent en continu
       tl.fromTo($("#s3-drone"), {{ x: -260, y: Y }}, {{ x: HOVER, y: Y, duration: 1.2, ease: "expo.out" }}, 0.9);
       tl.fromTo($$(".s3-blade"), {{ rotation: 0, transformOrigin: "50% 50%" }}, {{ rotation: 360 * 15, duration: 7.2, ease: "none" }}, 0);
-      // 3. HUD technique autour du drone
-      draw(1.9, $("#s3-reticle"), 0.55);
-      draw(2.25, $$(".s3-tick"), 0.2, "power2.out", 0.04);
-      fadeIn(2.15, $("#s3-leaddot"), 0.15);
-      draw(2.2, $("#s3-leader"), 0.3, "power2.out");
-      blurIn(2.45, [$("#s3-tag"), $("#s3-scale")], 0.18, 0.12);
+      // 3. HUD technique : ligne de rappel + données
+      fadeIn(1.95, $("#s3-leaddot"), 0.15);
+      draw(2.0, $("#s3-leader"), 0.4, "power2.out");
+      blurIn(2.3, [$("#s3-tag"), $("#s3-scale")], 0.18, 0.12);
       blurOut(3.65, [$("#s3-tag"), $("#s3-scale")], 0.16, 0.05);
       undraw(3.65, $("#s3-leader"), 0.22, "power3.in");
       fadeOut(3.7, $("#s3-leaddot"), 0.15);
@@ -725,7 +775,7 @@ def build_s4():
     {"".join(labels)}
     <div id="s4-title" class="title" style="left: 120px; top: 86px; font-size: 56px">Chaque anomalie est détectée et localisée.</div>"""
     css = """
-    #root .lab4 { position: absolute; font-family: "Poppins", sans-serif; font-weight: 500; font-size: 36px; line-height: 42px; color: #111111; white-space: nowrap; }
+    #root .lab4 { position: absolute; font-family: "Comfortaa", sans-serif; font-weight: 600; font-size: 36px; line-height: 42px; color: #111111; white-space: nowrap; }
     #root #s4-bus, #root #s4-inner, #root #s4-ring { opacity: 0; }
     #root #s4-leaders circle { opacity: 0; }"""
     js = f"""
@@ -777,7 +827,11 @@ def build_s4():
 # --------------------------------------------------------------------------
 # S5 — Rapport et bénéfices
 # --------------------------------------------------------------------------
-DOT5 = (1745, 405)
+# Données du graphique « Production (kWh/an) » fournies par le client
+S5_AX, S5_AY, S5_TOP = 1060, 850, 410  # axe Y en x, axe X en y, haut de l'échelle (25 000)
+S5_K = (S5_AY - S5_TOP) / 25000
+S5_BARS = [("Installation|saine", 20000, 1250, "#CDCDD2"), ("Installation|avec défauts", 16400, 1580, ACC)]
+S5_BW = 210
 
 
 def build_s5():
@@ -791,6 +845,20 @@ def build_s5():
         checks.append(f'<polyline id="s5-k{i}" class="d" pathLength="1" points="266,{y + 1} 275,{y + 10} 290,{y - 9}" stroke="{ACC}" stroke-width="4"/>')
         texts.append(f'<div id="s5-i{i}" class="item" style="left: 318px; top: {y - 21}px">{t}</div>')
     ball_x, ball_y = logo_screen(*BALL_L)
+    grid, yticks, bars, cats = [], [], [], []
+    for v in range(0, 25001, 5000):
+        y = S5_AY - v * S5_K
+        if v:
+            grid.append(f'<line x1="{S5_AX}" y1="{n(y)}" x2="1770" y2="{n(y)}"/>')
+        label = f"{v:,}".replace(",", " ")
+        yticks.append(f'<text x="{S5_AX - 20}" y="{n(y + 10)}" text-anchor="end">{label}</text>')
+    for i, (name, v, cx, col) in enumerate(S5_BARS):
+        h = v * S5_K
+        bars.append(
+            f'<rect id="s5-bar{i}" x="{cx - S5_BW / 2}" y="{n(S5_AY - h)}" width="{S5_BW}" height="{n(h + 12)}" rx="10" '
+            f'fill="{col}" data-top="{n(S5_AY - h)}" data-h="{n(h + 12)}"/>'
+        )
+        cats.append(f'<div id="s5-cat{i}" class="cat" style="left: {cx - 170}px; top: {S5_AY + 18}px">{name.replace("|", "<br />")}</div>')
     body = f"""    <div id="s5-paper" style="left: {dx}px; top: {dy}px; width: {dw}px; height: {dh}px"></div>
     <svg class="world" viewBox="0 0 {W} {H}" width="{W}" height="{H}">
       <g fill="none" stroke="{INK}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -808,29 +876,34 @@ def build_s5():
       <g id="s5-marks">{marks_svg("s5", False)}</g>
     </svg>
     <svg id="s5-chart" class="world" viewBox="0 0 {W} {H}" width="{W}" height="{H}">
-      <defs><clipPath id="s5-clip"><rect id="s5-cliprect" x="955" y="380" width="0" height="500"/></clipPath></defs>
-      <g fill="none" stroke-linecap="round" stroke-linejoin="round">
-        <line id="s5-ax" class="d" pathLength="1" x1="960" y1="860" x2="1760" y2="860" stroke="{INK}" stroke-width="2.5"/>
-        <line id="s5-ay" class="d" pathLength="1" x1="960" y1="860" x2="960" y2="420" stroke="{INK}" stroke-width="2.5"/>
-        <path clip-path="url(#s5-clip)" d="M960 520 C1150 515 1300 640 1500 730 C1600 770 1700 790 1760 795" stroke="#B4B4BB" stroke-width="2.5" stroke-dasharray="9 10"/>
-        <path id="s5-curve" class="d" pathLength="1" d="M960 520 C1150 512 1300 505 1450 470 C1580 440 1680 420 {DOT5[0]} {DOT5[1]}" stroke="{ACC}" stroke-width="4"/>
+      <defs><clipPath id="s5-clip"><rect x="0" y="0" width="{W}" height="{S5_AY}"/></clipPath></defs>
+      <g id="s5-axes">
+        <g id="s5-grid" stroke="#E4E4E7" stroke-width="1.5" stroke-dasharray="6 8">{"".join(grid)}</g>
+        <g id="s5-yt" class="tick">{"".join(yticks)}</g>
+        <g fill="none" stroke="{INK}" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <line id="s5-ax" class="d" pathLength="1" x1="{S5_AX}" y1="{S5_AY}" x2="1790" y2="{S5_AY}"/>
+          <polyline id="s5-axa" class="d" pathLength="1" points="1778,{S5_AY - 9} 1790,{S5_AY} 1778,{S5_AY + 9}"/>
+          <line id="s5-ay" class="d" pathLength="1" x1="{S5_AX}" y1="{S5_AY}" x2="{S5_AX}" y2="375"/>
+          <polyline id="s5-aya" class="d" pathLength="1" points="{S5_AX - 9},387 {S5_AX},375 {S5_AX + 9},387"/>
+        </g>
       </g>
-      <circle id="s5-dot" cx="{DOT5[0]}" cy="{DOT5[1]}" r="10" fill="{ACC}"/>
+      <g clip-path="url(#s5-clip)">{"".join(bars)}</g>
     </svg>
     <div id="s5-h" class="dochead" style="left: 260px; top: 128px">Rapport d’inspection</div>
     {"".join(texts)}
-    <div id="s5-lab-y" class="label" style="left: 982px; top: 400px">Rendement</div>
-    <div id="s5-lab-a" class="label" style="left: 1640px; top: 812px">Avant</div>
-    <div id="s5-lab-b" class="label" style="left: 1560px; top: 350px; color: #111111">Après</div>
+    <div id="s5-lab-y" class="label" style="left: 1010px; top: 318px">Production (kWh/an)</div>
+    {"".join(cats)}
     <div id="s5-title" class="title" style="left: 960px; top: 150px">Un rapport clair<br />pour agir vite.</div>"""
     css = """
     #root #s5-paper { position: absolute; background: #FFFFFF; box-shadow: 0 18px 40px rgba(17, 17, 17, 0.08); opacity: 0; }
-    #root .dochead { position: absolute; font-family: "Poppins", sans-serif; font-weight: 600; font-size: 30px; line-height: 40px; color: #111111; white-space: nowrap; }
-    #root .item { position: absolute; font-family: "Poppins", sans-serif; font-weight: 500; font-size: 30px; line-height: 42px; color: #111111; white-space: nowrap; }
-    #root #s5-dot { opacity: 0; }"""
-    js = f"""
+    #root .dochead { position: absolute; font-family: "Comfortaa", sans-serif; font-weight: 700; font-size: 30px; line-height: 40px; color: #111111; white-space: nowrap; }
+    #root .item { position: absolute; font-family: "Comfortaa", sans-serif; font-weight: 600; font-size: 30px; line-height: 42px; color: #111111; white-space: nowrap; }
+    #root .tick text { font-family: "Comfortaa", sans-serif; font-weight: 600; font-size: 28px; fill: #6B6B70; }
+    #root .cat { position: absolute; width: 340px; text-align: center; font-family: "Comfortaa", sans-serif; font-weight: 600; font-size: 28px; line-height: 36px; color: #111111; }
+    #root #s5-grid, #root #s5-yt { opacity: 0; }"""
+    js = """
       const title = words($("#s5-title"), txt("s5-title", "Un rapport clair|pour *agir vite*."));
-      ["s5-i0", "s5-i1", "s5-i2"].forEach((id, i) => {{ const v = txt(id, ""); if (v) $("#" + id).textContent = v; }});
+      ["s5-i0", "s5-i1", "s5-i2"].forEach((id, i) => { const v = txt(id, ""); if (v) $("#" + id).textContent = v; });
       // 1. la feuille se dessine autour de la vignette
       draw(0, $("#s5-doc"), 1.1, "power2.inOut");
       fadeIn(0.2, $("#s5-paper"), 0.7);
@@ -845,20 +918,26 @@ def build_s5():
       draw(2.2, $("#s5-k1"), 0.25, "power2.out");
       draw(2.6, $("#s5-k2"), 0.25, "power2.out");
       draw(1.7, $$(".s5-foot"), 0.4, "power2.out", 0.1);
-      // 4. la courbe de rendement remonte
+      // 4. graphique production : installation saine vs avec défauts
       draw(2.2, [$("#s5-ay"), $("#s5-ax")], 0.55, "power3.out", 0.08);
+      draw(2.6, [$("#s5-aya"), $("#s5-axa")], 0.22, "power2.out", 0.05);
+      fadeIn(2.45, [$("#s5-grid"), $("#s5-yt")], 0.4, 0.08);
       blurIn(2.55, $("#s5-lab-y"), 0.18);
-      tl.fromTo($("#s5-cliprect"), {{ attr: {{ width: 0 }} }}, {{ attr: {{ width: 810 }}, duration: 0.8, ease: "power1.inOut" }}, 2.75);
-      blurIn(3.4, $("#s5-lab-a"), 0.18);
-      draw(3.3, $("#s5-curve"), 1.0, "power2.inOut");
-      tl.fromTo($("#s5-dot"), {{ opacity: 0, scale: 0, transformOrigin: "50% 50%" }}, {{ opacity: 1, scale: 1, duration: 0.4, ease: "back.out(1.4)" }}, 4.25);
-      blurIn(4.4, $("#s5-lab-b"), 0.18);
-      // 5. sortie : tout se floute, le point orange file vers le logo
-      const keep = $("#s5-dot");
-      blurOut(5.85, [...title, $("#s5-h"), $("#s5-i0"), $("#s5-i1"), $("#s5-i2"), $("#s5-lab-y"), $("#s5-lab-a"), $("#s5-lab-b")], 0.2, 0.015);
-      blurOut(5.9, [R.querySelector("svg.world"), $("#s5-thumb"), $("#s5-paper")], 0.22, 0.02);
-      tl.to($$("#s5-chart > g"), {{ opacity: 0, filter: "blur(8px)", duration: 0.22, ease: "power2.in" }}, 5.9);
-      tl.to(keep, {{ x: {n(ball_x - DOT5[0])}, y: {n(ball_y - DOT5[1])}, duration: 0.6, ease: "power2.inOut" }}, 5.95);"""
+      [0, 1].forEach((i) => {
+        const b = $("#s5-bar" + i);
+        const top = parseFloat(b.getAttribute("data-top")), h = parseFloat(b.getAttribute("data-h"));
+        tl.fromTo(b, { attr: { y: __AY__, height: 0 } }, { attr: { y: top, height: h }, duration: 0.75, ease: "power3.out" }, 2.85 + i * 0.35);
+        blurIn(3.15 + i * 0.35, $("#s5-cat" + i), 0.18);
+      });
+      // 5. sortie : tout se floute ; la barre orange se replie en point et file vers le logo
+      const keep = $("#s5-bar1");
+      const kx = __BX__, ky = parseFloat(keep.getAttribute("data-top"));
+      blurOut(5.85, [...title, $("#s5-h"), $("#s5-i0"), $("#s5-i1"), $("#s5-i2"), $("#s5-lab-y"), $("#s5-cat0"), $("#s5-cat1")], 0.2, 0.015);
+      blurOut(5.9, [R.querySelector("svg.world"), $("#s5-thumb"), $("#s5-paper"), $("#s5-axes"), $("#s5-bar0")], 0.22, 0.02);
+      tl.to(keep, { attr: { x: kx - 10, y: ky - 10, width: 20, height: 20, rx: 10 }, duration: 0.32, ease: "power2.inOut" }, 5.85);
+      tl.to(keep, { attr: { x: __TX__, y: __TY__ }, duration: 0.5, ease: "power2.inOut" }, 6.08);"""
+    js = (js.replace("__AY__", str(S5_AY)).replace("__BX__", str(S5_BARS[1][2]))
+          .replace("__TX__", n(ball_x - 10)).replace("__TY__", n(ball_y - 10)))
     write_scene(
         "s5",
         "Scène 5 — Rapport et bénéfices",
@@ -886,7 +965,7 @@ def build_s6():
           <stop offset="0.35" stop-color="#E0402F"/>
           <stop offset="1" stop-color="#A51F17"/>
         </radialGradient>
-        <linearGradient id="s6-word" gradientUnits="userSpaceOnUse" x1="140" y1="0" x2="1200" y2="0">
+        <linearGradient id="s6-word" gradientUnits="userSpaceOnUse" x1="140" y1="0" x2="1198" y2="0">
           <stop offset="0" stop-color="#E2392D"/>
           <stop offset="0.47" stop-color="#E9862A"/>
           <stop offset="0.6" stop-color="#E8842A"/>
@@ -897,7 +976,7 @@ def build_s6():
       <g id="s6-logo" transform="translate({n(LOGO_X)} {LOGO_Y}) scale({LOGO_S})">
         <path id="s6-coil" class="d" pathLength="1" d="{logo_coil_path()}" fill="none" stroke="#6D6C74" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
         <g clip-path="url(#s6-clip)">
-          <text id="s6-word" x="140" y="292" font-family="Fredoka" font-weight="700" font-size="188" fill="url(#s6-word)" textLength="1058" lengthAdjust="spacingAndGlyphs">Fly Scan’Air</text>
+          <text id="s6-word" x="140" y="292" font-family="Comfortaa" font-weight="700" font-size="174" fill="url(#s6-word)" stroke="url(#s6-word)" stroke-width="10" stroke-linejoin="round" paint-order="stroke">Fly Scan’Aır</text>
         </g>
         <line id="s6-scan" x1="0" y1="118" x2="0" y2="336" stroke="{ACC}" stroke-width="4"/>
         <circle id="s6-ballr" cx="{BALL_R[0]}" cy="{BALL_R[1]}" r="12" fill="url(#s6-ball)"/>
@@ -905,21 +984,25 @@ def build_s6():
       </g>
       <circle id="s6-dot" cx="{n(bx)}" cy="{n(by)}" r="10" fill="{ACC}"/>
     </svg>
-    <div id="s6-slogan" class="title cta1">Rendre visible l’invisible.</div>
+    <div id="s6-slogan" class="title cta1">Inspections techniques aériennes,<br />révélez l’invisible.</div>
     <div id="s6-msg" class="cta2">Faites contrôler votre installation.</div>
-    <div id="s6-contact" class="cta3"></div>"""
+    <div id="s6-contact" class="cta3">www.flyscanair.com · 06 22 80 57 69 · contact@flyscanair.com</div>"""
     css = """
-    @font-face { font-family: "Fredoka"; src: url("assets/fonts/fredoka-700.woff2") format("woff2"); font-weight: 700; font-style: normal; }
-    #root .cta1 { left: 0; width: 1920px; top: 654px; text-align: center; font-size: 60px; }
-    #root .cta2 { position: absolute; left: 0; width: 1920px; top: 756px; text-align: center; font-family: "Montserrat", sans-serif; font-weight: 500; font-size: 40px; color: #111111; }
-    #root .cta3 { position: absolute; left: 0; width: 1920px; top: 836px; text-align: center; font-family: "Poppins", sans-serif; font-weight: 500; font-size: 30px; color: #6B6B70; }
-    #root .cta2 .arrow { color: #FF5700; }
+    #root .cta1 { left: 0; width: 1920px; top: 552px; text-align: center; font-size: 56px; line-height: 1.18; }
+    #root .cta2 { position: absolute; left: 0; width: 1920px; top: 722px; text-align: center; font-family: "Comfortaa", sans-serif; font-weight: 600; font-size: 38px; color: #111111; }
+    #root .cta3 { position: absolute; left: 0; width: 1920px; top: 808px; text-align: center; font-family: "Comfortaa", sans-serif; font-weight: 600; font-size: 32px; color: #6B6B70; display: flex; justify-content: center; align-items: center; }
+    #root .cta3 .sq { display: inline-block; width: 10px; height: 10px; background: #FF5700; margin: 0 24px; }
     #root #s6-scan, #root #s6-ballr, #root #s6-balll { opacity: 0; }"""
     js = f"""
-      const slogan = words($("#s6-slogan"), txt("s6-slogan", "Rendre visible l’invisible."));
+      const slogan = words($("#s6-slogan"), txt("s6-slogan", "Inspections techniques aériennes,|révélez *l’invisible*."));
       const msg = words($("#s6-msg"), txt("s6-msg", "Faites contrôler votre installation."));
-      const contact = txt("s6-contact", "");
-      $("#s6-contact").textContent = contact;
+      const contact = txt("s6-contact", "www.flyscanair.com|06 22 80 57 69|contact@flyscanair.com");
+      const cEl = $("#s6-contact");
+      cEl.textContent = "";
+      contact.split("|").forEach((part, i) => {{
+        if (i) {{ const q = document.createElement("i"); q.className = "sq"; cEl.appendChild(q); }}
+        const sp = document.createElement("span"); sp.textContent = part.trim(); cEl.appendChild(sp);
+      }});
       // 1. le point orange devient la bille rouge du logo
       tl.fromTo($("#s6-balll"), {{ opacity: 0 }}, {{ opacity: 1, duration: 0.35, ease: "power1.inOut" }}, 0.0);
       tl.to($("#s6-dot"), {{ opacity: 0, duration: 0.35, ease: "power1.inOut" }}, 0.0);
@@ -939,9 +1022,9 @@ def build_s6():
         "s6",
         "Scène 6 — Call to action",
         [
-            svar("s6-slogan", "Scène 6 — slogan", "Rendre visible l’invisible."),
+            svar("s6-slogan", "Scène 6 — slogan", "Inspections techniques aériennes,|révélez *l’invisible*."),
             svar("s6-msg", "Scène 6 — message", "Faites contrôler votre installation."),
-            svar("s6-contact", "Scène 6 — contact (site, téléphone)", ""),
+            svar("s6-contact", "Scène 6 — contact (| sépare les éléments)", "www.flyscanair.com|06 22 80 57 69|contact@flyscanair.com"),
         ],
         css,
         body,
