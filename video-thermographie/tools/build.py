@@ -1036,7 +1036,7 @@ def build_s4():
         tl.fromTo($("#s4-ring"), {{ opacity: 0.85, scale: 1, transformOrigin: "50% 50%" }}, {{ opacity: 0, scale: 3.2, duration: 1.0, ease: "power2.out", immediateRender: false }}, t);
       }});
       // 4. les défauts sont entourés automatiquement
-      [[1.4, 0], [2.3, 1], [3.2, 2]].forEach(([t, i]) => {{
+      [[0.8, 0], [1.55, 1], [3.3, 2]].forEach(([t, i]) => {{  // calé sur la voix off
         draw(t, $("#s4-c" + i), 0.6, "power2.inOut");
         draw(t + 0.4, $("#s4-ld" + i), 0.3, "power2.out");
         fadeIn(t + 0.65, $("#s4-dot" + i), 0.1);
@@ -1281,56 +1281,56 @@ def build_s5():
       blurIn(0.55, P1.querySelector(".dochead"), 0.2);
       draw(0.65, P1.querySelector(".s5-rule"), 0.45, "power2.out");
       blurIn(0.9, t1, 0.15, 0.067);
-      blurIn(1.2, $$("#s5-p1 .s5-f"), 0.18, 0.16);
-      tl.fromTo($("#s5-badge"), { opacity: 0, scale: 0.6, transformOrigin: "50% 50%" }, { opacity: 1, scale: 1, duration: 0.3, ease: "back.out(1.8)" }, 1.3);
+      blurIn(2.8, $$("#s5-p1 .s5-f"), 0.18, 0.2); // voix : « chaque défaut y est décrit… »
+      tl.fromTo($("#s5-badge"), { opacity: 0, scale: 0.6, transformOrigin: "50% 50%" }, { opacity: 1, scale: 1, duration: 0.3, ease: "back.out(1.8)" }, 4.45); // « …et qualifié »
       fadeIn(1.7, $$("#s5-p1 .s5-foot"), 0.3, 0.1);
       // PAGE 2 — résultats et gravité
-      blurOut(4.0, t1, 0.16, 0.02);
-      pageOut(4.0, P1);
-      pageIn(4.2, P2);
-      draw(4.25, P2.querySelector(".s5-rule"), 0.4, "power2.out");
-      blurIn(4.3, t2, 0.15, 0.067);
-      draw(4.4, $$(".s5-card"), 0.4, "power2.out", 0.1);
+      blurOut(5.15, t1, 0.16, 0.02);
+      pageOut(5.15, P1);
+      pageIn(5.35, P2);
+      draw(5.4, P2.querySelector(".s5-rule"), 0.4, "power2.out");
+      blurIn(5.45, t2, 0.15, 0.067);
+      draw(5.55, $$(".s5-card"), 0.4, "power2.out", 0.1);
       [["#s5-n0", 7], ["#s5-n1", 5]].forEach(([id, v], i) => {
         const el = $(id), o = { v: 0 };
-        tl.fromTo(o, { v: 0 }, { v, duration: 0.6, ease: "power2.out", onUpdate: () => { el.textContent = Math.round(o.v); } }, 4.55 + i * 0.12);
+        tl.fromTo(o, { v: 0 }, { v, duration: 0.6, ease: "power2.out", onUpdate: () => { el.textContent = Math.round(o.v); } }, 5.7 + i * 0.12);
       });
-      blurIn(4.5, [$("#s5-n0"), $("#s5-n1"), $("#s5-n2"), ...$$(".s5-cardl")], 0.2, 0.06);
-      blurIn(5.0, $("#s5-sub"), 0.18);
-      fadeIn(5.1, $$(".s5-sw"), 0.25, 0.1);
-      blurIn(5.15, $$(".s5-cl"), 0.18, 0.1);
+      blurIn(5.65, [$("#s5-n0"), $("#s5-n1"), $("#s5-n2"), ...$$(".s5-cardl")], 0.2, 0.06);
+      blurIn(6.15, $("#s5-sub"), 0.18);
+      fadeIn(6.25, $$(".s5-sw"), 0.25, 0.1);
+      blurIn(6.3, $$(".s5-cl"), 0.18, 0.1);
       $$(".s5-gbar").forEach((b, i) => {
-        tl.fromTo(b, { attr: { width: 0 } }, { attr: { width: parseFloat(b.getAttribute("data-w")) }, duration: 0.5, ease: "power3.out" }, 5.3 + i * 0.1);
+        tl.fromTo(b, { attr: { width: 0 } }, { attr: { width: parseFloat(b.getAttribute("data-w")) }, duration: 0.5, ease: "power3.out" }, 6.45 + i * 0.1);
       });
-      fadeIn(5.6, $$("#s5-p2 .s5-foot"), 0.3, 0.1);
+      fadeIn(6.75, $$("#s5-p2 .s5-foot"), 0.3, 0.1);
       //   graphique de production (fourni par le client)
-      draw(4.7, [$("#s5-ay"), $("#s5-ax")], 0.55, "power3.out", 0.08);
-      draw(5.1, [$("#s5-aya"), $("#s5-axa")], 0.22, "power2.out", 0.05);
-      fadeIn(4.95, [$("#s5-grid"), $("#s5-yt")], 0.4, 0.08);
-      blurIn(5.0, $("#s5-lab-y"), 0.18);
+      draw(5.85, [$("#s5-ay"), $("#s5-ax")], 0.55, "power3.out", 0.08);
+      draw(6.25, [$("#s5-aya"), $("#s5-axa")], 0.22, "power2.out", 0.05);
+      fadeIn(6.1, [$("#s5-grid"), $("#s5-yt")], 0.4, 0.08);
+      blurIn(6.15, $("#s5-lab-y"), 0.18);
       [0, 1].forEach((i) => {
         const b = $("#s5-bar" + i);
         const top = parseFloat(b.getAttribute("data-top")), h = parseFloat(b.getAttribute("data-h"));
-        tl.fromTo(b, { attr: { y: __AY__, height: 0 } }, { attr: { y: top, height: h }, duration: 0.75, ease: "power3.out" }, 5.35 + i * 0.3);
-        blurIn(5.6 + i * 0.3, $("#s5-cat" + i), 0.18);
+        tl.fromTo(b, { attr: { y: __AY__, height: 0 } }, { attr: { y: top, height: h }, duration: 0.75, ease: "power3.out" }, 6.5 + i * 0.3);
+        blurIn(6.75 + i * 0.3, $("#s5-cat" + i), 0.18);
       });
       // PAGE 3 — couverture du rapport, conforme à la norme
-      blurOut(8.2, t2, 0.16, 0.02);
-      blurOut(8.2, [$("#s5-chart"), $("#s5-lab-y"), $("#s5-cat0"), $("#s5-cat1")], 0.2, 0.02);
-      pageOut(8.2, P2);
-      pageIn(8.4, P3);
-      blurIn(8.5, t3, 0.15, 0.067);
-      draw(8.5, $("#s5-acc"), 0.4, "power2.out");
-      blurIn(8.55, $("#s5-ct"), 0.2);
-      blurIn(8.75, $("#s5-cs"), 0.2);
-      draw(8.6, $$(".s5-ill"), 0.4, "power2.out", 0.05);
-      fadeIn(9.0, $("#s5-hotc"), 0.3);
-      fadeIn(9.1, $("#s5-mlogo"), 0.35);
-      tl.fromTo($("#s5-stamp"), { opacity: 0, scale: 1.45, transformOrigin: "50% 50%" }, { opacity: 1, scale: 1, duration: 0.32, ease: "back.out(1.8)" }, 9.4);
+      blurOut(8.7, t2, 0.16, 0.02);
+      blurOut(8.7, [$("#s5-chart"), $("#s5-lab-y"), $("#s5-cat0"), $("#s5-cat1")], 0.2, 0.02);
+      pageOut(8.7, P2);
+      pageIn(8.9, P3);
+      blurIn(9.0, t3, 0.15, 0.067);
+      draw(9.0, $("#s5-acc"), 0.4, "power2.out");
+      blurIn(9.05, $("#s5-ct"), 0.2);
+      blurIn(9.25, $("#s5-cs"), 0.2);
+      draw(9.1, $$(".s5-ill"), 0.4, "power2.out", 0.05);
+      fadeIn(9.5, $("#s5-hotc"), 0.3);
+      fadeIn(9.6, $("#s5-mlogo"), 0.35);
+      tl.fromTo($("#s5-stamp"), { opacity: 0, scale: 1.45, transformOrigin: "50% 50%" }, { opacity: 1, scale: 1, duration: 0.32, ease: "back.out(1.8)" }, 9.9);
       //   ce que contient le rapport
-      draw(9.6, $$(".s5-box"), 0.3, "power2.out", 0.1);
-      blurIn(9.7, [$("#s5-i0"), $("#s5-i1"), $("#s5-i2"), $("#s5-i3")], 0.18, 0.15);
-      [10.0, 10.25, 10.5, 10.75].forEach((t, i) => draw(t, $("#s5-k" + i), 0.22, "power2.out"));
+      draw(10.1, $$(".s5-box"), 0.3, "power2.out", 0.1);
+      blurIn(10.2, [$("#s5-i0"), $("#s5-i1"), $("#s5-i2"), $("#s5-i3")], 0.18, 0.15);
+      [10.5, 10.75, 11.0, 11.25].forEach((t, i) => draw(t, $("#s5-k" + i), 0.22, "power2.out"));
       // 4. sortie : le rapport file dans la plateforme
       blurOut(11.75, [...t3, $("#s5-i0"), $("#s5-i1"), $("#s5-i2"), $("#s5-i3")], 0.2, 0.015);
       blurOut(11.8, [$("#s5-check")], 0.2, 0);
@@ -1611,11 +1611,11 @@ def build_s7():
       tl.to($("#s7-lscan"), {{ opacity: 0, duration: 0.15 }}, 1.4);
       tl.fromTo($("#s7-ballr"), {{ opacity: 0, scale: 0, transformOrigin: "50% 50%" }}, {{ opacity: 1, scale: 1, duration: 0.35, ease: "back.out(1.6)" }}, 1.5);
       blurIn(1.6, slogan, 0.15, 0.067);
-      tl.fromTo(msg, {{ opacity: 0 }}, {{ opacity: 1, duration: 0.2 }}, 2.05);
-      tl.fromTo(msg, {{ color: "#D4D4D8" }}, {{ color: "#111111", duration: 0.25, stagger: 0.08 }}, 2.15);
+      tl.fromTo(msg, {{ opacity: 0 }}, {{ opacity: 1, duration: 0.2 }}, 1.9);
+      tl.fromTo(msg, {{ color: "#D4D4D8" }}, {{ color: "#111111", duration: 0.25, stagger: 0.08 }}, 2.0);
       // B. le logo monte ; site web et LinkedIn apparaissent
-      blurOut(3.7, msg, 0.16, 0.02);
-      tl.to($("#s7-top"), {{ scale: {tsc}, y: {tty}, transformOrigin: "{n(W / 2)}px 0px", duration: 0.55, ease: "power2.inOut" }}, 3.75);
+      blurOut(3.85, msg, 0.16, 0.02); // le message reste lisible pendant que la voix le prononce
+      tl.to($("#s7-top"), {{ scale: {tsc}, y: {tty}, transformOrigin: "{n(W / 2)}px 0px", duration: 0.55, ease: "power2.inOut" }}, 3.88);
       fadeIn(4.0, $("#s7-wfill"), 0.3);
       draw(4.0, $("#s7-frame"), 0.6, "power2.inOut");
       draw(4.25, $("#s7-bar"), 0.35, "power2.out");
@@ -1672,20 +1672,20 @@ SFX = [
     ("sfx-drone", "whoosh-short.mp3", 13.8 + 0.72, 0.5),
     ("sfx-scan", "whoosh-cinematic.mp3", 13.8 + 3.95, 0.3),
     ("sfx-zoom", "whoosh-high.mp3", 13.8 + 6.55, 0.45),
-    ("sfx-tick1", "key-press.mp3", 20.4 + 2.0, 0.5),
-    ("sfx-tick2", "key-press.mp3", 20.4 + 2.9, 0.45),
-    ("sfx-tick3", "key-press.mp3", 20.4 + 3.8, 0.5),
+    ("sfx-tick1", "key-press.mp3", 20.4 + 1.4, 0.5),
+    ("sfx-tick2", "key-press.mp3", 20.4 + 2.15, 0.45),
+    ("sfx-tick3", "key-press.mp3", 20.4 + 3.9, 0.5),
     ("sfx-carry", "whoosh-low.mp3", 20.4 + 6.8, 0.35),
-    ("sfx-page2", "whoosh-high.mp3", 27.6 + 4.15, 0.18),
-    ("sfx-page3", "whoosh-high.mp3", 27.6 + 8.35, 0.18),
-    ("sfx-stamp", "pop.mp3", 27.6 + 9.48, 0.45),
-    ("sfx-check1", "click-soft.mp3", 27.6 + 10.12, 0.6),
-    ("sfx-check2", "click-soft.mp3", 27.6 + 10.37, 0.55),
-    ("sfx-check3", "click-soft.mp3", 27.6 + 10.62, 0.6),
-    ("sfx-check4", "click-soft.mp3", 27.6 + 10.87, 0.55),
+    ("sfx-page2", "whoosh-high.mp3", 27.6 + 5.3, 0.18),
+    ("sfx-page3", "whoosh-high.mp3", 27.6 + 8.85, 0.18),
+    ("sfx-stamp", "pop.mp3", 27.6 + 9.98, 0.45),
+    ("sfx-check1", "click-soft.mp3", 27.6 + 10.62, 0.6),
+    ("sfx-check2", "click-soft.mp3", 27.6 + 10.87, 0.55),
+    ("sfx-check3", "click-soft.mp3", 27.6 + 11.12, 0.6),
+    ("sfx-check4", "click-soft.mp3", 27.6 + 11.37, 0.55),
     ("sfx-doc", "whoosh-short.mp3", 27.6 + 12.09, 0.3),
     ("sfx-logo", "impact-bass-1.mp3", 46.8 + 1.55, 0.22),
-    ("sfx-top", "whoosh-low.mp3", 46.8 + 4.0, 0.22),
+    ("sfx-top", "whoosh-low.mp3", 46.8 + 4.13, 0.22),
     ("sfx-type", "typing.mp3", 46.8 + 4.42, 0.35),
 ]
 
@@ -1715,7 +1715,7 @@ def build_index(sfx_offsets):
         segs = []
         for v in vo:
             s0, s1 = v["start"] - 0.3, v["start"] + v["dur"] + 0.45
-            if segs and s0 <= segs[-1][1]:
+            if segs and s0 <= segs[-1][1] + 0.5:  # pas de remontée de la musique dans les petits silences
                 segs[-1][1] = s1
             else:
                 segs.append([s0, s1])

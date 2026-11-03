@@ -10,14 +10,26 @@ Réalisée avec [HyperFrames](https://hyperframes.heygen.com) : HTML + SVG + GSA
 | Vidéo finale MP4 HD (version LinkedIn 16:9) | `renders/FlyScanAir_thermographie_16x9.mp4` (1920 × 1080) |
 | Déclinaison verticale 9:16 | `renders/FlyScanAir_thermographie_9x16.mp4` (1080 × 1920) |
 | Déclinaison carrée 1:1 | `renders/FlyScanAir_thermographie_1x1.mp4` (1080 × 1080) |
-| Projet source | `index.html` + `compositions/s1.html` … `s6.html` (16:9) ; `formats/9x16/` et `formats/1x1/` (projets autonomes des déclinaisons) |
+| Projet source | `index.html` + `compositions/s1.html` … `s7.html` (16:9) ; `formats/9x16/` et `formats/1x1/` (projets autonomes des déclinaisons) |
 | Assets graphiques | tout est vectoriel dans les scènes ; logo redessiné en SVG dans `compositions/s6.html` ; police Comfortaa `assets/fonts/` |
+| Voix off (FLORA, Gemini 3.1 Flash TTS, voix « Umbriel », fr-FR) | `assets/audio/vo/raw_01.wav` … `raw_10.wav` (fichiers FLORA d’origine), `vo_01.wav` … `vo_10.wav` (nettoyés et placés par `tools/voiceover.py`) |
 | Musique (originale, libre de droits) | `assets/audio/music.wav` (générée par `tools/music.py`) |
 | Effets sonores | `assets/audio/sfx/` (voir `CREDITS.md`) |
 | Capture du site, logo LinkedIn | `assets/images/site-flyscanair.jpg` ; logo LinkedIn : icône Font Awesome Free (CC BY 4.0, `assets/images/LICENSE-fontawesome.txt`) |
 | Fiche technique | `SPEC.md` ; note de revue : `REVIEW.md` |
 
-Pas de voix off (choix validé) : les textes à l’écran portent le message, ce qui convient aussi à la lecture sans le son sur LinkedIn.
+Voix off en français (10 phrases, voix masculine grave « Umbriel ») ; la musique s’efface sous la voix (−10 dB) et
+remonte dans les silences. Les textes à l’écran portent toujours le message seuls, pour la lecture sans le son sur LinkedIn.
+
+| Scène | Voix off |
+| --- | --- |
+| 1 | « Sur une toiture solaire, certains défauts restent totalement invisibles à l’œil nu. » |
+| 2 | « Pourtant, ils font baisser le rendement, augmentent le risque d’incendie et fragilisent votre garantie. » |
+| 3 | « Notre drone, équipé d’une caméra infrarouge, survole vos panneaux et révèle chaque échauffement. » |
+| 4 | « Points chauds, diodes by-pass défectueuses, boîtes de jonction en surchauffe : chaque anomalie est localisée. » |
+| 5 | « Vous recevez ensuite un rapport détaillé : chaque défaut y est décrit et qualifié, classé par niveau de gravité, avec l’action à mener. Un rapport aux normes, utile aussi auprès de votre assureur. » |
+| 6 | « Bientôt, retrouvez vos rapports et planifiez vos prochaines inspections sur notre plateforme en ligne. » |
+| 7 | « Fly Scan’Air. Révélez l’invisible. Faites contrôler votre installation : rendez-vous sur notre site. » |
 
 ## Structure
 
@@ -58,11 +70,19 @@ La géométrie (perspective du toit, champ de panneaux, raccords de zoom au pixe
 écrase les HTML** : soit vous modifiez le script puis le relancez, soit vous retouchez directement les HTML
 (dans Studio ou à la main) et vous ne relancez plus le script.
 
-`python3 tools/music.py` régénère la musique (synthèse déterministe, 100 BPM, la mineur → do majeur).
+`python3 tools/music.py` régénère la musique (synthèse déterministe, 100 BPM, la mineur → do majeur ; nappes,
+basse en croches, grosse caisse à la noire, clap discret sur 2 et 4, charleston en croches).
+
+`python3 tools/voiceover.py` retraite la voix off à partir des fichiers FLORA `raw_XX.wav` : coupe les silences,
+raccourcit les pauses trop longues, accélère très légèrement certaines phrases (×1,02 à ×1,04, hauteur conservée),
+normalise à −16 LUFS et écrit `assets/audio/vo/vo.json` (placement de chaque phrase). Les débuts de phrase se règlent
+dans `LINES` en tête du script ; relancer ensuite `tools/build.py` (les trois formats) pour mettre à jour les pistes
+et l’atténuation de la musique. Pour changer une phrase : la régénérer dans FLORA avec la même voix, remplacer le
+`raw_XX.wav` correspondant, relancer les deux scripts.
 
 ## Déclinaisons 9:16 et 1:1
 
-Mêmes dessins, textes, minutage, transitions, musique et effets sonores que le 16:9 : seule la mise en page
+Mêmes dessins, textes, minutage, transitions, voix off, musique et effets sonores que le 16:9 : seule la mise en page
 s’adapte au cadre (blocs empilés en vertical, caméra qui suit le drone en scène 3, étiquettes de la scène 4
 placées sous le panneau, slogan et coordonnées sur plusieurs lignes). Les réglages de mise en page sont dans
 `LAYOUTS` en tête de `tools/build.py`.

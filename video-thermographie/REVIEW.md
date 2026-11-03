@@ -1,5 +1,25 @@
 # REVIEW
 
+## Passage 7 — voix off et musique
+- Voix off française, 10 phrases générées dans FLORA (Gemini 3.1 Flash TTS, voix « Umbriel », fr-FR ; coût 0,13 $),
+  fichiers d'origine conservés (`assets/audio/vo/raw_XX.wav`). Texte complet dans README.md.
+- `tools/voiceover.py` : silences de début/fin coupés, pauses internes limitées à 0,24–0,30 s, phrases 4 à 7 et 10
+  accélérées de 2 à 4 % (hauteur conservée), −16 LUFS. Environ 48 s de parole sur 55 s : la voix se termine à 53,6 s,
+  avant la sortie en boucle (54 s), et reprend à 0,9 s.
+- Image recalée sur la voix (seuls changements visuels, tous de minutage) :
+  S4 les trois cercles se tracent quand la voix nomme le défaut (0,8 / 1,55 / 3,3 s au lieu de 1,4 / 2,3 / 3,2 s) ;
+  S5 les champs du défaut n°1 apparaissent sur « chaque défaut y est décrit », la catégorie sur « qualifié »,
+  page 2 tournée à 5,15 s (au lieu de 4,0 s), page 3 à 8,7 s (au lieu de 8,2 s) — le tampon « Conforme IEC TS 62446-3 »
+  tombe sur « aux normes » ; S7 le message « Faites contrôler votre installation. » arrive 0,15 s plus tôt et reste
+  0,15 s de plus. Bruitages déplacés avec leurs gestes.
+- Musique plus rythmée : grosse caisse à la noire (S2 → S6, battement discret dès 2,4 s), clap léger sur 2 et 4 (S3 → S6),
+  charleston en croches (+ doubles-croches fantômes dès S4), basse en croches dès S2, léger pompage des nappes.
+  Mêmes accords, même tempo (100 BPM), même fin sur l'accord tenu et le logo.
+- Mixage : la musique descend à 0,32 (−10 dB) sous la voix, remonte dans les vrais silences (fin de S1, fin de S2) et
+  pour la sortie en boucle.
+- `hyperframes check` : 0 erreur, 0 avertissement sur les trois formats.
+- Son mesuré, **pas écouté** : à valider à l'écoute (équilibre voix / musique, naturel des légères accélérations).
+
 ## Passage 6 — finitions
 - « Un rapport aux normes, pour agir rapidement. »
 - Fin : « Suivez-nous sur LinkedIn » + linkedin.com/company/fly-scan-air (adresse fournie par le client).

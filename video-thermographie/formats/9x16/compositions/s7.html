@@ -170,11 +170,11 @@
       tl.to($("#s7-lscan"), { opacity: 0, duration: 0.15 }, 1.4);
       tl.fromTo($("#s7-ballr"), { opacity: 0, scale: 0, transformOrigin: "50% 50%" }, { opacity: 1, scale: 1, duration: 0.35, ease: "back.out(1.6)" }, 1.5);
       blurIn(1.6, slogan, 0.15, 0.067);
-      tl.fromTo(msg, { opacity: 0 }, { opacity: 1, duration: 0.2 }, 2.05);
-      tl.fromTo(msg, { color: "#D4D4D8" }, { color: "#111111", duration: 0.25, stagger: 0.08 }, 2.15);
+      tl.fromTo(msg, { opacity: 0 }, { opacity: 1, duration: 0.2 }, 1.9);
+      tl.fromTo(msg, { color: "#D4D4D8" }, { color: "#111111", duration: 0.25, stagger: 0.08 }, 2.0);
       // B. le logo monte ; site web et LinkedIn apparaissent
-      blurOut(3.7, msg, 0.16, 0.02);
-      tl.to($("#s7-top"), { scale: 0.6, y: -210, transformOrigin: "540px 0px", duration: 0.55, ease: "power2.inOut" }, 3.75);
+      blurOut(3.85, msg, 0.16, 0.02); // le message reste lisible pendant que la voix le prononce
+      tl.to($("#s7-top"), { scale: 0.6, y: -210, transformOrigin: "540px 0px", duration: 0.55, ease: "power2.inOut" }, 3.88);
       fadeIn(4.0, $("#s7-wfill"), 0.3);
       draw(4.0, $("#s7-frame"), 0.6, "power2.inOut");
       draw(4.25, $("#s7-bar"), 0.35, "power2.out");

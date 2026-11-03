@@ -2,6 +2,8 @@
 
 Source : `Cahier_des_charges.pdf` (structure en 6 scènes, textes S1 et S2 imposés).
 Choix validés avec le client : pas de voix off ; musique originale composée ; 16:9 seul pour ce premier passage.
+Passage 7 : voix off française ajoutée (FLORA, Gemini 3.1 Flash TTS, voix « Umbriel »), musique plus rythmée (batterie légère) ;
+cercles de S4, pages 2 et 3 de S5 et message final de S7 recalés sur la voix.
 Passage 5 : 54 s ; rapport en trois pages (défaut, résultats, couverture normée) ; planning des inspections.
 Passage 4 : 45 s, 7 scènes (ajout plateforme en ligne et fin site web + LinkedIn), rapport « Conforme IEC TS 62446-3 »,
 anomalies nommées selon la note technique, drone simplifié et balayage 1,5 s.
@@ -54,7 +56,10 @@ SHOTS:
                 Sortie : tout se floute ; la barre orange se replie en point et glisse vers la bille du logo.
   S6  34,2–40,8 Le point devient la bille gauche du logo, le serpentin se trace, la ligne de scan révèle « Fly Scan’Aır »,
                 la bille droite (point du i) apparaît. Slogan mot à mot, message, contact. Tenue ≥ 3,5 s. Fin sur l'accord résolu de la musique.
-SOUND:   musique originale 100 BPM, la mineur → do majeur : nappes douces + pulsation basse (S1–S2), arpège léger à
+SOUND:   passage 7 : voix off fr-FR, 10 phrases (texte dans README.md), -16 LUFS, placée scène par scène et terminée avant la
+         sortie en boucle (54 s) ; musique atténuée de 10 dB sous la voix ; batterie légère (grosse caisse à la noire de S2 à S6,
+         clap sur 2 et 4 de S3 à S6, charleston en croches) et basse en croches. Ci-dessous, la conception d'origine.
+         Musique originale 100 BPM, la mineur → do majeur : nappes douces + pulsation basse (S1–S2), arpège léger à
          l'entrée du drone (S3–S5), résolution lumineuse sur le rapport, accord final tenu (S6). Effets : whoosh court
          (entrée drone), whoosh long bas (scan), whoosh (zoom), 3 tics (cercles), 3 clics doux (coches), impact grave
          discret (logo). Mixage -16 LUFS, crête ≤ -1 dBTP.

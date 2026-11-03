@@ -1,0 +1,228 @@
+[
+ {
+  "id": "01",
+  "file": "assets/audio/vo/vo_01.wav",
+  "start": 0.9,
+  "dur": 4.71,
+  "tempo": 1.0,
+  "raw": 5.24,
+  "speech": [
+   [
+    0.94,
+    2.35
+   ],
+   [
+    2.58,
+    3.84
+   ],
+   [
+    3.98,
+    5.51
+   ]
+  ],
+  "text": "Sur une toiture solaire, certains défauts restent totalement invisibles à l'œil nu."
+ },
+ {
+  "id": "02",
+  "file": "assets/audio/vo/vo_02.wav",
+  "start": 7.15,
+  "dur": 5.66,
+  "tempo": 1.0,
+  "raw": 6.28,
+  "speech": [
+   [
+    7.19,
+    7.7
+   ],
+   [
+    7.82,
+    9.17
+   ],
+   [
+    9.47,
+    11.03
+   ],
+   [
+    11.2,
+    12.71
+   ]
+  ],
+  "text": "Pourtant, ils font baisser le rendement, augmentent le risque d'incendie et fragilisent votre garantie."
+ },
+ {
+  "id": "03",
+  "file": "assets/audio/vo/vo_03.wav",
+  "start": 14.2,
+  "dur": 6.03,
+  "tempo": 1.0,
+  "raw": 6.56,
+  "speech": [
+   [
+    14.24,
+    15.12
+   ],
+   [
+    15.27,
+    17.18
+   ],
+   [
+    17.44,
+    18.59
+   ],
+   [
+    18.76,
+    20.13
+   ]
+  ],
+  "text": "Notre drone, équipé d'une caméra infrarouge, survole vos panneaux et révèle chaque échauffement."
+ },
+ {
+  "id": "04",
+  "file": "assets/audio/vo/vo_04.wav",
+  "start": 20.65,
+  "dur": 6.475,
+  "tempo": 1.03,
+  "raw": 7.6,
+  "speech": [
+   [
+    20.689,
+    21.349
+   ],
+   [
+    21.582,
+    23.436
+   ],
+   [
+    23.669,
+    25.33
+   ],
+   [
+    25.563,
+    26.32
+   ],
+   [
+    26.436,
+    27.019
+   ]
+  ],
+  "text": "Points chauds, diodes by-pass défectueuses, boîtes de jonction en surchauffe : chaque anomalie est localisée."
+ },
+ {
+  "id": "05",
+  "file": "assets/audio/vo/vo_05.wav",
+  "start": 27.8,
+  "dur": 5.118,
+  "tempo": 1.04,
+  "raw": 6.16,
+  "speech": [
+   [
+    27.838,
+    30.137
+   ],
+   [
+    30.367,
+    32.81
+   ]
+  ],
+  "text": "Vous recevez ensuite un rapport détaillé : chaque défaut y est décrit et qualifié,"
+ },
+ {
+  "id": "06",
+  "file": "assets/audio/vo/vo_06.wav",
+  "start": 33.1,
+  "dur": 3.17,
+  "tempo": 1.04,
+  "raw": 3.92,
+  "speech": [
+   [
+    33.138,
+    34.86
+   ],
+   [
+    35.09,
+    36.167
+   ]
+  ],
+  "text": "classé par niveau de gravité, avec l'action à mener."
+ },
+ {
+  "id": "07",
+  "file": "assets/audio/vo/vo_07.wav",
+  "start": 36.45,
+  "dur": 3.178,
+  "tempo": 1.04,
+  "raw": 3.92,
+  "speech": [
+   [
+    36.488,
+    37.556
+   ],
+   [
+    37.787,
+    39.527
+   ]
+  ],
+  "text": "Un rapport aux normes, utile aussi auprès de votre assureur."
+ },
+ {
+  "id": "08",
+  "file": "assets/audio/vo/vo_08.wav",
+  "start": 40.45,
+  "dur": 5.82,
+  "tempo": 1.0,
+  "raw": 6.4,
+  "speech": [
+   [
+    40.49,
+    41.15
+   ],
+   [
+    41.34,
+    46.17
+   ]
+  ],
+  "text": "Bientôt, retrouvez vos rapports et planifiez vos prochaines inspections sur notre plateforme en ligne."
+ },
+ {
+  "id": "09",
+  "file": "assets/audio/vo/vo_09.wav",
+  "start": 46.95,
+  "dur": 3.09,
+  "tempo": 1.0,
+  "raw": 3.76,
+  "speech": [
+   [
+    46.99,
+    48.2
+   ],
+   [
+    48.46,
+    49.94
+   ]
+  ],
+  "text": "Fly Scan'Air. Révélez l'invisible."
+ },
+ {
+  "id": "10",
+  "file": "assets/audio/vo/vo_10.wav",
+  "start": 50.2,
+  "dur": 3.346,
+  "tempo": 1.02,
+  "raw": 4.08,
+  "speech": [
+   [
+    50.239,
+    51.935
+   ],
+   [
+    52.229,
+    53.288
+   ],
+   [
+    53.406,
+    53.445
+   ]
+  ],
+  "text": "Faites contrôler votre installation : rendez-vous sur notre site."
+ }
+]
