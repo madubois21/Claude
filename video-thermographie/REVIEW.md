@@ -1,5 +1,13 @@
 # REVIEW
 
+## Passage 6 — finitions
+- « Un rapport aux normes, pour agir rapidement. »
+- Fin : « Suivez-nous sur LinkedIn » + linkedin.com/company/fly-scan-air (adresse fournie par le client).
+- Boucle : à 54 s tout se retire (le serpentin et le navigateur se dé-tracent, la ligne de scan repasse à l'envers),
+  puis la ligne de sol de la scène 1 se trace jusqu'à 38 % : la dernière image s'enchaîne sur la première.
+  Durée 55 s ; la musique s'éteint sur cette sortie.
+- Corrigé : identifiant en double (dégradé et texte du logo), le nom du logo ne disparaissait pas à la sortie.
+
 ## Passage 5 — rythme et rapport
 - Durée 45 s → 54 s (cahier : 50–55 s demandés par le client). Temps ajouté : rapport (6 → 12,6 s), graphique S2 et
   anomalies S4 (+0,6 s chacun), plateforme (+1,2 s). Scène 3 inchangée (balayage rapide conservé). Musique recalée.

@@ -392,13 +392,13 @@ def vb(t):
 # --------------------------------------------------------------------------
 P7 = {  # carton final : logo + slogan (temps A), puis site web + LinkedIn (temps B)
     "16x9": dict(s=0.72, y=196, slogan=(552, 56), msg=(722, 38), top=(0.55, -37.8), web=None, inb=None,
-                 contacts=(924, 32), url=28, capw=34, capi=34,
+                 contacts=(924, 32), url=28, capw=34, capi=34, capn=40, inurl="linkedin.com/company/fly-scan-air",
                  slogan_text="Inspections techniques aériennes,|révélez *l’invisible*."),
     "9x16": dict(s=0.7, y=600, slogan=(970, 60), msg=(1230, 38), top=(0.6, -210), web=(1.15, -242, 88.5),
-                 inb=(1.0, -880, 710), contacts=(1490, 34), url=28, capw=34, capi=34,
+                 inb=(1.0, -880, 700), contacts=(1520, 34), url=28, capw=34, capi=34, capn=40, inurl="linkedin.com/company/fly-scan-air",
                  slogan_text="Inspections techniques|aériennes,|révélez *l’invisible*."),
     "1x1": dict(s=0.6, y=200, slogan=(495, 50), msg=(705, 34), top=(0.56, -62), web=(0.72, -156, 54.8),
-                inb=(0.8, -296, 24), contacts=(760, 30), url=40, capw=40, capi=36,
+                inb=(0.8, -296, 24), contacts=(760, 30), url=40, capw=40, capi=36, capn=36, inurl="linkedin.com/company/|fly-scan-air",
                 slogan_text="Inspections techniques|aériennes,|révélez *l’invisible*."),
 }[FMT]
 P6 = {  # plateforme en ligne
@@ -1230,7 +1230,7 @@ def build_s5():
     titles = "\n".join(f'    <div id="s5-t{i}" class="title" style="{tst}">{t}</div>' for i, t in (
         (1, "Chaque défaut est<br />localisé et qualifié."),
         (2, "Classés par gravité,<br />avec l’action à mener."),
-        (3, "Un rapport aux normes,<br />pour agir vite."),
+        (3, "Un rapport aux normes,<br />pour agir rapidement."),
     ))
     body = box(doc_part, L["s5_doc"] if L else None) + "\n" + box(chart_part, L["s5_chart"] if L else None) + "\n" + titles
     css = f"""
@@ -1268,7 +1268,7 @@ def build_s5():
     js = """
       const t1 = words($("#s5-t1"), txt("s5-t1", "Chaque défaut est|localisé et *qualifié*."));
       const t2 = words($("#s5-t2"), txt("s5-t2", "Classés par *gravité*,|avec l’action à mener."));
-      const t3 = words($("#s5-t3"), txt("s5-t3", "Un rapport *aux normes*,|pour agir vite."));
+      const t3 = words($("#s5-t3"), txt("s5-t3", "Un rapport *aux normes*,|pour agir rapidement."));
       ["s5-i0", "s5-i1", "s5-i2", "s5-i3"].forEach((id) => { const v = txt(id, ""); if (v) $("#" + id).textContent = v; });
       const P1 = $("#s5-p1"), P2 = $("#s5-p2"), P3 = $("#s5-p3");
       const pageOut = (t, el) => tl.to(el, { opacity: 0, x: -30, filter: "blur(6px)", duration: 0.22, ease: "power2.in" }, t);
@@ -1344,7 +1344,7 @@ def build_s5():
         [
             svar("s5-t1", "Scène 5 — titre page 1", "Chaque défaut est|localisé et *qualifié*."),
             svar("s5-t2", "Scène 5 — titre page 2", "Classés par *gravité*,|avec l’action à mener."),
-            svar("s5-t3", "Scène 5 — titre page 3", "Un rapport *aux normes*,|pour agir vite."),
+            svar("s5-t3", "Scène 5 — titre page 3", "Un rapport *aux normes*,|pour agir rapidement."),
             svar("s5-i0", "Scène 5 — ligne 1", items[0]),
             svar("s5-i1", "Scène 5 — ligne 2", items[1]),
             svar("s5-i2", "Scène 5 — ligne 3", items[2]),
@@ -1528,7 +1528,8 @@ def build_s7():
         <path d="{LINKEDIN_PATH}" transform="scale({sc:.5f})" fill="#0A66C2"/>
       </g></g>
     </svg>
-    <div id="s7-capi" class="cap7" style="left: 1170px; width: 500px; top: 670px; font-size: {P7["capi"]}px">Suivez-nous sur LinkedIn</div>"""
+    <div id="s7-inname" class="cap7" style="left: 1020px; width: 800px; top: 664px; font-size: {P7["capn"]}px">Suivez-nous sur LinkedIn</div>
+    <div id="s7-capi" class="cap7 grey" style="left: 1020px; width: 800px; top: {664 + round(P7["capn"] * 1.35)}px; font-size: {P7["capi"]}px; line-height: 1.25">{P7["inurl"].replace("|", "<br />")}</div>"""
     top = f"""    <div id="s7-top" data-layout-allow-overflow style="position: absolute; left: 0; top: 0; width: {W}px; height: {H}px">
     <svg class="world" viewBox="0 0 {W} {H}" width="{W}" height="{H}"{CANVAS}>
       <defs>
@@ -1537,7 +1538,7 @@ def build_s7():
           <stop offset="0.35" stop-color="#E0402F"/>
           <stop offset="1" stop-color="#A51F17"/>
         </radialGradient>
-        <linearGradient id="s7-word" gradientUnits="userSpaceOnUse" x1="140" y1="0" x2="1198" y2="0">
+        <linearGradient id="s7-wordgrad" gradientUnits="userSpaceOnUse" x1="140" y1="0" x2="1198" y2="0">
           <stop offset="0" stop-color="#E2392D"/>
           <stop offset="0.47" stop-color="#E9862A"/>
           <stop offset="0.6" stop-color="#E8842A"/>
@@ -1548,7 +1549,7 @@ def build_s7():
       <g id="s7-logo" transform="translate({n(LOGO_X)} {LOGO_Y}) scale({LOGO_S})">
         <path id="s7-coil" class="d" pathLength="1" d="{logo_coil_path()}" fill="none" stroke="#6D6C74" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
         <g clip-path="url(#s7-clip)">
-          <text id="s7-word" x="140" y="292" font-family="Comfortaa" font-weight="700" font-size="174" fill="url(#s7-word)" stroke="url(#s7-word)" stroke-width="10" stroke-linejoin="round" paint-order="stroke">Fly Scan’Aır</text>
+          <text id="s7-word" x="140" y="292" font-family="Comfortaa" font-weight="700" font-size="174" fill="url(#s7-wordgrad)" stroke="url(#s7-wordgrad)" stroke-width="10" stroke-linejoin="round" paint-order="stroke">Fly Scan’Aır</text>
         </g>
         <line id="s7-lscan" x1="0" y1="118" x2="0" y2="336" stroke="{ACC}" stroke-width="4"/>
         <circle id="s7-ballr" cx="{BALL_R[0]}" cy="{BALL_R[1]}" r="12" fill="url(#s7-ball)"/>
@@ -1559,8 +1560,18 @@ def build_s7():
     <div id="s7-slogan" class="title cta1">Inspections techniques aériennes,<br />révélez l’invisible.</div>
     <div id="s7-msg" class="cta2">Faites contrôler votre installation.</div>
     </div>"""
+    # ligne de sol de la scène 1, recalculée à l'écran : la fin rejoint la première image (boucle sans coupure)
+    if L:
+        s1s, s1tx, s1ty = L["s1_box"]
+        g1, g2 = s1_ground()
+        loop = (s1s * g1 + s1tx, s1s * g2 + s1tx, s1s * 880 + s1ty, 2.5 * s1s)
+    else:
+        loop = (120, 1800, 880, 2.5)
     body = (top + "\n" + box(web_svg, P7["web"]) + "\n" + box(in_svg, P7["inb"]) + f"""
-    <div id="s7-contact" class="cta3"></div>""")
+    <div id="s7-contact" class="cta3"></div>
+    <svg class="world" viewBox="0 0 {W} {H}" width="{W}" height="{H}"{CANVAS}>
+      <line id="s7-loop" class="d" pathLength="1" x1="{n(loop[0])}" y1="{n(loop[2])}" x2="{n(loop[1])}" y2="{n(loop[2])}" stroke="{INK}" stroke-width="{n(loop[3])}" stroke-linecap="round"/>
+    </svg>""")
     ct, cs = P7["contacts"]
     css = f"""
     #root .cta1 {{ left: 0; width: {W}px; top: {P7["slogan"][0]}px; text-align: center; font-size: {P7["slogan"][1]}px; line-height: 1.18; }}
@@ -1569,12 +1580,17 @@ def build_s7():
     #root .cta3 .sq {{ display: inline-block; width: 10px; height: 10px; background: #FF5700; margin: 0 24px; }}
     #root .url {{ position: absolute; display: flex; align-items: center; font-family: "Comfortaa", sans-serif; font-weight: 600; color: #111111; white-space: pre; }}
     #root .cap7 {{ position: absolute; text-align: center; font-family: "Comfortaa", sans-serif; font-weight: 700; color: #111111; white-space: nowrap; }}
+    #root .cap7.grey {{ font-weight: 600; color: #6B6B70; }}
     #root #s7-lscan, #root #s7-ballr, #root #s7-balll, #root #s7-scan, #root #s7-wfill, #root #s7-dots, #root #s7-pill, #root #s7-in {{ opacity: 0; }}"""
     tsc, tty = P7["top"]
     js = f"""
       const slogan = words($("#s7-slogan"), txt("s7-slogan", "{P7["slogan_text"]}"));
       const msg = words($("#s7-msg"), txt("s7-msg", "Faites contrôler votre installation."));
       const contact = txt("s7-contact", "06 22 80 57 69|contact@flyscanair.com");
+      const inName = txt("s7-inname", "");
+      if (inName) $("#s7-inname").textContent = inName;
+      const inUrl = txt("s7-inurl", "");
+      if (inUrl) $("#s7-capi").innerHTML = inUrl.split("|").map((x) => x.replace(/[<>&]/g, "")).join("<br />");
       const cEl = $("#s7-contact");
       cEl.textContent = "";
       contact.split("|").forEach((part, i) => {{
@@ -1611,8 +1627,22 @@ def build_s7():
       tl.to($("#s7-scan"), {{ opacity: 0, duration: 0.15 }}, 5.25);
       blurIn(4.9, $("#s7-capw"), 0.2);
       tl.fromTo($("#s7-in"), {{ opacity: 0, scale: 0.6, transformOrigin: "50% 50%" }}, {{ opacity: 1, scale: 1, duration: 0.45, ease: "back.out(1.6)" }}, 4.5);
-      blurIn(4.85, $("#s7-capi"), 0.2);
-      blurIn(5.05, $("#s7-contact"), 0.2);"""
+      blurIn(4.85, [$("#s7-inname"), $("#s7-capi")], 0.2, 0.1);
+      blurIn(5.05, $("#s7-contact"), 0.2);
+      // C. sortie pour la boucle : tout se retire, puis la ligne de sol de la scène 1 commence à se tracer
+      blurOut(7.2, [$("#s7-contact"), $("#s7-capw"), $("#s7-inname"), $("#s7-capi")], 0.2, 0.04);
+      tl.to(letters.slice().reverse(), {{ opacity: 0, duration: 0.04, stagger: 0.012 }}, 7.2);
+      tl.fromTo($("#s7-scan"), {{ x: {BX + BW} }}, {{ x: {BX}, duration: 0.38, ease: "power1.inOut", immediateRender: false }}, 7.25);
+      tl.to($("#s7-scan"), {{ opacity: 1, duration: 0.05 }}, 7.25);
+      tl.to($("#s7-cliprect"), {{ attr: {{ width: 0 }}, duration: 0.38, ease: "power1.inOut" }}, 7.25);
+      tl.to($("#s7-scan"), {{ opacity: 0, duration: 0.1 }}, 7.63);
+      tl.to($("#s7-in"), {{ opacity: 0, scale: 0.6, duration: 0.3, ease: "power2.in" }}, 7.3);
+      undraw(7.45, [$("#s7-bar"), $("#s7-frame")], 0.35, "power2.in", 0.05);
+      fadeOut(7.45, [$("#s7-dots"), $("#s7-pill"), $("#s7-wfill")], 0.25);
+      blurOut(7.22, slogan, 0.16, 0.02);
+      fadeOut(7.3, [$("#s7-word"), $("#s7-ballr"), $("#s7-balll")], 0.3);
+      undraw(7.3, $("#s7-coil"), 0.45, "power2.in");
+      tl.fromTo($("#s7-loop"), {{ attr: {{ "stroke-dashoffset": 1.05 }} }}, {{ attr: {{ "stroke-dashoffset": 0.62 }}, duration: 0.5, ease: "power1.in" }}, 7.7);"""
     write_scene(
         "s7",
         "Scène 7 — Logo, slogan, site web et LinkedIn",
@@ -1620,6 +1650,8 @@ def build_s7():
             svar("s7-slogan", "Scène 7 — slogan", P7["slogan_text"]),
             svar("s7-msg", "Scène 7 — message", "Faites contrôler votre installation."),
             svar("s7-url", "Scène 7 — adresse du site", "www.flyscanair.com"),
+            svar("s7-inname", "Scène 7 — appel LinkedIn", "Suivez-nous sur LinkedIn"),
+            svar("s7-inurl", "Scène 7 — adresse de la page LinkedIn (| = retour ligne)", P7["inurl"]),
             svar("s7-contact", "Scène 7 — contact (| sépare les éléments)", "06 22 80 57 69|contact@flyscanair.com"),
         ],
         css,
@@ -1632,8 +1664,8 @@ def build_s7():
 # index.html
 # --------------------------------------------------------------------------
 SCENES = [("s1", 0, 7.2), ("s2", 7.2, 6.6), ("s3", 13.8, 6.6), ("s4", 20.4, 7.2), ("s5", 27.6, 12.6),
-          ("s6", 40.2, 6.6), ("s7", 46.8, 7.2)]
-TOTAL = 54.0
+          ("s6", 40.2, 6.6), ("s7", 46.8, 8.2)]
+TOTAL = 55.0
 
 # (id, file, hit time in the film, volume): the file's measured peak lands one frame after its picture
 SFX = [

@@ -14,7 +14,7 @@ import numpy as np
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SR = 48000
-TOTAL = 54.0
+TOTAL = 55.0
 BEAT = 0.6
 N = int(TOTAL * SR)
 rng = np.random.default_rng(20261102)
@@ -77,7 +77,7 @@ CHORDS = [
     (40.2, 42.6, 48, [55, 60, 64, 67, 72]),  # C           S6 plateforme
     (42.6, 44.4, 41, [57, 60, 65, 69, 72]),  # F
     (44.4, 46.8, 43, [55, 59, 62, 67, 71]),  # G
-    (46.8, 54.0, 36, [55, 59, 64, 67, 74]),  # Cmaj9        S7 logo, site, LinkedIn
+    (46.8, 55.0, 36, [55, 59, 64, 67, 74]),  # Cmaj9        S7 logo, site, LinkedIn
 ]
 
 

@@ -39,7 +39,7 @@
     data-composition-id="s5"
     data-width="1080"
     data-height="1920"
-    data-composition-variables="[{&quot;id&quot;: &quot;s5-t1&quot;, &quot;type&quot;: &quot;string&quot;, &quot;label&quot;: &quot;Scène 5 — titre page 1&quot;, &quot;default&quot;: &quot;Chaque défaut est|localisé et *qualifié*.&quot;}, {&quot;id&quot;: &quot;s5-t2&quot;, &quot;type&quot;: &quot;string&quot;, &quot;label&quot;: &quot;Scène 5 — titre page 2&quot;, &quot;default&quot;: &quot;Classés par *gravité*,|avec l’action à mener.&quot;}, {&quot;id&quot;: &quot;s5-t3&quot;, &quot;type&quot;: &quot;string&quot;, &quot;label&quot;: &quot;Scène 5 — titre page 3&quot;, &quot;default&quot;: &quot;Un rapport *aux normes*,|pour agir vite.&quot;}, {&quot;id&quot;: &quot;s5-i0&quot;, &quot;type&quot;: &quot;string&quot;, &quot;label&quot;: &quot;Scène 5 — ligne 1&quot;, &quot;default&quot;: &quot;Anomalies localisées&quot;}, {&quot;id&quot;: &quot;s5-i1&quot;, &quot;type&quot;: &quot;string&quot;, &quot;label&quot;: &quot;Scène 5 — ligne 2&quot;, &quot;default&quot;: &quot;Priorités d’intervention&quot;}, {&quot;id&quot;: &quot;s5-i2&quot;, &quot;type&quot;: &quot;string&quot;, &quot;label&quot;: &quot;Scène 5 — ligne 3&quot;, &quot;default&quot;: &quot;Recommandations&quot;}, {&quot;id&quot;: &quot;s5-i3&quot;, &quot;type&quot;: &quot;string&quot;, &quot;label&quot;: &quot;Scène 5 — ligne 4&quot;, &quot;default&quot;: &quot;Justificatif assurance&quot;}]"
+    data-composition-variables="[{&quot;id&quot;: &quot;s5-t1&quot;, &quot;type&quot;: &quot;string&quot;, &quot;label&quot;: &quot;Scène 5 — titre page 1&quot;, &quot;default&quot;: &quot;Chaque défaut est|localisé et *qualifié*.&quot;}, {&quot;id&quot;: &quot;s5-t2&quot;, &quot;type&quot;: &quot;string&quot;, &quot;label&quot;: &quot;Scène 5 — titre page 2&quot;, &quot;default&quot;: &quot;Classés par *gravité*,|avec l’action à mener.&quot;}, {&quot;id&quot;: &quot;s5-t3&quot;, &quot;type&quot;: &quot;string&quot;, &quot;label&quot;: &quot;Scène 5 — titre page 3&quot;, &quot;default&quot;: &quot;Un rapport *aux normes*,|pour agir rapidement.&quot;}, {&quot;id&quot;: &quot;s5-i0&quot;, &quot;type&quot;: &quot;string&quot;, &quot;label&quot;: &quot;Scène 5 — ligne 1&quot;, &quot;default&quot;: &quot;Anomalies localisées&quot;}, {&quot;id&quot;: &quot;s5-i1&quot;, &quot;type&quot;: &quot;string&quot;, &quot;label&quot;: &quot;Scène 5 — ligne 2&quot;, &quot;default&quot;: &quot;Priorités d’intervention&quot;}, {&quot;id&quot;: &quot;s5-i2&quot;, &quot;type&quot;: &quot;string&quot;, &quot;label&quot;: &quot;Scène 5 — ligne 3&quot;, &quot;default&quot;: &quot;Recommandations&quot;}, {&quot;id&quot;: &quot;s5-i3&quot;, &quot;type&quot;: &quot;string&quot;, &quot;label&quot;: &quot;Scène 5 — ligne 4&quot;, &quot;default&quot;: &quot;Justificatif assurance&quot;}]"
   >
     <div class="box" data-layout-allow-overflow style="position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; transform-origin: 0 0; transform: translate(124px, 423.2px) scale(0.8)">
     <div id="s5-docw" style="position: absolute; left: 0; top: 0; width: 1920px; height: 1080px">
@@ -112,7 +112,7 @@
     </div>
     <div id="s5-t1" class="title" style="left: 108px; top: 300px; font-size: 64px">Chaque défaut est<br />localisé et qualifié.</div>
     <div id="s5-t2" class="title" style="left: 108px; top: 300px; font-size: 64px">Classés par gravité,<br />avec l’action à mener.</div>
-    <div id="s5-t3" class="title" style="left: 108px; top: 300px; font-size: 64px">Un rapport aux normes,<br />pour agir vite.</div>
+    <div id="s5-t3" class="title" style="left: 108px; top: 300px; font-size: 64px">Un rapport aux normes,<br />pour agir rapidement.</div>
   </div>
   <script>
     (function () {
@@ -171,7 +171,7 @@
 
       const t1 = words($("#s5-t1"), txt("s5-t1", "Chaque défaut est|localisé et *qualifié*."));
       const t2 = words($("#s5-t2"), txt("s5-t2", "Classés par *gravité*,|avec l’action à mener."));
-      const t3 = words($("#s5-t3"), txt("s5-t3", "Un rapport *aux normes*,|pour agir vite."));
+      const t3 = words($("#s5-t3"), txt("s5-t3", "Un rapport *aux normes*,|pour agir rapidement."));
       ["s5-i0", "s5-i1", "s5-i2", "s5-i3"].forEach((id) => { const v = txt(id, ""); if (v) $("#" + id).textContent = v; });
       const P1 = $("#s5-p1"), P2 = $("#s5-p2"), P3 = $("#s5-p3");
       const pageOut = (t, el) => tl.to(el, { opacity: 0, x: -30, filter: "blur(6px)", duration: 0.22, ease: "power2.in" }, t);

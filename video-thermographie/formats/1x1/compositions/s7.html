@@ -17,6 +17,7 @@
     #root .cta3 .sq { display: inline-block; width: 10px; height: 10px; background: #FF5700; margin: 0 24px; }
     #root .url { position: absolute; display: flex; align-items: center; font-family: "Comfortaa", sans-serif; font-weight: 600; color: #111111; white-space: pre; }
     #root .cap7 { position: absolute; text-align: center; font-family: "Comfortaa", sans-serif; font-weight: 700; color: #111111; white-space: nowrap; }
+    #root .cap7.grey { font-weight: 600; color: #6B6B70; }
     #root #s7-lscan, #root #s7-ballr, #root #s7-balll, #root #s7-scan, #root #s7-wfill, #root #s7-dots, #root #s7-pill, #root #s7-in { opacity: 0; }
   </style>
   <div
@@ -24,7 +25,7 @@
     data-composition-id="s7"
     data-width="1080"
     data-height="1080"
-    data-composition-variables="[{&quot;id&quot;: &quot;s7-slogan&quot;, &quot;type&quot;: &quot;string&quot;, &quot;label&quot;: &quot;Scène 7 — slogan&quot;, &quot;default&quot;: &quot;Inspections techniques|aériennes,|révélez *l’invisible*.&quot;}, {&quot;id&quot;: &quot;s7-msg&quot;, &quot;type&quot;: &quot;string&quot;, &quot;label&quot;: &quot;Scène 7 — message&quot;, &quot;default&quot;: &quot;Faites contrôler votre installation.&quot;}, {&quot;id&quot;: &quot;s7-url&quot;, &quot;type&quot;: &quot;string&quot;, &quot;label&quot;: &quot;Scène 7 — adresse du site&quot;, &quot;default&quot;: &quot;www.flyscanair.com&quot;}, {&quot;id&quot;: &quot;s7-contact&quot;, &quot;type&quot;: &quot;string&quot;, &quot;label&quot;: &quot;Scène 7 — contact (| sépare les éléments)&quot;, &quot;default&quot;: &quot;06 22 80 57 69|contact@flyscanair.com&quot;}]"
+    data-composition-variables="[{&quot;id&quot;: &quot;s7-slogan&quot;, &quot;type&quot;: &quot;string&quot;, &quot;label&quot;: &quot;Scène 7 — slogan&quot;, &quot;default&quot;: &quot;Inspections techniques|aériennes,|révélez *l’invisible*.&quot;}, {&quot;id&quot;: &quot;s7-msg&quot;, &quot;type&quot;: &quot;string&quot;, &quot;label&quot;: &quot;Scène 7 — message&quot;, &quot;default&quot;: &quot;Faites contrôler votre installation.&quot;}, {&quot;id&quot;: &quot;s7-url&quot;, &quot;type&quot;: &quot;string&quot;, &quot;label&quot;: &quot;Scène 7 — adresse du site&quot;, &quot;default&quot;: &quot;www.flyscanair.com&quot;}, {&quot;id&quot;: &quot;s7-inname&quot;, &quot;type&quot;: &quot;string&quot;, &quot;label&quot;: &quot;Scène 7 — appel LinkedIn&quot;, &quot;default&quot;: &quot;Suivez-nous sur LinkedIn&quot;}, {&quot;id&quot;: &quot;s7-inurl&quot;, &quot;type&quot;: &quot;string&quot;, &quot;label&quot;: &quot;Scène 7 — adresse de la page LinkedIn (| = retour ligne)&quot;, &quot;default&quot;: &quot;linkedin.com/company/|fly-scan-air&quot;}, {&quot;id&quot;: &quot;s7-contact&quot;, &quot;type&quot;: &quot;string&quot;, &quot;label&quot;: &quot;Scène 7 — contact (| sépare les éléments)&quot;, &quot;default&quot;: &quot;06 22 80 57 69|contact@flyscanair.com&quot;}]"
   >
     <div id="s7-top" data-layout-allow-overflow style="position: absolute; left: 0; top: 0; width: 1080px; height: 1080px">
     <svg class="world" viewBox="0 0 1080 1080" width="1080" height="1080" style="width: 1080px; height: 1080px">
@@ -34,7 +35,7 @@
           <stop offset="0.35" stop-color="#E0402F"/>
           <stop offset="1" stop-color="#A51F17"/>
         </radialGradient>
-        <linearGradient id="s7-word" gradientUnits="userSpaceOnUse" x1="140" y1="0" x2="1198" y2="0">
+        <linearGradient id="s7-wordgrad" gradientUnits="userSpaceOnUse" x1="140" y1="0" x2="1198" y2="0">
           <stop offset="0" stop-color="#E2392D"/>
           <stop offset="0.47" stop-color="#E9862A"/>
           <stop offset="0.6" stop-color="#E8842A"/>
@@ -45,7 +46,7 @@
       <g id="s7-logo" transform="translate(159 200) scale(0.6)">
         <path id="s7-coil" stroke-dashoffset="1.05" class="d" pathLength="1" d="M30 218 H95 Q125 218 125 248 V375 A35 35 0 0 0 195 375 V75 A35 35 0 0 1 265 75 V375 A35 35 0 0 0 335 375 V75 A35 35 0 0 1 405 75 V375 A35 35 0 0 0 475 375 V75 A35 35 0 0 1 545 75 V375 A35 35 0 0 0 615 375 V75 A35 35 0 0 1 685 75 V290 Q685 335 730 335 H1200 Q1245 335 1245 290 V215 Q1245 170 1200 170 H1087.5" fill="none" stroke="#6D6C74" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
         <g clip-path="url(#s7-clip)">
-          <text id="s7-word" x="140" y="292" font-family="Comfortaa" font-weight="700" font-size="174" fill="url(#s7-word)" stroke="url(#s7-word)" stroke-width="10" stroke-linejoin="round" paint-order="stroke">Fly Scan’Aır</text>
+          <text id="s7-word" x="140" y="292" font-family="Comfortaa" font-weight="700" font-size="174" fill="url(#s7-wordgrad)" stroke="url(#s7-wordgrad)" stroke-width="10" stroke-linejoin="round" paint-order="stroke">Fly Scan’Aır</text>
         </g>
         <line id="s7-lscan" x1="0" y1="118" x2="0" y2="336" stroke="#FF5700" stroke-width="4"/>
         <circle id="s7-ballr" cx="1087.5" cy="170" r="12" fill="url(#s7-ball)"/>
@@ -79,9 +80,13 @@
         <path d="M416 32H31.9C14.3 32 0 46.5 0 64.3v383.4C0 465.5 14.3 480 31.9 480H416c17.6 0 32-14.5 32-32.3V64.3c0-17.8-14.4-32.3-32-32.3zM135.4 416H69V202.2h66.5V416zm-33.2-243c-21.3 0-38.5-17.3-38.5-38.5S80.9 96 102.2 96c21.2 0 38.5 17.3 38.5 38.5 0 21.3-17.2 38.5-38.5 38.5zm282.1 243h-66.4V312c0-24.8-.5-56.7-34.5-56.7-34.6 0-39.9 27-39.9 54.9V416h-66.4V202.2h63.7v29.2h.9c8.9-16.8 30.6-34.5 62.9-34.5 67.2 0 79.7 44.3 79.7 101.9V416z" transform="scale(0.35714)" fill="#0A66C2"/>
       </g></g>
     </svg>
-    <div id="s7-capi" class="cap7" style="left: 1170px; width: 500px; top: 670px; font-size: 36px">Suivez-nous sur LinkedIn</div>
+    <div id="s7-inname" class="cap7" style="left: 1020px; width: 800px; top: 664px; font-size: 36px">Suivez-nous sur LinkedIn</div>
+    <div id="s7-capi" class="cap7 grey" style="left: 1020px; width: 800px; top: 713px; font-size: 36px; line-height: 1.25">linkedin.com/company/<br />fly-scan-air</div>
     </div>
     <div id="s7-contact" class="cta3"></div>
+    <svg class="world" viewBox="0 0 1080 1080" width="1080" height="1080" style="width: 1080px; height: 1080px">
+      <line id="s7-loop" stroke-dashoffset="1.05" class="d" pathLength="1" x1="40" y1="950" x2="1040" y2="950" stroke="#111111" stroke-width="2.45" stroke-linecap="round"/>
+    </svg>
   </div>
   <script>
     (function () {
@@ -141,6 +146,10 @@
       const slogan = words($("#s7-slogan"), txt("s7-slogan", "Inspections techniques|aériennes,|révélez *l’invisible*."));
       const msg = words($("#s7-msg"), txt("s7-msg", "Faites contrôler votre installation."));
       const contact = txt("s7-contact", "06 22 80 57 69|contact@flyscanair.com");
+      const inName = txt("s7-inname", "");
+      if (inName) $("#s7-inname").textContent = inName;
+      const inUrl = txt("s7-inurl", "");
+      if (inUrl) $("#s7-capi").innerHTML = inUrl.split("|").map((x) => x.replace(/[<>&]/g, "")).join("<br />");
       const cEl = $("#s7-contact");
       cEl.textContent = "";
       contact.split("|").forEach((part, i) => {
@@ -177,8 +186,22 @@
       tl.to($("#s7-scan"), { opacity: 0, duration: 0.15 }, 5.25);
       blurIn(4.9, $("#s7-capw"), 0.2);
       tl.fromTo($("#s7-in"), { opacity: 0, scale: 0.6, transformOrigin: "50% 50%" }, { opacity: 1, scale: 1, duration: 0.45, ease: "back.out(1.6)" }, 4.5);
-      blurIn(4.85, $("#s7-capi"), 0.2);
+      blurIn(4.85, [$("#s7-inname"), $("#s7-capi")], 0.2, 0.1);
       blurIn(5.05, $("#s7-contact"), 0.2);
+      // C. sortie pour la boucle : tout se retire, puis la ligne de sol de la scène 1 commence à se tracer
+      blurOut(7.2, [$("#s7-contact"), $("#s7-capw"), $("#s7-inname"), $("#s7-capi")], 0.2, 0.04);
+      tl.to(letters.slice().reverse(), { opacity: 0, duration: 0.04, stagger: 0.012 }, 7.2);
+      tl.fromTo($("#s7-scan"), { x: 1060 }, { x: 300, duration: 0.38, ease: "power1.inOut", immediateRender: false }, 7.25);
+      tl.to($("#s7-scan"), { opacity: 1, duration: 0.05 }, 7.25);
+      tl.to($("#s7-cliprect"), { attr: { width: 0 }, duration: 0.38, ease: "power1.inOut" }, 7.25);
+      tl.to($("#s7-scan"), { opacity: 0, duration: 0.1 }, 7.63);
+      tl.to($("#s7-in"), { opacity: 0, scale: 0.6, duration: 0.3, ease: "power2.in" }, 7.3);
+      undraw(7.45, [$("#s7-bar"), $("#s7-frame")], 0.35, "power2.in", 0.05);
+      fadeOut(7.45, [$("#s7-dots"), $("#s7-pill"), $("#s7-wfill")], 0.25);
+      blurOut(7.22, slogan, 0.16, 0.02);
+      fadeOut(7.3, [$("#s7-word"), $("#s7-ballr"), $("#s7-balll")], 0.3);
+      undraw(7.3, $("#s7-coil"), 0.45, "power2.in");
+      tl.fromTo($("#s7-loop"), { attr: { "stroke-dashoffset": 1.05 } }, { attr: { "stroke-dashoffset": 0.62 }, duration: 0.5, ease: "power1.in" }, 7.7);
       window.__timelines["s7"] = tl;
     })();
   </script>
