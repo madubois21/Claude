@@ -18,6 +18,8 @@
 - Mixage : la musique descend à 0,32 (−10 dB) sous la voix, remonte dans les vrais silences (fin de S1, fin de S2) et
   pour la sortie en boucle.
 - `hyperframes check` : 0 erreur, 0 avertissement sur les trois formats.
+- Rendus (trois formats) : 55,0 s, 30 i/s ; −15,9 LUFS intégré, crête vraie −1,8 dBTP ; la voix ressort d'environ 9 dB
+  au-dessus de la musique. Images clés relues (cercles S4, pages S5, tampon, message S7, raccord de boucle).
 - Son mesuré, **pas écouté** : à valider à l'écoute (équilibre voix / musique, naturel des légères accélérations).
 
 ## Passage 6 — finitions
