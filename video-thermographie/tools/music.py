@@ -14,7 +14,7 @@ import numpy as np
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SR = 48000
-TOTAL = 40.8
+TOTAL = 45.0
 BEAT = 0.6
 N = int(TOTAL * SR)
 rng = np.random.default_rng(20261102)
@@ -56,23 +56,26 @@ def add(sig, start, pan=0.0, gain=1.0):
 # ------------------------------------------------------------------ harmony
 #            start  end   bass  pad notes
 CHORDS = [
-    (0.0, 4.8, 45, [57, 60, 64, 71]),  # Am(add9)        S1
+    (0.0, 4.8, 45, [57, 60, 64, 71]),  # Am(add9)        S1 problème invisible
     (4.8, 7.2, 41, [57, 60, 64, 65]),  # Fmaj7
     (7.2, 9.6, 38, [57, 60, 62, 65]),  # Dm9             S2 risques
     (9.6, 12.0, 40, [57, 59, 64, 69]),  # Esus4
     (12.0, 13.2, 40, [56, 59, 64, 68]),  # E
     (13.2, 15.6, 45, [57, 60, 64, 69]),  # Am             S3 drone
-    (15.6, 18.0, 41, [57, 60, 65, 69]),  # F
-    (18.0, 19.8, 48, [55, 60, 64, 67]),  # C
-    (19.8, 21.0, 43, [55, 59, 62, 67]),  # G
-    (21.0, 23.4, 45, [57, 60, 64, 69]),  # Am             S4 détection
-    (23.4, 25.8, 41, [57, 60, 65, 69]),  # F
-    (25.8, 27.6, 43, [55, 60, 62, 67]),  # Gsus4
-    (27.6, 30.0, 48, [55, 60, 64, 67, 72]),  # C           S5 rapport
-    (30.0, 31.2, 47, [55, 59, 62, 67, 71]),  # G/B
-    (31.2, 32.4, 45, [57, 60, 64, 69, 72]),  # Am
-    (32.4, 34.2, 41, [57, 60, 65, 69, 72]),  # F
-    (34.2, 40.8, 36, [55, 59, 64, 67, 74]),  # Cmaj9        S6 logo
+    (15.6, 17.4, 41, [57, 60, 65, 69]),  # F
+    (17.4, 18.6, 48, [55, 60, 64, 67]),  # C
+    (18.6, 19.8, 43, [55, 59, 62, 67]),  # G
+    (19.8, 22.2, 45, [57, 60, 64, 69]),  # Am             S4 détection
+    (22.2, 24.6, 41, [57, 60, 65, 69]),  # F
+    (24.6, 26.4, 43, [55, 60, 62, 67]),  # Gsus4
+    (26.4, 28.8, 48, [55, 60, 64, 67, 72]),  # C           S5 rapport normé
+    (28.8, 30.0, 47, [55, 59, 62, 67, 71]),  # G/B
+    (30.0, 31.2, 45, [57, 60, 64, 69, 72]),  # Am
+    (31.2, 32.4, 41, [57, 60, 65, 69, 72]),  # F
+    (32.4, 34.8, 48, [55, 60, 64, 67, 72]),  # C           S6 plateforme
+    (34.8, 36.0, 41, [57, 60, 65, 69, 72]),  # F
+    (36.0, 37.8, 43, [55, 59, 62, 67, 71]),  # G
+    (37.8, 45.0, 36, [55, 59, 64, 67, 74]),  # Cmaj9        S7 logo, site, LinkedIn
 ]
 
 
@@ -103,7 +106,7 @@ for start, end, bass, notes in CHORDS:
         step = BEAT * 2
     elif start < 13.2:
         step = BEAT
-    elif start < 34.2:
+    elif start < 37.8:
         step = BEAT / 2
     else:
         step = None
@@ -134,10 +137,10 @@ def pluck(freq, dur=0.5):
 SIX = BEAT / 4
 step_i = 0
 for start, end, bass, notes in CHORDS:
-    if start < 13.2 or start >= 34.2:
+    if start < 13.2 or start >= 37.8:
         continue
     tones = sorted(notes[:4])
-    octave = 12 if start >= 27.6 else 0
+    octave = 12 if start >= 26.4 else 0
     seq = [tones[0], tones[1], tones[2], tones[3], tones[0] + 12, tones[3], tones[2], tones[1]]
     t0 = start
     while t0 < end - 1e-6:
@@ -159,7 +162,7 @@ def hat(dur=0.08):
 
 
 t0 = 13.2 + BEAT / 2
-while t0 < 34.2:
+while t0 < 37.8:
     add(hat(), t0, 0.2, 0.028)
     t0 += BEAT
 
@@ -176,7 +179,7 @@ for i in range(n):
     acc = a[i] * acc + (1 - a[i]) * noise[i]
     y[i] = acc
 swell = y * (t / t[-1]) ** 2 * env_adsr(n, 0.01, 0.12)
-add(swell, 32.4, 0, 0.55)
+add(swell, 36.0, 0, 0.55)
 
 # ------------------------------------------------------------------ reverb
 def reverb(x, seconds=2.6, mix=0.24, seed=1):

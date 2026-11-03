@@ -48,11 +48,10 @@ LAYOUTS = {
         s3_cam=(-35, 832, -245.9, 1000), s3_hud=(556, 597), s3_title=(108, 330, 58),
         handoff=(220, 641, 640),
         s4_settle=(60, 560, 960), s4_title=(108, 330, 56), s4_title_text="Chaque anomalie est|détectée et localisée.",
-        s4_rows=(1370, 1450, 1530), s4_fs=36, s4_lab=(("c", 0, 400), ("c", 0, 420), ("r", 1020, 440)),
-        s5_title=(108, 300, 64), s5_doc=(0.8, 124, 423.2), s5_chart=(0.8, -556, 975.6),
+        s4_rows=(1380, 1490, 1600), s4_order=(2, 1, 0), s4_fs=(34, 28),
+        s4_lab=(("r", 1020, 480), ("c", 0, 480), ("c", 0, 460)),
+        s5_title=(108, 300, 64), s5_doc=(0.8, 124, 423.2), s5_chart=(0.8, -556, 975.6), s5_stamp=36,
         s5_fs=dict(item=35, head=36, tick=36, label=38, cat=36, catlh=44),
-        s6=dict(s=0.7, y=520, slogan=(890, 60), msg=(1150, 38), contact=(1250, 34, 52),
-                slogan_text="Inspections techniques|aériennes,|révélez *l’invisible*."),
     ),
     "1x1": dict(
         s1_box=(0.98, -817.3, 87.6), s1_title=(108, 120, 56), s1_sun=(1640, 230),
@@ -60,12 +59,11 @@ LAYOUTS = {
         s2_fs=dict(tick=35, label=38, ilabel=40),
         s3_cam=(-35, 832, 87.4, 1000), s3_hud=(556, 236), s3_title=(108, 108, 52),
         handoff=(270, 380, 540),
-        s4_settle=(204, 230, 672), s4_title=(108, 90, 46), s4_title_text="Chaque anomalie est|détectée et localisée.",
-        s4_rows=(800, 862, 924), s4_fs=32, s4_lab=(("c", 0, 360), ("c", 0, 380), ("r", 1000, 400)),
-        s5_title=(108, 150, 52), s5_doc=(0.7, -90, 232.8), s5_chart=(0.58, -10, 175.6),
-        s5_fs=dict(item=40, head=40, tick=49, label=49, cat=49, catlh=58),
-        s6=dict(s=0.6, y=175, slogan=(470, 50), msg=(680, 34), contact=(762, 30, 42),
-                slogan_text="Inspections techniques|aériennes,|révélez *l’invisible*."),
+        s4_settle=(204, 170, 672), s4_title=(108, 90, 40), s4_title_text="Chaque anomalie est détectée et localisée.",
+        s4_rows=(750, 825, 900), s4_order=(2, 1, 0), s4_fs=(30, 28),
+        s4_lab=(("r", 1000, 420), ("l", 108, 460), ("c", 0, 380)),
+        s5_title=(108, 150, 52), s5_doc=(0.7, -90, 232.8), s5_chart=(0.58, -10, 175.6), s5_stamp=40,
+        s5_fs=dict(item=40, head=40, tick=49, label=49, cat=49, catlh=58, head_left=242),
     ),
 }
 L = LAYOUTS.get(FMT)
@@ -216,10 +214,11 @@ FX0, FY0 = 230, 412  # field origin
 CC, CR = 6, 4  # cells per panel
 HERO = (1, 4)  # (row, col) zoomed panel
 
-# anomalies in panel-local coords at S3 scale
+# anomalies in panel-local coords at S3 scale (signatures de la note technique IEC TS 62446-3)
 ANOM = {
     (0, 1): [("spot", 87.5, 60)],
-    (1, 4): [("spot", 52.5, 60), ("cell", 105, 80), ("conn", 192.5, 120)],
+    (1, 4): [("spot", 122.5, 100), ("band", 35, 0), ("jbox", 175, 12)],  # panneau zoomé en S4
+    (2, 2): [("module", 0, 0)],  # module fonctionnant à vide : échauffement uniforme
     (2, 5): [("cell", 35, 80), ("cell", 35, 120)],
     (0, 6): [("spot", 157.5, 20)],
 }
@@ -265,22 +264,32 @@ def anomalies_svg(r, c, ox, oy, s, prefix, hero_ids=False):
     for i, (kind, ax, ay) in enumerate(ANOM.get((r, c), [])):
         x, y = ox + ax * s, oy + ay * s
         idattr = f' id="{prefix}-a{i}"' if hero_ids else ""
-        if kind == "spot":
+        if kind == "spot":  # point chaud ponctuel (cellule fissurée)
             out.append(
                 f'<g{idattr} class="{prefix}-anom" data-x="{n(x)}">'
                 f'<circle cx="{n(x)}" cy="{n(y)}" r="{n(22 * s)}" fill="url(#{prefix}-hot)"/>'
                 f'<circle cx="{n(x)}" cy="{n(y)}" r="{n(5 * s)}" fill="{ACC}"/></g>'
             )
-        elif kind == "cell":
+        elif kind == "cell":  # cellule isolée plus chaude
             out.append(
                 f'<rect{idattr} class="{prefix}-anom" data-x="{n(x)}" x="{n(x)}" y="{n(y)}" width="{n(35 * s)}" '
                 f'height="{n(40 * s)}" fill="url(#{prefix}-warm)"/>'
             )
-        elif kind == "conn":
+        elif kind == "band":  # échauffement linéaire d'une chaîne (diode by-pass)
+            out.append(
+                f'<rect{idattr} class="{prefix}-anom" data-x="{n(x)}" x="{n(x)}" y="{n(oy + 3 * s)}" width="{n(35 * s)}" '
+                f'height="{n(154 * s)}" fill="url(#{prefix}-band)"/>'
+            )
+        elif kind == "jbox":  # boîte de jonction en surchauffe
             out.append(
                 f'<g{idattr} class="{prefix}-anom" data-x="{n(x)}">'
-                f'<ellipse cx="{n(x)}" cy="{n(y)}" rx="{n(13 * s)}" ry="{n(5 * s)}" fill="url(#{prefix}-hot)"/>'
-                f'<ellipse cx="{n(x)}" cy="{n(y)}" rx="{n(5 * s)}" ry="{n(2 * s)}" fill="{ACC}"/></g>'
+                f'<ellipse cx="{n(x)}" cy="{n(y)}" rx="{n(17 * s)}" ry="{n(10 * s)}" fill="url(#{prefix}-hot)"/>'
+                f'<rect x="{n(x - 9 * s)}" y="{n(y - 4 * s)}" width="{n(18 * s)}" height="{n(8 * s)}" rx="{n(2 * s)}" fill="{ACC}"/></g>'
+            )
+        elif kind == "module":  # module fonctionnant à vide
+            out.append(
+                f'<rect{idattr} class="{prefix}-anom" data-x="{n(ox)}" x="{n(ox)}" y="{n(oy)}" width="{n(PW * s)}" '
+                f'height="{n(PH * s)}" fill="{ACC}" fill-opacity="0.2"/>'
             )
     return "".join(out)
 
@@ -295,6 +304,10 @@ def thermal_defs(prefix):
         f'<radialGradient id="{prefix}-warm">'
         f'<stop offset="0" stop-color="{ACC}" stop-opacity="0.62"/>'
         f'<stop offset="1" stop-color="{ACC}" stop-opacity="0.26"/></radialGradient>'
+        f'<linearGradient id="{prefix}-band" x1="0" x2="1" y1="0" y2="0">'
+        f'<stop offset="0" stop-color="{ACC}" stop-opacity="0.28"/>'
+        f'<stop offset="0.5" stop-color="{ACC}" stop-opacity="0.72"/>'
+        f'<stop offset="1" stop-color="{ACC}" stop-opacity="0.28"/></linearGradient>'
     )
 
 
@@ -304,10 +317,15 @@ def th_fill(r, c):
 
 # hero panel in S4 world (used by S4 and S5 so the hand-off is exact)
 S4PW, S4PH = PW * K, PH * K  # 960 x 731.43
-MARKS = [  # detection circles (cx, cy, r) in S4 world + label y
-    (S4X + 52.5 * K, S4Y + 60 * K, 110),
-    (S4X + 122.5 * K, S4Y + 100 * K, 135),
-    (S4X + 192.5 * K, S4Y + 120 * K, 80),
+MARKS = [  # zones entourées en S4 : (forme, cx, cy, demi-largeur, demi-hauteur) dans le monde S4
+    ("circle", S4X + 122.5 * K, S4Y + 100 * K, 110, 110),  # point chaud (hot-spot)
+    ("capsule", S4X + 52.5 * K, S4Y + 80 * K, 105, 372),  # diode by-pass : chaîne échauffée
+    ("circle", S4X + 175 * K, S4Y + 12 * K, 70, 70),  # boîte de jonction
+]
+S4_LABELS = [  # texte principal | précision technique (note technique, § 3.2 et 3.7)
+    "Point chaud (hot-spot)|cellule fissurée",
+    "Diode by-pass défectueuse|échauffement linéaire",
+    "Boîte de jonction|connexion en surchauffe",
 ]
 
 
@@ -330,11 +348,17 @@ def hero_panel_svg(prefix, with_ids=True):
 def marks_svg(prefix, drawable):
     cls = ' class="d"' if drawable else ""
     out = []
-    for i, (cx, cy, r) in enumerate(MARKS):
-        out.append(
-            f'<circle id="{prefix}-c{i}"{cls} pathLength="1" cx="{n(cx)}" cy="{n(cy)}" r="{r}" '
-            f'fill="none" stroke="{ACC}" stroke-width="3" transform="rotate(-90 {n(cx)} {n(cy)})"/>'
-        )
+    for i, (shape, cx, cy, hw, hh) in enumerate(MARKS):
+        if shape == "circle":
+            out.append(
+                f'<circle id="{prefix}-c{i}"{cls} pathLength="1" cx="{n(cx)}" cy="{n(cy)}" r="{hw}" '
+                f'fill="none" stroke="{ACC}" stroke-width="3" transform="rotate(-90 {n(cx)} {n(cy)})"/>'
+            )
+        else:
+            out.append(
+                f'<rect id="{prefix}-c{i}"{cls} pathLength="1" x="{n(cx - hw)}" y="{n(cy - hh)}" width="{2 * hw}" '
+                f'height="{2 * hh}" rx="{hw}" fill="none" stroke="{ACC}" stroke-width="3"/>'
+            )
     return "".join(out)
 
 
@@ -366,9 +390,28 @@ def vb(t):
 # --------------------------------------------------------------------------
 # Logo (vector redraw of the Fly Scan'Air PNG) — logo coords 1270 x 430
 # --------------------------------------------------------------------------
-LOGO_S = L["s6"]["s"] if L else 0.72
+P7 = {  # carton final : logo + slogan (temps A), puis site web + LinkedIn (temps B)
+    "16x9": dict(s=0.72, y=196, slogan=(552, 56), msg=(722, 38), top=(0.55, -37.8), web=None, inb=None,
+                 contacts=(924, 32), url=28, capw=34, capi=34,
+                 slogan_text="Inspections techniques aériennes,|révélez *l’invisible*."),
+    "9x16": dict(s=0.7, y=600, slogan=(970, 60), msg=(1230, 38), top=(0.6, -210), web=(1.15, -242, 88.5),
+                 inb=(1.0, -880, 710), contacts=(1490, 34), url=28, capw=34, capi=34,
+                 slogan_text="Inspections techniques|aériennes,|révélez *l’invisible*."),
+    "1x1": dict(s=0.6, y=200, slogan=(495, 50), msg=(705, 34), top=(0.56, -62), web=(0.72, -156, 54.8),
+                inb=(0.8, -296, 24), contacts=(760, 30), url=40, capw=40, capi=36,
+                slogan_text="Inspections techniques|aériennes,|révélez *l’invisible*."),
+}[FMT]
+P6 = {  # plateforme en ligne
+    "16x9": dict(title=(140, 330, 52), text="Suivez vos installations|sur notre *plateforme*|en ligne.",
+                 tag=(140, 545), win=(0.9, 826, 243), ui=32),
+    "9x16": dict(title=(108, 360, 60), text="Suivez vos installations|sur notre *plateforme*|en ligne.",
+                 tag=(108, 600), win=(0.88, 73.6, 700), ui=32),
+    "1x1": dict(title=(108, 96, 44), text="Suivez vos installations sur|notre *plateforme* en ligne.",
+                tag=(108, 214), win=(0.78, 126.5, 300), ui=36),
+}[FMT]
+LOGO_S = P7["s"]
 LOGO_X = (W - 1270 * LOGO_S) / 2
-LOGO_Y = L["s6"]["y"] if L else 196
+LOGO_Y = P7["y"]
 BALL_L = (30, 218)
 BALL_R = (1087.5, 170)  # = le point du « ı » (Comfortaa 700, 174 px, mesuré)
 
@@ -758,28 +801,21 @@ HOVER_X, SCAN_END_X, DRONE_Y = 215, 1790, 680
 
 
 def drone_svg():
-    rot = [(-105, -78), (105, -78), (-105, 78), (105, 78)]
-    arms = "".join(
-        f'<line x1="{n(x * 0.3)}" y1="{n(y * 0.3)}" x2="{x}" y2="{y}" stroke="{INK}" stroke-width="7" stroke-linecap="round"/>'
-        f'<line x1="{n(x * 0.3)}" y1="{n(y * 0.3)}" x2="{x}" y2="{y}" stroke="#FFFFFF" stroke-width="2.5" stroke-linecap="round"/>'
-        for x, y in rot
-    )
+    """Drone vu de dessus, réduit à l'essentiel : corps, deux bras, quatre rotors, objectif."""
+    rot = [(-100, -76), (100, -76), (-100, 76), (100, 76)]
     rotors = "".join(
         f'<g transform="translate({x} {y})">'
-        f'<circle r="56" fill="#111111" fill-opacity="0.035" stroke="{INK}" stroke-width="1.5"/>'
-        f'<circle r="9" fill="#FFFFFF" stroke="{INK}" stroke-width="2"/>'
-        f'<g class="s3-blade"><line x1="-48" y1="0" x2="48" y2="0" stroke="{INK}" stroke-width="3.5" stroke-linecap="round"/></g>'
+        f'<circle r="50" fill="#FFFFFF" fill-opacity="0.75" stroke="{INK}" stroke-width="2"/>'
+        f'<g class="s3-blade"><line x1="-40" y1="0" x2="40" y2="0" stroke="{INK}" stroke-width="2.5" stroke-linecap="round"/></g>'
         "</g>"
         for x, y in rot
     )
     return f"""<g id="s3-drone">
-          <ellipse cx="34" cy="46" rx="150" ry="112" fill="#111111" fill-opacity="0.06"/>
-          {arms}
+          <line x1="-100" y1="-76" x2="100" y2="76" stroke="{INK}" stroke-width="2.5" stroke-linecap="round"/>
+          <line x1="100" y1="-76" x2="-100" y2="76" stroke="{INK}" stroke-width="2.5" stroke-linecap="round"/>
           {rotors}
-          <rect x="-52" y="-36" width="104" height="72" rx="18" fill="#FFFFFF" stroke="{INK}" stroke-width="2.5"/>
-          <line x1="-30" y1="-36" x2="-30" y2="36" stroke="{INK}" stroke-width="1.2"/>
-          <circle cx="58" cy="0" r="14" fill="#FFFFFF" stroke="{INK}" stroke-width="2.5"/>
-          <circle cx="58" cy="0" r="6" fill="{ACC}"/>
+          <rect x="-44" y="-30" width="88" height="60" rx="16" fill="#FFFFFF" stroke="{INK}" stroke-width="2.5"/>
+          <circle cx="30" cy="0" r="7" fill="{ACC}"/>
         </g>"""
 
 
@@ -832,8 +868,8 @@ def build_s3():
         <line x1="-12" y1="{fy1}" x2="12" y2="{fy1}" stroke="{ACC}" stroke-width="3"/>
       </g>
       {drone_svg()}
-      <polyline id="s3-leader" class="d" pathLength="1" points="{HOVER_X},{DRONE_Y - 40} {HOVER_X},331 470,331" fill="none" stroke="{INK}" stroke-width="1.5"/>
-      <circle id="s3-leaddot" cx="{HOVER_X}" cy="{DRONE_Y - 40}" r="5" fill="{INK}"/>
+      <polyline id="s3-leader" class="d" pathLength="1" points="{HOVER_X},{DRONE_Y - 34} {HOVER_X},331 470,331" fill="none" stroke="{INK}" stroke-width="1.5"/>
+      <circle id="s3-leaddot" cx="{HOVER_X}" cy="{DRONE_Y - 34}" r="5" fill="{INK}"/>
     </svg>
     <div id="s3-hud">
       <div id="s3-tag" class="tag">Caméra infrarouge</div>
@@ -853,25 +889,25 @@ def build_s3():
     js = f"""
       const title = words($("#s3-title"), txt("s3-title", "Le scan infrarouge révèle|chaque *échauffement*."));
       const HOVER = {HOVER_X}, END = {SCAN_END_X}, Y = {DRONE_Y};
-      const T0 = 3.9, TD = 2.7; // balayage
+      const T0 = 3.2, TD = 1.5; // balayage rapide
       // 1. le champ de panneaux se dessine (vue de dessus)
-      draw(0.1, $$(".s3-pline"), 0.5, "power2.inOut", 0.035);
-      fadeIn(0.35, $$(".s3-pfill"), 0.4, 0.035);
-      fadeIn(0.7, $$(".s3-cells"), 0.5, 0.025);
-      solid(1.9, $$(".s3-pline"));
+      draw(0.1, $$(".s3-pline"), 0.5, "power2.inOut", 0.03);
+      fadeIn(0.3, $$(".s3-pfill"), 0.4, 0.03);
+      fadeIn(0.6, $$(".s3-cells"), 0.5, 0.02);
+      solid(1.6, $$(".s3-pline"));
       // 2. le drone entre ; les rotors tournent en continu
-      tl.fromTo($("#s3-drone"), {{ x: -260, y: Y }}, {{ x: HOVER, y: Y, duration: 1.2, ease: "expo.out" }}, 0.9);
-      tl.fromTo($$(".s3-blade"), {{ rotation: 0, transformOrigin: "50% 50%" }}, {{ rotation: 360 * 15, duration: 7.2, ease: "none" }}, 0);
+      tl.fromTo($("#s3-drone"), {{ x: -260, y: Y }}, {{ x: HOVER, y: Y, duration: 0.85, ease: "expo.out" }}, 0.7);
+      tl.fromTo($$(".s3-blade"), {{ rotation: 0, transformOrigin: "50% 50%" }}, {{ rotation: 360 * 13, duration: 6.6, ease: "none" }}, 0);
       // 3. HUD technique : ligne de rappel + données
-      fadeIn(1.95, $("#s3-leaddot"), 0.15);
-      draw(2.0, $("#s3-leader"), 0.4, "power2.out");
-      blurIn(2.3, [$("#s3-tag"), $("#s3-scale")], 0.18, 0.12);
-      blurOut(3.65, [$("#s3-tag"), $("#s3-scale")], 0.16, 0.05);
-      undraw(3.65, $("#s3-leader"), 0.22, "power3.in");
-      fadeOut(3.7, $("#s3-leaddot"), 0.15);
-      tl.set($("#s3-leader"), {{ opacity: 0 }}, 3.9);
+      fadeIn(1.6, $("#s3-leaddot"), 0.15);
+      draw(1.65, $("#s3-leader"), 0.35, "power2.out");
+      blurIn(1.95, [$("#s3-tag"), $("#s3-scale")], 0.18, 0.12);
+      blurOut(3.0, [$("#s3-tag"), $("#s3-scale")], 0.16, 0.05);
+      undraw(3.0, $("#s3-leader"), 0.2, "power3.in");
+      fadeOut(3.05, $("#s3-leaddot"), 0.15);
+      tl.set($("#s3-leader"), {{ opacity: 0 }}, 3.25);
       // 4. balayage thermique : la ligne orange révèle la vue thermique
-      fadeIn(T0 - 0.15, $("#s3-scan"), 0.15);
+      fadeIn(T0 - 0.12, $("#s3-scan"), 0.12);
       tl.fromTo($("#s3-scan"), {{ x: HOVER }}, {{ x: END, duration: TD, ease: "power1.inOut" }}, T0);
       tl.to($("#s3-drone"), {{ x: END, duration: TD, ease: "power1.inOut" }}, T0);
       tl.fromTo($("#s3-cliprect"), {{ attr: {{ width: 0 }} }}, {{ attr: {{ width: END - HOVER }}, duration: TD, ease: "power1.inOut" }}, T0);
@@ -882,12 +918,12 @@ def build_s3():
         const t = T0 + TD * inv(Math.min(Math.max(p, 0), 1));
         tl.fromTo(el, {{ opacity: 0.9, scale: 1, transformOrigin: "50% 50%" }}, {{ opacity: 0, scale: 2.6, duration: 0.8, ease: "power2.out", immediateRender: false }}, t + 0.05);
       }});
-      blurIn(4.0, title, 0.15, 0.067);
+      blurIn(3.25, title, 0.15, 0.067);
       // 5. sortie : le drone quitte le cadre, puis zoom traversant
-      fadeOut(T0 + TD - 0.05, $("#s3-scan"), 0.25);
-      tl.to($("#s3-drone"), {{ x: 2250, duration: 0.5, ease: "power3.in" }}, 6.6);
-      blurOut(6.95, title, 0.16, 0.02);
-      tl.to($("#s3-svg"), {{ attr: {{ viewBox: "{vb(S3_END_VB)}" }}, duration: 0.62, ease: "power3.in" }}, 7.18);"""
+      fadeOut(T0 + TD - 0.05, $("#s3-scan"), 0.2);
+      tl.to($("#s3-drone"), {{ x: 2250, duration: 0.45, ease: "power3.in" }}, T0 + TD);
+      blurOut(5.6, title, 0.16, 0.02);
+      tl.to($("#s3-svg"), {{ attr: {{ viewBox: "{vb(S3_END_VB)}" }}, duration: 0.62, ease: "power3.in" }}, 5.98);"""
     if L:
         marker = '      tl.fromTo($("#s3-cliprect"),'
         cam = (f'      tl.fromTo($("#s3-svg"), {{ attr: {{ viewBox: "{vb(S3_VB0)}" }} }}, '
@@ -906,28 +942,33 @@ def build_s3():
 # --------------------------------------------------------------------------
 # S4 — Détection des anomalies
 # --------------------------------------------------------------------------
-def s4_callouts(names):
+def lab4(i, left, top, extra=""):
+    main, detail = S4_LABELS[i].split("|")
+    return (f'<div id="s4-l{i + 1}" class="lab4" style="left: {n(left)}px; top: {n(top)}px{extra}">'
+            f'<span class="m">{main}</span><span class="dt">{detail}</span></div>')
+
+
+def s4_callouts():
     """Déclinaisons : étiquettes sous le panneau, reliées par des traits verticaux."""
     vx, vy, vw, _ = S4_SETTLE_VB
     k = W / vw
-    fs = L["s4_fs"]
-    lh = round(fs * 1.2)
-    leaders, dots, labels = [], [], []
-    for i, ((cx, cy, r), row, (align, xr, wbox)) in enumerate(zip(MARKS, L["s4_rows"], L["s4_lab"])):
+    mlh = round(L["s4_fs"][0] * 1.22)
+    leaders, dots, labels = [None] * 3, [None] * 3, [None] * 3
+    for row, i, (align, xr, wbox) in zip(L["s4_rows"], L["s4_order"], L["s4_lab"]):
+        _, cx, cy, hw, hh = MARKS[i]
         scx = (cx - vx) * k
-        wy0 = cy + r
-        wy1 = (row - lh / 2 - 8) / k + vy
-        leaders.append(f'<polyline id="s4-ld{i}" class="d" pathLength="1" points="{n(cx)},{n(wy0)} {n(cx)},{n(wy1)}" fill="none" stroke="{INK}" stroke-width="1.5"/>')
-        dots.append(f'<circle id="s4-dot{i}" cx="{n(cx)}" cy="{n(wy1)}" r="{n(5 / k)}" fill="{INK}"/>')
-        left, ta = (scx - wbox / 2, "center") if align == "c" else (xr - wbox, "right")
-        labels.append(
-            f'<div id="{names[i][0]}" class="lab4" style="left: {n(left)}px; top: {n(row - lh / 2)}px; '
-            f'width: {wbox}px; text-align: {ta}">{names[i][1]}</div>'
-        )
+        wy0 = cy + hh
+        wy1 = (row - mlh / 2 - 8) / k + vy
+        leaders[i] = f'<polyline id="s4-ld{i}" class="d" pathLength="1" points="{n(cx)},{n(wy0)} {n(cx)},{n(wy1)}" fill="none" stroke="{INK}" stroke-width="1.5"/>'
+        dots[i] = f'<circle id="s4-dot{i}" cx="{n(cx)}" cy="{n(wy1)}" r="{n(5 / k)}" fill="{INK}"/>'
+        left, ta = {"c": (scx - wbox / 2, "center"), "r": (xr - wbox, "right"), "l": (xr, "left")}[align]
+        labels[i] = lab4(i, left, row - mlh / 2, f"; width: {wbox}px; text-align: {ta}")
     return leaders, dots, labels
 
 
 def build_s4():
+    import math
+
     neigh = []
     hr, hc = HERO
     for dr in (-1, 0, 1):
@@ -943,21 +984,19 @@ def build_s4():
                 + anomalies_svg(r, c, x, y, K, "s4")
                 + f'<rect x="{n(x)}" y="{n(y)}" width="{n(S4PW)}" height="{n(S4PH)}" fill="none" stroke="{INK}" stroke-width="2"/>'
             )
-    labels_y = [504, 652, 800]
+    # 16:9 : étiquettes à droite, traits horizontaux (y choisis pour ne croiser aucune zone)
+    label_y = [687, 450, 285]
     leaders, dots, labels = [], [], []
-    names = [("s4-l1", "Point chaud"), ("s4-l2", "Cellule défectueuse"), ("s4-l3", "Défaut de connexion")]
-    import math
-
-    for i, ((cx, cy, r), ly) in enumerate(zip(MARKS, labels_y)):
-        dy = ly - cy
-        sx = cx + math.sqrt(max(r * r - dy * dy, 0))
+    for i, ((shape, cx, cy, hw, hh), ly) in enumerate(zip(MARKS, label_y)):
+        sx = cx + (math.sqrt(max(hw * hw - (ly - cy) ** 2, 0)) if shape == "circle" else hw)
         leaders.append(f'<polyline id="s4-ld{i}" class="d" pathLength="1" points="{n(sx)},{n(ly)} 1160,{n(ly)}" fill="none" stroke="{INK}" stroke-width="1.5"/>')
         dots.append(f'<circle id="s4-dot{i}" cx="1160" cy="{n(ly)}" r="5" fill="{INK}"/>')
-        labels.append(f'<div id="{names[i][0]}" class="lab4" style="left: 1182px; top: {n(ly - 21)}px">{names[i][1]}</div>')
+        labels.append(lab4(i, 1182, ly - 22))
     if L:
-        leaders, dots, labels = s4_callouts(names)
-    hx, hy = MARKS[0][0], MARKS[0][1]
+        leaders, dots, labels = s4_callouts()
+    hx, hy = MARKS[0][1], MARKS[0][2]
     s4t = L["s4_title_text"] if L else "Chaque anomalie est détectée et localisée."
+    fm, fd = L["s4_fs"] if L else (36, 28)
     body = f"""    <svg id="s4-svg" class="world zoom" viewBox="{vb(S4_START_VB)}" width="{W}" height="{H}"{CANVAS}>
       <defs>{thermal_defs("s4")}</defs>
       <g id="s4-neigh">{"".join(neigh)}</g>
@@ -968,18 +1007,22 @@ def build_s4():
     </svg>
     {"".join(labels)}
     <div id="s4-title" class="title" style="{tstyle(L and L["s4_title"], "left: 120px; top: 86px; font-size: 56px")}">Chaque anomalie est détectée et localisée.</div>"""
-    css = """
-    #root .lab4 { position: absolute; font-family: "Comfortaa", sans-serif; font-weight: 600; font-size: 36px; line-height: 42px; color: #111111; white-space: nowrap; }
-    #root #s4-bus, #root #s4-inner, #root #s4-ring { opacity: 0; }
-    #root #s4-leaders circle { opacity: 0; }"""
-    if L:
-        css += f"""
-    #root .lab4 {{ font-size: {L["s4_fs"]}px; line-height: {round(L["s4_fs"] * 1.2)}px; }}"""
+    css = f"""
+    #root .lab4 {{ position: absolute; font-family: "Comfortaa", sans-serif; white-space: nowrap; }}
+    #root .lab4 .m {{ display: block; font-weight: 700; font-size: {fm}px; line-height: {round(fm * 1.22)}px; color: #111111; }}
+    #root .lab4 .dt {{ display: block; font-weight: 600; font-size: {fd}px; line-height: {round(fd * 1.3)}px; color: #6B6B70; }}
+    #root #s4-bus, #root #s4-inner, #root #s4-ring {{ opacity: 0; }}
+    #root #s4-leaders circle {{ opacity: 0; }}"""
     js = f"""
       const title = words($("#s4-title"), txt("s4-title", "{s4t}"));
-      txt("s4-l1", "") && ($("#s4-l1").textContent = txt("s4-l1", ""));
-      txt("s4-l2", "") && ($("#s4-l2").textContent = txt("s4-l2", ""));
-      txt("s4-l3", "") && ($("#s4-l3").textContent = txt("s4-l3", ""));
+      [1, 2, 3].forEach((i) => {{
+        const v = txt("s4-l" + i, "");
+        if (v && v.indexOf("|") > 0) {{
+          const el = $("#s4-l" + i);
+          el.querySelector(".m").textContent = v.split("|")[0];
+          el.querySelector(".dt").textContent = v.split("|")[1];
+        }}
+      }});
       const svg = $("#s4-svg");
       // 1. le zoom se pose sur le panneau défectueux
       tl.fromTo(svg, {{ attr: {{ viewBox: "{vb(S4_START_VB)}" }} }}, {{ attr: {{ viewBox: "{vb(S4_SETTLE_VB)}" }}, duration: 0.95, ease: "power3.out" }}, 0);
@@ -999,7 +1042,7 @@ def build_s4():
         fadeIn(t + 0.65, $("#s4-dot" + i), 0.1);
         blurIn(t + 0.62, $("#s4-l" + (i + 1)), 0.18);
       }});
-      solid(4.0, $$("#s4-marks circle"));
+      solid(4.0, $$("#s4-marks > *"));
       // 5. sortie : la vignette part dans le rapport
       blurOut(5.55, [...title, $("#s4-l1"), $("#s4-l2"), $("#s4-l3")], 0.18, 0.02);
       undraw(5.55, $$("#s4-leaders polyline"), 0.2, "power3.in");
@@ -1008,12 +1051,12 @@ def build_s4():
       tl.to(svg, {{ attr: {{ viewBox: "{vb(S4_END_VB)}" }}, duration: 0.72, ease: "power2.inOut" }}, 5.83);"""
     write_scene(
         "s4",
-        "Scène 4 — Détection des anomalies",
+        "Scène 4 — Détection des anomalies (vocabulaire de la note technique)",
         [
             svar("s4-title", "Scène 4 — titre", s4t),
-            svar("s4-l1", "Scène 4 — étiquette 1", "Point chaud"),
-            svar("s4-l2", "Scène 4 — étiquette 2", "Cellule défectueuse"),
-            svar("s4-l3", "Scène 4 — étiquette 3", "Défaut de connexion"),
+            svar("s4-l1", "Scène 4 — étiquette 1 (principal|précision)", S4_LABELS[0]),
+            svar("s4-l2", "Scène 4 — étiquette 2 (principal|précision)", S4_LABELS[1]),
+            svar("s4-l3", "Scène 4 — étiquette 3 (principal|précision)", S4_LABELS[2]),
         ],
         css,
         body,
@@ -1031,17 +1074,31 @@ S5_BARS = [("Installation|saine", 20000, 1250, "#CDCDD2"), ("Installation|avec d
 S5_BW = 210
 
 
+# plateforme : position de l'icône « nouveau rapport » dans la fenêtre (coordonnées fenêtre)
+P6_DOC = (661, 185, 34)  # centre x, centre y, hauteur
+
+
 def build_s5():
     dx, dy, dw, dh = 220, 96, 600, 848
     doc_path = f"M{dx} {dy} H{dx + dw} V{dy + dh} H{dx} Z"
-    rows = [650, 730, 810]
-    items = ["Anomalies localisées", "Priorités d’intervention", "Recommandations"]
+    rows = [632, 697, 762, 827]
+    items = ["Anomalies localisées", "Priorités d’intervention", "Recommandations", "Justificatif assurance"]
     boxes, checks, texts = [], [], []
     for i, (y, t) in enumerate(zip(rows, items)):
         boxes.append(f'<rect class="d s5-box" pathLength="1" x="260" y="{y - 17}" width="34" height="34" rx="4"/>')
         checks.append(f'<polyline id="s5-k{i}" class="d" pathLength="1" points="266,{y + 1} 275,{y + 10} 290,{y - 9}" stroke="{ACC}" stroke-width="4"/>')
         texts.append(f'<div id="s5-i{i}" class="item" style="left: 318px; top: {y - 21}px">{t}</div>')
-    ball_x, ball_y = logo_screen(*BALL_L)
+    # tampon « conforme à la norme », posé sur le rapport
+    sf = L["s5_stamp"] if L else 30
+    sw_, sh_ = sf * 10.4, sf * 3.6
+    stamp = (
+        f'<g transform="translate(640 516) rotate(-7)"><g id="s5-stamp">'
+        f'<rect x="{n(-sw_ / 2)}" y="{n(-sh_ / 2)}" width="{n(sw_)}" height="{n(sh_)}" rx="10" fill="#FFFFFF" fill-opacity="0.9" stroke="{ACC}" stroke-width="3"/>'
+        f'<rect x="{n(-sw_ / 2 + 7)}" y="{n(-sh_ / 2 + 7)}" width="{n(sw_ - 14)}" height="{n(sh_ - 14)}" rx="6" fill="none" stroke="{ACC}" stroke-width="1.5"/>'
+        f'<text class="stamp" x="0" y="{n(-sf * 0.25)}" text-anchor="middle" font-size="{sf}" letter-spacing="3">CONFORME</text>'
+        f'<text class="stamp" x="0" y="{n(sf * 1.05)}" text-anchor="middle" font-size="{sf}">IEC TS 62446-3</text>'
+        f'</g></g>'
+    )
     grid, yticks, bars, cats = [], [], [], []
     for v in range(0, 25001, 5000):
         y = S5_AY - v * S5_K
@@ -1056,15 +1113,16 @@ def build_s5():
             f'fill="{col}" data-top="{n(S5_AY - h)}" data-h="{n(h + 12)}"/>'
         )
         cats.append(f'<div id="s5-cat{i}" class="cat" style="left: {cx - 170}px; top: {S5_AY + 18}px">{name.replace("|", "<br />")}</div>')
-    body = f"""    <div id="s5-paper" style="left: {dx}px; top: {dy}px; width: {dw}px; height: {dh}px"></div>
+    doc_part = f"""    <div id="s5-docw" style="position: absolute; left: 0; top: 0; width: {SW}px; height: {SH}px">
+    <div id="s5-paper" style="left: {dx}px; top: {dy}px; width: {dw}px; height: {dh}px"></div>
     <svg class="world" viewBox="0 0 {SW} {SH}" width="{SW}" height="{SH}">
       <g fill="none" stroke="{INK}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <path id="s5-doc" class="d" pathLength="1" d="{doc_path}"/>
         <line id="s5-rule" class="d" pathLength="1" x1="260" y1="178" x2="780" y2="178" stroke-width="1.5"/>
         {"".join(boxes)}
         {"".join(checks)}
-        <line class="d s5-foot" pathLength="1" x1="260" y1="884" x2="660" y2="884" stroke="#E4E4E7" stroke-width="8"/>
-        <line class="d s5-foot" pathLength="1" x1="260" y1="910" x2="560" y2="910" stroke="#E4E4E7" stroke-width="8"/>
+        <line class="d s5-foot" pathLength="1" x1="260" y1="890" x2="660" y2="890" stroke="#E4E4E7" stroke-width="8"/>
+        <line class="d s5-foot" pathLength="1" x1="260" y1="914" x2="560" y2="914" stroke="#E4E4E7" stroke-width="8"/>
       </g>
     </svg>
     <svg id="s5-thumb" class="world zoom" viewBox="{vb(THUMB_LOCAL_VB)}" width="{SW}" height="{SH}">
@@ -1072,8 +1130,12 @@ def build_s5():
       {hero_panel_svg("s5", with_ids=False)}
       <g id="s5-marks">{marks_svg("s5", False)}</g>
     </svg>
-    <svg id="s5-chart" class="world" viewBox="0 0 {SW} {SH}" width="{SW}" height="{SH}">
-      <defs><clipPath id="s5-clip"><rect x="{-4000 if L else 0}" y="{-4000 if L else 0}" width="{SW + 8000 if L else SW}" height="{S5_AY + 4000 if L else S5_AY}"/></clipPath></defs>
+    <svg class="world" viewBox="0 0 {SW} {SH}" width="{SW}" height="{SH}">{stamp}</svg>
+    <div id="s5-h" class="dochead" style="left: 260px; top: 128px">Rapport thermographique</div>
+    {"".join(texts)}
+    </div>"""
+    chart_part = f"""    <svg id="s5-chart" class="world" viewBox="0 0 {SW} {SH}" width="{SW}" height="{SH}">
+      <defs><clipPath id="s5-clip"><rect x="0" y="0" width="{SW}" height="{S5_AY}"/></clipPath></defs>
       <g id="s5-axes">
         <g id="s5-grid" stroke="#E4E4E7" stroke-width="1.5" stroke-dasharray="6 8">{"".join(grid)}</g>
         <g id="s5-yt" class="tick">{"".join(yticks)}</g>
@@ -1086,26 +1148,18 @@ def build_s5():
       </g>
       <g clip-path="url(#s5-clip)">{"".join(bars)}</g>
     </svg>
-    <div id="s5-h" class="dochead" style="left: 260px; top: 128px">Rapport d’inspection</div>
-    {"".join(texts)}
     <div id="s5-lab-y" class="label" style="left: 1010px; top: 318px">Production (kWh/an)</div>
-    {"".join(cats)}
-    <div id="s5-title" class="title" style="{tstyle(L and L["s5_title"], "left: 960px; top: 150px")}">Un rapport clair<br />pour agir vite.</div>"""
-    if L:  # rapport et graphique deviennent deux blocs empilés
-        i_chart = body.index('    <svg id="s5-chart"')
-        i_head = body.index('    <div id="s5-h"')
-        i_lab = body.index('    <div id="s5-lab-y"')
-        i_title = body.index('    <div id="s5-title"')
-        doc_part = body[:i_chart] + body[i_head:i_lab]
-        chart_part = body[i_chart:i_head] + body[i_lab:i_title]
-        body = box(doc_part.rstrip(), L["s5_doc"]) + "\n" + box(chart_part.rstrip(), L["s5_chart"]) + "\n" + body[i_title:]
+    {"".join(cats)}"""
+    title = f"""    <div id="s5-title" class="title" style="{tstyle(L and L["s5_title"], "left: 960px; top: 150px")}">Un rapport aux normes,<br />pour agir vite.</div>"""
+    body = (box(doc_part, L["s5_doc"] if L else None) + "\n" + box(chart_part, L["s5_chart"] if L else None) + "\n" + title)
     css = """
     #root #s5-paper { position: absolute; background: #FFFFFF; box-shadow: 0 18px 40px rgba(17, 17, 17, 0.08); opacity: 0; }
     #root .dochead { position: absolute; font-family: "Comfortaa", sans-serif; font-weight: 700; font-size: 30px; line-height: 40px; color: #111111; white-space: nowrap; }
     #root .item { position: absolute; font-family: "Comfortaa", sans-serif; font-weight: 600; font-size: 30px; line-height: 42px; color: #111111; white-space: nowrap; }
     #root .tick text { font-family: "Comfortaa", sans-serif; font-weight: 600; font-size: 28px; fill: #6B6B70; }
+    #root .stamp { font-family: "Comfortaa", sans-serif; font-weight: 700; fill: #FF5700; }
     #root .cat { position: absolute; width: 340px; text-align: center; font-family: "Comfortaa", sans-serif; font-weight: 600; font-size: 28px; line-height: 36px; color: #111111; }
-    #root #s5-grid, #root #s5-yt { opacity: 0; }"""
+    #root #s5-grid, #root #s5-yt, #root #s5-stamp { opacity: 0; }"""
     if L:
         fs = L["s5_fs"]
         css += f"""
@@ -1114,9 +1168,18 @@ def build_s5():
     #root .tick text {{ font-size: {fs["tick"]}px; }}
     #root .label {{ font-size: {fs["label"]}px; }}
     #root .cat {{ font-size: {fs["cat"]}px; line-height: {fs["catlh"]}px; }}"""
+        if "head_left" in fs:
+            css += f"""
+    #root #s5-h {{ left: {fs["head_left"]}px !important; }}"""
+    # le rapport rejoint la ligne « Nouveau rapport » de la plateforme (raccord S5 -> S6)
+    ws, wtx, wty = P6["win"]
+    icx, icy, ich = ws * P6_DOC[0] + wtx, ws * P6_DOC[1] + wty, ws * P6_DOC[2]
+    bs, btx, bty = L["s5_doc"] if L else (1, 0, 0)
+    dcx, dcy = dx + dw / 2, dy + dh / 2
+    carry = dict(x=(icx - btx) / bs - dcx, y=(icy - bty) / bs - dcy, scale=ich / (dh * bs))
     js = """
-      const title = words($("#s5-title"), txt("s5-title", "Un rapport clair|pour *agir vite*."));
-      ["s5-i0", "s5-i1", "s5-i2"].forEach((id, i) => { const v = txt(id, ""); if (v) $("#" + id).textContent = v; });
+      const title = words($("#s5-title"), txt("s5-title", "Un rapport *aux normes*,|pour agir vite."));
+      ["s5-i0", "s5-i1", "s5-i2", "s5-i3"].forEach((id) => { const v = txt(id, ""); if (v) $("#" + id).textContent = v; });
       // 1. la feuille se dessine autour de la vignette
       draw(0, $("#s5-doc"), 1.1, "power2.inOut");
       fadeIn(0.2, $("#s5-paper"), 0.7);
@@ -1125,44 +1188,39 @@ def build_s5():
       // 2. titre
       blurIn(0.9, title, 0.15, 0.067);
       // 3. checklist cochée
-      draw(1.15, $$(".s5-box"), 0.35, "power2.out", 0.12);
-      blurIn(1.3, [$("#s5-i0"), $("#s5-i1"), $("#s5-i2")], 0.18, 0.2);
-      draw(1.8, $("#s5-k0"), 0.25, "power2.out");
-      draw(2.2, $("#s5-k1"), 0.25, "power2.out");
-      draw(2.6, $("#s5-k2"), 0.25, "power2.out");
-      draw(1.7, $$(".s5-foot"), 0.4, "power2.out", 0.1);
-      // 4. graphique production : installation saine vs avec défauts
-      draw(2.2, [$("#s5-ay"), $("#s5-ax")], 0.55, "power3.out", 0.08);
-      draw(2.6, [$("#s5-aya"), $("#s5-axa")], 0.22, "power2.out", 0.05);
-      fadeIn(2.45, [$("#s5-grid"), $("#s5-yt")], 0.4, 0.08);
-      blurIn(2.55, $("#s5-lab-y"), 0.18);
+      draw(1.1, $$(".s5-box"), 0.35, "power2.out", 0.1);
+      blurIn(1.2, [$("#s5-i0"), $("#s5-i1"), $("#s5-i2"), $("#s5-i3")], 0.18, 0.15);
+      [1.7, 1.95, 2.2, 2.45].forEach((t, i) => draw(t, $("#s5-k" + i), 0.22, "power2.out"));
+      draw(1.6, $$(".s5-foot"), 0.4, "power2.out", 0.1);
+      // 4. le tampon « conforme IEC TS 62446-3 » s'appose
+      tl.fromTo($("#s5-stamp"), { opacity: 0, scale: 1.45, transformOrigin: "50% 50%" }, { opacity: 1, scale: 1, duration: 0.32, ease: "back.out(1.8)" }, 2.7);
+      // 5. graphique production : installation saine vs avec défauts
+      draw(2.3, [$("#s5-ay"), $("#s5-ax")], 0.55, "power3.out", 0.08);
+      draw(2.7, [$("#s5-aya"), $("#s5-axa")], 0.22, "power2.out", 0.05);
+      fadeIn(2.55, [$("#s5-grid"), $("#s5-yt")], 0.4, 0.08);
+      blurIn(2.6, $("#s5-lab-y"), 0.18);
       [0, 1].forEach((i) => {
         const b = $("#s5-bar" + i);
         const top = parseFloat(b.getAttribute("data-top")), h = parseFloat(b.getAttribute("data-h"));
-        tl.fromTo(b, { attr: { y: __AY__, height: 0 } }, { attr: { y: top, height: h }, duration: 0.75, ease: "power3.out" }, 2.85 + i * 0.35);
-        blurIn(3.15 + i * 0.35, $("#s5-cat" + i), 0.18);
+        tl.fromTo(b, { attr: { y: __AY__, height: 0 } }, { attr: { y: top, height: h }, duration: 0.75, ease: "power3.out" }, 2.95 + i * 0.3);
+        blurIn(3.2 + i * 0.3, $("#s5-cat" + i), 0.18);
       });
-      // 5. sortie : tout se floute ; la barre orange se replie en point et file vers le logo
-      const keep = $("#s5-bar1");
-      const kx = __BX__, ky = parseFloat(keep.getAttribute("data-top"));
-      blurOut(5.85, [...title, $("#s5-h"), $("#s5-i0"), $("#s5-i1"), $("#s5-i2"), $("#s5-lab-y"), $("#s5-cat0"), $("#s5-cat1")], 0.2, 0.015);
-      blurOut(5.9, [R.querySelector("svg.world"), $("#s5-thumb"), $("#s5-paper"), $("#s5-axes"), $("#s5-bar0")], 0.22, 0.02);
-      tl.to(keep, { attr: { x: kx - 10, y: ky - 10, width: 20, height: 20, rx: 10 }, duration: 0.32, ease: "power2.inOut" }, 5.85);
-      tl.to(keep, { attr: { x: __TX__, y: __TY__ }, duration: 0.5, ease: "power2.inOut" }, 6.08);"""
-    tx_dot, ty_dot = ball_x - 10, ball_y - 10
-    if L:  # cible du point exprimée dans la boîte du graphique
-        cs, cx_, cy_ = L["s5_chart"]
-        tx_dot, ty_dot = (ball_x - cx_) / cs - 10, (ball_y - cy_) / cs - 10
-    js = (js.replace("__AY__", str(S5_AY)).replace("__BX__", str(S5_BARS[1][2]))
-          .replace("__TX__", n(tx_dot)).replace("__TY__", n(ty_dot)))
+      // 6. sortie : le graphique se floute, le rapport file dans la plateforme
+      blurOut(5.15, [...title, $("#s5-lab-y"), $("#s5-cat0"), $("#s5-cat1")], 0.2, 0.015);
+      blurOut(5.2, [$("#s5-chart")], 0.22, 0);
+      fadeOut(5.42, [$("#s5-h"), $("#s5-i0"), $("#s5-i1"), $("#s5-i2"), $("#s5-i3"), $("#s5-stamp")], 0.1);
+      tl.to($("#s5-docw"), { x: __CX__, y: __CY__, scale: __CS__, transformOrigin: "__OX__px __OY__px", duration: 0.48, ease: "power2.inOut" }, 5.45);"""
+    js = (js.replace("__AY__", str(S5_AY)).replace("__CX__", n(carry["x"])).replace("__CY__", n(carry["y"]))
+          .replace("__CS__", f'{carry["scale"]:.5f}').replace("__OX__", n(dcx)).replace("__OY__", n(dcy)))
     write_scene(
         "s5",
-        "Scène 5 — Rapport et bénéfices",
+        "Scène 5 — Rapport aux normes (IEC TS 62446-3)",
         [
-            svar("s5-title", "Scène 5 — titre", "Un rapport clair|pour *agir vite*."),
-            svar("s5-i0", "Scène 5 — ligne 1", "Anomalies localisées"),
-            svar("s5-i1", "Scène 5 — ligne 2", "Priorités d’intervention"),
-            svar("s5-i2", "Scène 5 — ligne 3", "Recommandations"),
+            svar("s5-title", "Scène 5 — titre", "Un rapport *aux normes*,|pour agir vite."),
+            svar("s5-i0", "Scène 5 — ligne 1", items[0]),
+            svar("s5-i1", "Scène 5 — ligne 2", items[1]),
+            svar("s5-i2", "Scène 5 — ligne 3", items[2]),
+            svar("s5-i3", "Scène 5 — ligne 4", items[3]),
         ],
         css,
         body,
@@ -1171,86 +1229,259 @@ def build_s5():
 
 
 # --------------------------------------------------------------------------
-# S6 — Call to action (logo Fly Scan'Air)
+# S6 — Plateforme en ligne (en cours de développement : mention « Bientôt disponible »)
 # --------------------------------------------------------------------------
+LINKEDIN_PATH = (  # Font Awesome Free 6.5.2 « linkedin » (CC BY 4.0), viewBox 0 0 448 512
+    "M416 32H31.9C14.3 32 0 46.5 0 64.3v383.4C0 465.5 14.3 480 31.9 480H416c17.6 0 32-14.5 32-32.3V64.3c0-17.8-14.4-32.3-32-32.3z"
+    "M135.4 416H69V202.2h66.5V416zm-33.2-243c-21.3 0-38.5-17.3-38.5-38.5S80.9 96 102.2 96c21.2 0 38.5 17.3 38.5 38.5 0 21.3-17.2 38.5-38.5 38.5z"
+    "m282.1 243h-66.4V312c0-24.8-.5-56.7-34.5-56.7-34.6 0-39.9 27-39.9 54.9V416h-66.4V202.2h63.7v29.2h.9c8.9-16.8 30.6-34.5 62.9-34.5 67.2 0 79.7 44.3 79.7 101.9V416z"
+)
+
+
 def build_s6():
+    ws, wtx, wty = P6["win"]
+    ui = P6["ui"]
+    # plan thermique : 5 x 3 modules
+    field, markers = [], []
+    mx0, my0, mw, mh, mgx, mgy = 140, 168, 80, 56, 10, 14
+    hot = {(1, 1): 0, (0, 3): 1, (2, 4): 2}
+    for r in range(3):
+        for c in range(5):
+            x, y = mx0 + c * (mw + mgx), my0 + r * (mh + mgy)
+            warm = (r, c) == (2, 1)
+            field.append(
+                f'<g class="s6-mod"><rect x="{x}" y="{y}" width="{mw}" height="{mh}" fill="{"#FFD9C6" if warm else th_fill(r, c)}" stroke="{INK}" stroke-width="1.5"/>'
+                f'<path d="M{x + mw / 3:.1f} {y}V{y + mh}M{x + 2 * mw / 3:.1f} {y}V{y + mh}M{x} {y + mh / 2}H{x + mw}" stroke="{TH_CELL}" stroke-width="1"/></g>'
+            )
+            if (r, c) in hot:
+                k = hot[(r, c)]
+                markers.append((k, x + mw / 2, y + mh / 2))
+    rings = "".join(f'<circle class="s6-ring" cx="{n(x)}" cy="{n(y)}" r="10" fill="none" stroke="{ACC}" stroke-width="2"/>' for _, x, y in markers)
+    mks = "".join(f'<circle id="s6-mk{k}" class="s6-mk" cx="{n(x)}" cy="{n(y)}" r="10" fill="{ACC}"/>' for k, x, y in markers)
+    rows = []
+    for i, y in enumerate((150, 238, 326)):
+        hl = i == 0
+        icon = (f'<g class="{"s6-doc" if hl else "s6-doc2"}"><rect x="648" y="{y + 18}" width="26" height="34" rx="3" fill="#FFFFFF" stroke="{INK if hl else "#A1A1AA"}" stroke-width="2"/>'
+                f'<path d="M653 {y + 28}h16M653 {y + 35}h16M653 {y + 42}h10" stroke="{INK if hl else "#A1A1AA"}" stroke-width="1.5"/></g>')
+        rows.append(f'<rect class="d s6-row" pathLength="1" x="630" y="{y}" width="400" height="70" rx="10" fill="none" stroke="{INK if hl else "#C9CBD1"}" stroke-width="2"/>')
+        rows.append(icon)
+        if hl:
+            rows.append(f'<text id="s6-new" class="ui" x="686" y="{y + 46}">Nouveau rapport</text>')
+            rows.append(f'<circle id="s6-st0" cx="1030" cy="{y}" r="9" fill="{ACC}" stroke="#FFFFFF" stroke-width="3"/>')
+        else:
+            rows.append(f'<g class="s6-bars"><line x1="692" y1="{y + 28}" x2="900" y2="{y + 28}" stroke="#E4E4E7" stroke-width="9" stroke-linecap="round"/>'
+                        f'<line x1="692" y1="{y + 47}" x2="830" y2="{y + 47}" stroke="#E4E4E7" stroke-width="9" stroke-linecap="round"/>'
+                        f'<circle cx="1012" cy="{y + 35}" r="7" fill="#C9CBD1"/></g>')
+    icons = (
+        '<path class="d s6-ic" pathLength="1" d="M36 108h11v11h-11zM51 108h11v11h-11zM36 123h11v11h-11zM51 123h11v11h-11z"/>'
+        '<path class="d s6-ic" pathLength="1" d="M38 186h16l6 6v24h-22zM43 199h12M43 206h12"/>'
+        '<path class="d s6-ic" pathLength="1" d="M37 290h24M40 290v-10a9 9 0 0 1 18 0v10M46 296h6"/>'
+        '<path class="d s6-ic" pathLength="1" d="M36 372l9-11 8 6 10-13M36 376h26"/>'
+    )
+    svg = f"""    <svg id="s6-svg" class="world" viewBox="0 0 {SW} {SH}" width="{SW}" height="{SH}">
+      <g id="s6-ui" fill="none" stroke-linecap="round" stroke-linejoin="round">
+        <rect id="s6-fill" x="0" y="0" width="1060" height="660" rx="18" fill="#FFFFFF" stroke="none"/>
+        <rect id="s6-frame" class="d" pathLength="1" x="0" y="0" width="1060" height="660" rx="18" stroke="{INK}" stroke-width="2.5"/>
+        <line id="s6-bar" class="d" pathLength="1" x1="0" y1="60" x2="1060" y2="60" stroke="{INK}" stroke-width="2"/>
+        <g id="s6-dots" stroke="{INK}" stroke-width="2"><circle cx="32" cy="30" r="7"/><circle cx="58" cy="30" r="7"/><circle cx="84" cy="30" r="7"/></g>
+        <line id="s6-side" class="d" pathLength="1" x1="96" y1="60" x2="96" y2="660" stroke="{INK}" stroke-width="1.5"/>
+        <g stroke="{INK}" stroke-width="2">{icons}</g>
+        <text id="s6-h1" class="ui" x="130" y="118">Centrale photovoltaïque</text>
+        <text id="s6-h2" class="ui" x="630" y="118">Rapports</text>
+        <g id="s6-field">{"".join(field)}</g>
+        <text id="s6-cap" class="ui sm" x="140" y="412">Plan thermique</text>
+        <circle id="s6-adot" cx="148" cy="{470 - ui * 0.34:.1f}" r="7" fill="{ACC}"/>
+        <text id="s6-anom" class="ui" x="166" y="470">3 anomalies à traiter</text>
+        {"".join(rows)}
+        <text id="s6-suivi" class="ui" x="630" y="470">Suivi de production</text>
+        <line id="s6-base" x1="630" y1="622" x2="1030" y2="622" stroke="#E4E4E7" stroke-width="2"/>
+        <path id="s6-spark" class="d" pathLength="1" d="M630 604 C690 596 730 566 790 574 S890 548 950 538 S1010 520 1030 516" stroke="{INK}" stroke-width="2.5"/>
+        {rings}
+      </g>
+      {mks}
+    </svg>"""
+    title_spec = P6["title"]
+    body = box(svg, (ws, wtx, wty)) + f"""
+    <div id="s6-title" class="title" style="left: {title_spec[0]}px; top: {title_spec[1]}px; font-size: {title_spec[2]}px">Suivez vos installations<br />sur notre plateforme<br />en ligne.</div>
+    <div id="s6-tag" class="tag6" style="left: {P6["tag"][0]}px; top: {P6["tag"][1]}px">Bientôt disponible</div>"""
+    css = f"""
+    #root .ui {{ font-family: "Comfortaa", sans-serif; font-weight: 700; font-size: {ui}px; fill: #111111; stroke: none; }}
+    #root .ui.sm {{ font-weight: 600; fill: #6B6B70; }}
+    #root .tag6 {{ position: absolute; font-family: "Comfortaa", sans-serif; font-weight: 700; font-size: 30px; line-height: 1; padding: 10px 16px; border: 2px solid #FF5700; border-radius: 8px; color: #FF5700; background: #FFFFFF; white-space: nowrap; }}
+    #root #s6-fill, #root #s6-dots, #root .s6-mod, #root .s6-mk, #root .s6-ring, #root .s6-doc2, #root .s6-bars, #root #s6-st0, #root .ui, #root #s6-adot {{ opacity: 0; }}"""
+    # le point orange du plan devient la bille du logo (raccord S6 -> S7)
+    bx_, by_ = logo_screen(*BALL_L)
+    tgt = ((bx_ - wtx) / ws, (by_ - wty) / ws, 12 * LOGO_S / ws)
+    js = f"""
+      const title = words($("#s6-title"), txt("s6-title", "{P6["text"]}"));
+      // 1. la fenêtre de la plateforme se dessine autour du rapport qui arrive
+      fadeIn(0.0, $("#s6-fill"), 0.4);
+      draw(0.0, $("#s6-frame"), 0.8, "power2.inOut");
+      draw(0.3, $("#s6-bar"), 0.45, "power2.out");
+      fadeIn(0.4, $("#s6-dots"), 0.3);
+      draw(0.45, $("#s6-side"), 0.45, "power2.out");
+      draw(0.6, $$(".s6-ic"), 0.35, "power2.out", 0.08);
+      blurIn(0.25, title, 0.15, 0.067);
+      blurIn(0.95, $("#s6-tag"), 0.2);
+      // 2. plan thermique, anomalies localisées
+      blurIn(0.6, [$("#s6-h1"), $("#s6-h2")], 0.2, 0.12);
+      fadeIn(0.7, $$(".s6-mod"), 0.3, 0.03);
+      tl.fromTo($$(".s6-mk"), {{ opacity: 0, scale: 0, transformOrigin: "50% 50%" }}, {{ opacity: 1, scale: 1, duration: 0.3, ease: "back.out(2)", stagger: 0.12 }}, 1.3);
+      [1.7, 2.7, 3.7].forEach((t) => {{
+        tl.fromTo($$(".s6-ring"), {{ opacity: 0.85, scale: 1, transformOrigin: "50% 50%" }}, {{ opacity: 0, scale: 2.8, duration: 0.9, ease: "power2.out", immediateRender: false }}, t);
+      }});
+      blurIn(1.5, $("#s6-cap"), 0.18);
+      fadeIn(1.75, $("#s6-adot"), 0.15);
+      blurIn(1.75, $("#s6-anom"), 0.18);
+      // 3. rapports et suivi
+      draw(0.8, $$(".s6-row"), 0.4, "power2.out", 0.12);
+      blurIn(1.15, $("#s6-new"), 0.18);
+      fadeIn(1.25, $("#s6-st0"), 0.15);
+      fadeIn(1.1, [...$$(".s6-doc2"), ...$$(".s6-bars")], 0.3, 0.1);
+      blurIn(1.9, $("#s6-suivi"), 0.18);
+      draw(2.0, $("#s6-spark"), 0.7, "power2.inOut");
+      // 4. sortie : tout se floute ; un point du plan file vers le logo
+      blurOut(4.6, [...title, $("#s6-tag")], 0.18, 0.02);
+      tl.to([$("#s6-ui"), $("#s6-mk1"), $("#s6-mk2")], {{ opacity: 0, filter: "blur(8px)", duration: 0.22, ease: "power2.in" }}, 4.62);
+      tl.to($("#s6-mk0"), {{ attr: {{ cx: {n(tgt[0])}, cy: {n(tgt[1])}, r: {n(tgt[2])} }}, duration: 0.6, ease: "power2.inOut" }}, 4.75);"""
+    write_scene(
+        "s6",
+        "Scène 6 — Plateforme en ligne (bientôt disponible)",
+        [svar("s6-title", "Scène 6 — titre", P6["text"])],
+        css,
+        body,
+        js,
+    )
+
+
+# --------------------------------------------------------------------------
+# S7 — Logo, slogan, puis site web + LinkedIn
+# --------------------------------------------------------------------------
+SITE_IMG = (1360, 649)  # capture du site (assets/images/site-flyscanair.jpg)
+
+
+def build_s7():
     bx, by = logo_screen(*BALL_L)
-    dot_r = 10 * (L["s5_chart"][0] if L else 1)
-    slogan_text = L["s6"]["slogan_text"] if L else "Inspections techniques aériennes,|révélez *l’invisible*."
-    body = f"""    <svg class="world" viewBox="0 0 {W} {H}" width="{W}" height="{H}"{CANVAS}>
+    dot_r = 12 * LOGO_S
+    # navigateur (repère de la scène de référence)
+    BX, BY, BW = 300, 410, 760
+    bar_h = P7["url"] + 24
+    img_h = BW * SITE_IMG[1] / SITE_IMG[0]
+    fh = bar_h + img_h
+    web_svg = f"""    <svg class="world" viewBox="0 0 {SW} {SH}" width="{SW}" height="{SH}">
+      <defs><clipPath id="s7-imgclip"><rect id="s7-cliprect" x="{BX}" y="{n(BY + bar_h)}" width="0" height="{n(img_h)}"/></clipPath></defs>
+      <rect id="s7-wfill" x="{BX}" y="{BY}" width="{BW}" height="{n(fh)}" rx="10" fill="#FFFFFF"/>
+      <image href="assets/images/site-flyscanair.jpg" x="{BX}" y="{n(BY + bar_h)}" width="{BW}" height="{n(img_h)}" preserveAspectRatio="xMidYMid slice" clip-path="url(#s7-imgclip)"/>
+      <g fill="none" stroke="{INK}" stroke-linecap="round" stroke-linejoin="round">
+        <rect id="s7-frame" class="d" pathLength="1" x="{BX}" y="{BY}" width="{BW}" height="{n(fh)}" rx="10" stroke-width="2.5"/>
+        <line id="s7-bar" class="d" pathLength="1" x1="{BX}" y1="{n(BY + bar_h)}" x2="{BX + BW}" y2="{n(BY + bar_h)}" stroke-width="2"/>
+        <g id="s7-dots" stroke-width="2"><circle cx="{BX + 24}" cy="{n(BY + bar_h / 2)}" r="6"/><circle cx="{BX + 46}" cy="{n(BY + bar_h / 2)}" r="6"/><circle cx="{BX + 68}" cy="{n(BY + bar_h / 2)}" r="6"/></g>
+      </g>
+      <rect id="s7-pill" x="{BX + 110}" y="{BY + 8}" width="{BW - 170}" height="{bar_h - 16}" rx="{(bar_h - 16) / 2}" fill="#F3F3F4" stroke="#C9CBD1" stroke-width="1.5"/>
+      <line id="s7-scan" x1="0" y1="{n(BY + bar_h)}" x2="0" y2="{n(BY + fh)}" stroke="{ACC}" stroke-width="4"/>
+    </svg>
+    <div id="s7-url" class="url" style="left: {BX + 136}px; top: {BY + 8}px; height: {bar_h - 16}px; font-size: {P7["url"]}px"></div>
+    <div id="s7-capw" class="cap7" style="left: {BX}px; width: {BW}px; top: {n(BY + fh + 22)}px; font-size: {P7["capw"]}px">Découvrez notre site</div>"""
+    sc = 160 / 448
+    in_svg = f"""    <svg class="world" viewBox="0 0 {SW} {SH}" width="{SW}" height="{SH}">
+      <g transform="translate(1340 {n(470 - 32 * sc)})"><g id="s7-in">
+        <rect x="6" y="{n(32 * sc + 6)}" width="148" height="148" rx="10" fill="#FFFFFF"/>
+        <path d="{LINKEDIN_PATH}" transform="scale({sc:.5f})" fill="#0A66C2"/>
+      </g></g>
+    </svg>
+    <div id="s7-capi" class="cap7" style="left: 1170px; width: 500px; top: 670px; font-size: {P7["capi"]}px">Suivez-nous sur LinkedIn</div>"""
+    top = f"""    <div id="s7-top" data-layout-allow-overflow style="position: absolute; left: 0; top: 0; width: {W}px; height: {H}px">
+    <svg class="world" viewBox="0 0 {W} {H}" width="{W}" height="{H}"{CANVAS}>
       <defs>
-        <radialGradient id="s6-ball" cx="0.36" cy="0.34" r="0.7">
+        <radialGradient id="s7-ball" cx="0.36" cy="0.34" r="0.7">
           <stop offset="0" stop-color="#FF9C84"/>
           <stop offset="0.35" stop-color="#E0402F"/>
           <stop offset="1" stop-color="#A51F17"/>
         </radialGradient>
-        <linearGradient id="s6-word" gradientUnits="userSpaceOnUse" x1="140" y1="0" x2="1198" y2="0">
+        <linearGradient id="s7-word" gradientUnits="userSpaceOnUse" x1="140" y1="0" x2="1198" y2="0">
           <stop offset="0" stop-color="#E2392D"/>
           <stop offset="0.47" stop-color="#E9862A"/>
           <stop offset="0.6" stop-color="#E8842A"/>
           <stop offset="1" stop-color="#DC382D"/>
         </linearGradient>
-        <clipPath id="s6-clip"><rect id="s6-cliprect" x="120" y="100" width="0" height="260"/></clipPath>
+        <clipPath id="s7-clip"><rect id="s7-wordclip" x="120" y="100" width="0" height="260"/></clipPath>
       </defs>
-      <g id="s6-logo" transform="translate({n(LOGO_X)} {LOGO_Y}) scale({LOGO_S})">
-        <path id="s6-coil" class="d" pathLength="1" d="{logo_coil_path()}" fill="none" stroke="#6D6C74" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
-        <g clip-path="url(#s6-clip)">
-          <text id="s6-word" x="140" y="292" font-family="Comfortaa" font-weight="700" font-size="174" fill="url(#s6-word)" stroke="url(#s6-word)" stroke-width="10" stroke-linejoin="round" paint-order="stroke">Fly Scan’Aır</text>
+      <g id="s7-logo" transform="translate({n(LOGO_X)} {LOGO_Y}) scale({LOGO_S})">
+        <path id="s7-coil" class="d" pathLength="1" d="{logo_coil_path()}" fill="none" stroke="#6D6C74" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+        <g clip-path="url(#s7-clip)">
+          <text id="s7-word" x="140" y="292" font-family="Comfortaa" font-weight="700" font-size="174" fill="url(#s7-word)" stroke="url(#s7-word)" stroke-width="10" stroke-linejoin="round" paint-order="stroke">Fly Scan’Aır</text>
         </g>
-        <line id="s6-scan" x1="0" y1="118" x2="0" y2="336" stroke="{ACC}" stroke-width="4"/>
-        <circle id="s6-ballr" cx="{BALL_R[0]}" cy="{BALL_R[1]}" r="12" fill="url(#s6-ball)"/>
-        <circle id="s6-balll" cx="{BALL_L[0]}" cy="{BALL_L[1]}" r="12" fill="url(#s6-ball)"/>
+        <line id="s7-lscan" x1="0" y1="118" x2="0" y2="336" stroke="{ACC}" stroke-width="4"/>
+        <circle id="s7-ballr" cx="{BALL_R[0]}" cy="{BALL_R[1]}" r="12" fill="url(#s7-ball)"/>
+        <circle id="s7-balll" cx="{BALL_L[0]}" cy="{BALL_L[1]}" r="12" fill="url(#s7-ball)"/>
       </g>
-      <circle id="s6-dot" cx="{n(bx)}" cy="{n(by)}" r="{n(dot_r)}" fill="{ACC}"/>
+      <circle id="s7-dot" cx="{n(bx)}" cy="{n(by)}" r="{n(dot_r)}" fill="{ACC}"/>
     </svg>
-    <div id="s6-slogan" class="title cta1">Inspections techniques aériennes,<br />révélez l’invisible.</div>
-    <div id="s6-msg" class="cta2">Faites contrôler votre installation.</div>
-    <div id="s6-contact" class="cta3">www.flyscanair.com · 06 22 80 57 69 · contact@flyscanair.com</div>"""
-    css = """
-    #root .cta1 { left: 0; width: 1920px; top: 552px; text-align: center; font-size: 56px; line-height: 1.18; }
-    #root .cta2 { position: absolute; left: 0; width: 1920px; top: 722px; text-align: center; font-family: "Comfortaa", sans-serif; font-weight: 600; font-size: 38px; color: #111111; }
-    #root .cta3 { position: absolute; left: 0; width: 1920px; top: 808px; text-align: center; font-family: "Comfortaa", sans-serif; font-weight: 600; font-size: 32px; color: #6B6B70; display: flex; justify-content: center; align-items: center; }
-    #root .cta3 .sq { display: inline-block; width: 10px; height: 10px; background: #FF5700; margin: 0 24px; }
-    #root #s6-scan, #root #s6-ballr, #root #s6-balll { opacity: 0; }"""
-    if L:
-        c6 = L["s6"]
-        css += f"""
-    #root .cta1 {{ width: {W}px; top: {c6["slogan"][0]}px; font-size: {c6["slogan"][1]}px; }}
-    #root .cta2 {{ width: {W}px; top: {c6["msg"][0]}px; font-size: {c6["msg"][1]}px; }}
-    #root .cta3 {{ width: {W}px; top: {c6["contact"][0]}px; font-size: {c6["contact"][1]}px; flex-direction: column; line-height: {c6["contact"][2]}px; }}
-    #root .cta3 .sq {{ display: none; }}"""
+    <div id="s7-slogan" class="title cta1">Inspections techniques aériennes,<br />révélez l’invisible.</div>
+    <div id="s7-msg" class="cta2">Faites contrôler votre installation.</div>
+    </div>"""
+    body = (top + "\n" + box(web_svg, P7["web"]) + "\n" + box(in_svg, P7["inb"]) + f"""
+    <div id="s7-contact" class="cta3"></div>""")
+    ct, cs = P7["contacts"]
+    css = f"""
+    #root .cta1 {{ left: 0; width: {W}px; top: {P7["slogan"][0]}px; text-align: center; font-size: {P7["slogan"][1]}px; line-height: 1.18; }}
+    #root .cta2 {{ position: absolute; left: 0; width: {W}px; top: {P7["msg"][0]}px; text-align: center; font-family: "Comfortaa", sans-serif; font-weight: 600; font-size: {P7["msg"][1]}px; color: #111111; }}
+    #root .cta3 {{ position: absolute; left: 0; width: {W}px; top: {ct}px; text-align: center; font-family: "Comfortaa", sans-serif; font-weight: 600; font-size: {cs}px; color: #6B6B70; display: flex; justify-content: center; align-items: center; }}
+    #root .cta3 .sq {{ display: inline-block; width: 10px; height: 10px; background: #FF5700; margin: 0 24px; }}
+    #root .url {{ position: absolute; display: flex; align-items: center; font-family: "Comfortaa", sans-serif; font-weight: 600; color: #111111; white-space: pre; }}
+    #root .cap7 {{ position: absolute; text-align: center; font-family: "Comfortaa", sans-serif; font-weight: 700; color: #111111; white-space: nowrap; }}
+    #root #s7-lscan, #root #s7-ballr, #root #s7-balll, #root #s7-scan, #root #s7-wfill, #root #s7-dots, #root #s7-pill, #root #s7-in {{ opacity: 0; }}"""
+    tsc, tty = P7["top"]
     js = f"""
-      const slogan = words($("#s6-slogan"), txt("s6-slogan", "{slogan_text}"));
-      const msg = words($("#s6-msg"), txt("s6-msg", "Faites contrôler votre installation."));
-      const contact = txt("s6-contact", "www.flyscanair.com|06 22 80 57 69|contact@flyscanair.com");
-      const cEl = $("#s6-contact");
+      const slogan = words($("#s7-slogan"), txt("s7-slogan", "{P7["slogan_text"]}"));
+      const msg = words($("#s7-msg"), txt("s7-msg", "Faites contrôler votre installation."));
+      const contact = txt("s7-contact", "06 22 80 57 69|contact@flyscanair.com");
+      const cEl = $("#s7-contact");
       cEl.textContent = "";
       contact.split("|").forEach((part, i) => {{
         if (i) {{ const q = document.createElement("i"); q.className = "sq"; cEl.appendChild(q); }}
         const sp = document.createElement("span"); sp.textContent = part.trim(); cEl.appendChild(sp);
       }});
-      // 1. le point orange devient la bille rouge du logo
-      tl.fromTo($("#s6-balll"), {{ opacity: 0 }}, {{ opacity: 1, duration: 0.35, ease: "power1.inOut" }}, 0.0);
-      tl.to($("#s6-dot"), {{ opacity: 0, duration: 0.35, ease: "power1.inOut" }}, 0.0);
-      // 2. le serpentin se trace, la ligne de scan révèle le nom
-      draw(0.2, $("#s6-coil"), 1.7, "power1.inOut");
-      tl.fromTo($("#s6-scan"), {{ opacity: 0 }}, {{ opacity: 1, duration: 0.12 }}, 0.5);
-      tl.fromTo($("#s6-scan"), {{ x: 120 }}, {{ x: 1230, duration: 1.3, ease: "power1.inOut" }}, 0.5);
-      tl.fromTo($("#s6-cliprect"), {{ attr: {{ width: 0 }} }}, {{ attr: {{ width: 1110 }}, duration: 1.3, ease: "power1.inOut" }}, 0.5);
-      tl.to($("#s6-scan"), {{ opacity: 0, duration: 0.2 }}, 1.75);
-      tl.fromTo($("#s6-ballr"), {{ opacity: 0, scale: 0, transformOrigin: "50% 50%" }}, {{ opacity: 1, scale: 1, duration: 0.4, ease: "back.out(1.6)" }}, 1.85);
-      // 3. slogan, message, contact
-      blurIn(2.1, slogan, 0.15, 0.067);
-      tl.fromTo(msg, {{ opacity: 0 }}, {{ opacity: 1, duration: 0.2 }}, 2.6);
-      tl.fromTo(msg, {{ color: "#D4D4D8" }}, {{ color: "#111111", duration: 0.25, stagger: 0.08 }}, 2.7);
-      if (contact) blurIn(3.1, $("#s6-contact"), 0.2);"""
+      const uEl = $("#s7-url");
+      const letters = txt("s7-url", "www.flyscanair.com").split("").map((ch) => {{
+        const sp = document.createElement("span"); sp.textContent = ch; uEl.appendChild(sp); return sp;
+      }});
+      // A. le point orange devient la bille du logo, le serpentin se trace, le scan révèle le nom
+      tl.fromTo($("#s7-balll"), {{ opacity: 0 }}, {{ opacity: 1, duration: 0.3, ease: "power1.inOut" }}, 0.0);
+      tl.to($("#s7-dot"), {{ opacity: 0, duration: 0.3, ease: "power1.inOut" }}, 0.0);
+      draw(0.15, $("#s7-coil"), 1.4, "power1.inOut");
+      tl.fromTo($("#s7-lscan"), {{ opacity: 0 }}, {{ opacity: 1, duration: 0.1 }}, 0.35);
+      tl.fromTo($("#s7-lscan"), {{ x: 120 }}, {{ x: 1230, duration: 1.1, ease: "power1.inOut" }}, 0.35);
+      tl.fromTo($("#s7-wordclip"), {{ attr: {{ width: 0 }} }}, {{ attr: {{ width: 1110 }}, duration: 1.1, ease: "power1.inOut" }}, 0.35);
+      tl.to($("#s7-lscan"), {{ opacity: 0, duration: 0.15 }}, 1.4);
+      tl.fromTo($("#s7-ballr"), {{ opacity: 0, scale: 0, transformOrigin: "50% 50%" }}, {{ opacity: 1, scale: 1, duration: 0.35, ease: "back.out(1.6)" }}, 1.5);
+      blurIn(1.6, slogan, 0.15, 0.067);
+      tl.fromTo(msg, {{ opacity: 0 }}, {{ opacity: 1, duration: 0.2 }}, 2.05);
+      tl.fromTo(msg, {{ color: "#D4D4D8" }}, {{ color: "#111111", duration: 0.25, stagger: 0.08 }}, 2.15);
+      // B. le logo monte ; site web et LinkedIn apparaissent
+      blurOut(3.7, msg, 0.16, 0.02);
+      tl.to($("#s7-top"), {{ scale: {tsc}, y: {tty}, transformOrigin: "{n(W / 2)}px 0px", duration: 0.55, ease: "power2.inOut" }}, 3.75);
+      fadeIn(4.0, $("#s7-wfill"), 0.3);
+      draw(4.0, $("#s7-frame"), 0.6, "power2.inOut");
+      draw(4.25, $("#s7-bar"), 0.35, "power2.out");
+      fadeIn(4.3, [$("#s7-dots"), $("#s7-pill")], 0.25, 0.05);
+      tl.fromTo(letters, {{ opacity: 0 }}, {{ opacity: 1, duration: 0.05, stagger: 0.03 }}, 4.42);
+      tl.fromTo($("#s7-scan"), {{ opacity: 0 }}, {{ opacity: 1, duration: 0.1 }}, 4.6);
+      tl.fromTo($("#s7-scan"), {{ x: {BX} }}, {{ x: {BX + BW}, duration: 0.65, ease: "power1.inOut" }}, 4.6);
+      tl.fromTo($("#s7-cliprect"), {{ attr: {{ width: 0 }} }}, {{ attr: {{ width: {BW} }}, duration: 0.65, ease: "power1.inOut" }}, 4.6);
+      tl.to($("#s7-scan"), {{ opacity: 0, duration: 0.15 }}, 5.25);
+      blurIn(4.9, $("#s7-capw"), 0.2);
+      tl.fromTo($("#s7-in"), {{ opacity: 0, scale: 0.6, transformOrigin: "50% 50%" }}, {{ opacity: 1, scale: 1, duration: 0.45, ease: "back.out(1.6)" }}, 4.5);
+      blurIn(4.85, $("#s7-capi"), 0.2);
+      blurIn(5.05, $("#s7-contact"), 0.2);"""
     write_scene(
-        "s6",
-        "Scène 6 — Call to action",
+        "s7",
+        "Scène 7 — Logo, slogan, site web et LinkedIn",
         [
-            svar("s6-slogan", "Scène 6 — slogan", slogan_text),
-            svar("s6-msg", "Scène 6 — message", "Faites contrôler votre installation."),
-            svar("s6-contact", "Scène 6 — contact (| sépare les éléments)", "www.flyscanair.com|06 22 80 57 69|contact@flyscanair.com"),
+            svar("s7-slogan", "Scène 7 — slogan", P7["slogan_text"]),
+            svar("s7-msg", "Scène 7 — message", "Faites contrôler votre installation."),
+            svar("s7-url", "Scène 7 — adresse du site", "www.flyscanair.com"),
+            svar("s7-contact", "Scène 7 — contact (| sépare les éléments)", "06 22 80 57 69|contact@flyscanair.com"),
         ],
         css,
         body,
@@ -1261,22 +1492,28 @@ def build_s6():
 # --------------------------------------------------------------------------
 # index.html
 # --------------------------------------------------------------------------
-SCENES = [("s1", 0, 7.2), ("s2", 7.2, 6.0), ("s3", 13.2, 7.8), ("s4", 21.0, 6.6), ("s5", 27.6, 6.6), ("s6", 34.2, 6.6)]
-TOTAL = 40.8
+SCENES = [("s1", 0, 7.2), ("s2", 7.2, 6.0), ("s3", 13.2, 6.6), ("s4", 19.8, 6.6), ("s5", 26.4, 6.0),
+          ("s6", 32.4, 5.4), ("s7", 37.8, 7.2)]
+TOTAL = 45.0
 
 # (id, file, hit time in the film, volume): the file's measured peak lands one frame after its picture
 SFX = [
-    ("sfx-drone", "whoosh-short.mp3", 13.2 + 0.98, 0.5),
-    ("sfx-scan", "whoosh-cinematic.mp3", 13.2 + 5.25, 0.3),
-    ("sfx-zoom", "whoosh-high.mp3", 13.2 + 7.78, 0.45),
-    ("sfx-tick1", "key-press.mp3", 21.0 + 2.03, 0.5),
-    ("sfx-tick2", "key-press.mp3", 21.0 + 2.93, 0.45),
-    ("sfx-tick3", "key-press.mp3", 21.0 + 3.83, 0.5),
-    ("sfx-carry", "whoosh-low.mp3", 21.0 + 6.2, 0.35),
-    ("sfx-check1", "click-soft.mp3", 27.6 + 1.92, 0.6),
-    ("sfx-check2", "click-soft.mp3", 27.6 + 2.32, 0.55),
-    ("sfx-check3", "click-soft.mp3", 27.6 + 2.72, 0.6),
-    ("sfx-logo", "impact-bass-1.mp3", 34.2 + 1.92, 0.22),
+    ("sfx-drone", "whoosh-short.mp3", 13.2 + 0.72, 0.5),
+    ("sfx-scan", "whoosh-cinematic.mp3", 13.2 + 3.95, 0.3),
+    ("sfx-zoom", "whoosh-high.mp3", 13.2 + 6.55, 0.45),
+    ("sfx-tick1", "key-press.mp3", 19.8 + 2.0, 0.5),
+    ("sfx-tick2", "key-press.mp3", 19.8 + 2.9, 0.45),
+    ("sfx-tick3", "key-press.mp3", 19.8 + 3.8, 0.5),
+    ("sfx-carry", "whoosh-low.mp3", 19.8 + 6.2, 0.35),
+    ("sfx-check1", "click-soft.mp3", 26.4 + 1.82, 0.6),
+    ("sfx-check2", "click-soft.mp3", 26.4 + 2.07, 0.55),
+    ("sfx-check3", "click-soft.mp3", 26.4 + 2.32, 0.6),
+    ("sfx-check4", "click-soft.mp3", 26.4 + 2.57, 0.55),
+    ("sfx-stamp", "pop.mp3", 26.4 + 2.78, 0.45),
+    ("sfx-doc", "whoosh-short.mp3", 26.4 + 5.69, 0.3),
+    ("sfx-logo", "impact-bass-1.mp3", 37.8 + 1.55, 0.22),
+    ("sfx-top", "whoosh-low.mp3", 37.8 + 4.0, 0.22),
+    ("sfx-type", "typing.mp3", 37.8 + 4.42, 0.35),
 ]
 
 
@@ -1405,4 +1642,5 @@ if __name__ == "__main__":
     build_s4()
     build_s5()
     build_s6()
+    build_s7()
     build_index(offsets)

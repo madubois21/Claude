@@ -1,6 +1,6 @@
 # Fly Scan’Air — vidéo motion design « Inspection thermographique par drone »
 
-Vidéo full motion design de 40,8 s, 16:9 (1920 × 1080, 30 i/s), pensée pour LinkedIn.
+Vidéo full motion design de 45 s, 16:9 (1920 × 1080, 30 i/s), pensée pour LinkedIn, déclinée en 9:16 et 1:1.
 Réalisée avec [HyperFrames](https://hyperframes.heygen.com) : HTML + SVG + GSAP, rendus en MP4 image par image.
 
 ## Livrables
@@ -14,6 +14,7 @@ Réalisée avec [HyperFrames](https://hyperframes.heygen.com) : HTML + SVG + GSA
 | Assets graphiques | tout est vectoriel dans les scènes ; logo redessiné en SVG dans `compositions/s6.html` ; police Comfortaa `assets/fonts/` |
 | Musique (originale, libre de droits) | `assets/audio/music.wav` (générée par `tools/music.py`) |
 | Effets sonores | `assets/audio/sfx/` (voir `CREDITS.md`) |
+| Capture du site, logo LinkedIn | `assets/images/site-flyscanair.jpg` ; logo LinkedIn : icône Font Awesome Free (CC BY 4.0, `assets/images/LICENSE-fontawesome.txt`) |
 | Fiche technique | `SPEC.md` ; note de revue : `REVIEW.md` |
 
 Pas de voix off (choix validé) : les textes à l’écran portent le message, ce qui convient aussi à la lecture sans le son sur LinkedIn.
@@ -23,19 +24,22 @@ Pas de voix off (choix validé) : les textes à l’écran portent le message, c
 | Scène | Fichier | Temps | Contenu |
 | --- | --- | --- | --- |
 | 1 — Le problème invisible | `compositions/s1.html` | 0 – 7,2 s | bâtiment tracé, point chaud, « Certaines anomalies sont invisibles à l’œil nu. » |
-| 2 — Les risques | `compositions/s2.html` | 7,2 – 13,2 s | le sol devient l’axe du graphique « Rendement (%) » (installation saine vs avec défauts), icônes incendie + assurance |
-| 3 — Inspection drone | `compositions/s3.html` | 13,2 – 21 s | champ de panneaux, drone + HUD, ligne de scan orange qui révèle la vue thermique |
-| 4 — Détection | `compositions/s4.html` | 21 – 27,6 s | zoom sur le panneau, points chauds pulsants, défauts entourés automatiquement |
-| 5 — Rapport | `compositions/s5.html` | 27,6 – 34,2 s | le panneau devient la vignette du rapport, checklist, histogramme « Production (kWh/an) » |
-| 6 — Call to action | `compositions/s6.html` | 34,2 – 40,8 s | le serpentin du logo se trace, le scan révèle « Fly Scan’Air », slogan, message, site / téléphone / e-mail |
+| 2 — Les risques | `compositions/s2.html` | 7,2 – 13,2 s | graphique « Rendement (%) » (installation saine vs avec défauts), icônes incendie + assurance |
+| 3 — Inspection drone | `compositions/s3.html` | 13,2 – 19,8 s | champ de panneaux, drone schématique + HUD, balayage thermique rapide (1,5 s) |
+| 4 — Détection | `compositions/s4.html` | 19,8 – 26,4 s | zoom sur le module : point chaud (hot-spot), diode by-pass défectueuse, boîte de jonction |
+| 5 — Rapport aux normes | `compositions/s5.html` | 26,4 – 32,4 s | rapport thermographique, tampon « Conforme IEC TS 62446-3 », checklist, histogramme production |
+| 6 — Plateforme en ligne | `compositions/s6.html` | 32,4 – 37,8 s | le rapport rejoint la plateforme (plan thermique, rapports, suivi) — « Bientôt disponible » |
+| 7 — Fin | `compositions/s7.html` | 37,8 – 45 s | logo, slogan, message, puis site web (capture animée) + LinkedIn + coordonnées |
 
 Charte : fond blanc, traits noirs fins, accent `#FF5700`, typographie Comfortaa (textes et logotype).
+Vocabulaire technique des anomalies repris de la note technique Fly Scan’Air (norme IEC TS 62446-3).
 
 ## Modifier les textes
 
 Chaque scène déclare ses textes comme variables (`data-composition-variables` sur sa racine) :
-`s1-title`, `s2-t1`…`s2-t3`, `s3-title`, `s4-title`, `s4-l1`…`s4-l3`, `s5-title`, `s5-i0`…`s5-i2`,
-`s6-slogan`, `s6-msg`, `s6-contact` (éléments séparés par `|`).
+`s1-title`, `s2-t1`…`s2-t3`, `s3-title`, `s4-title`, `s4-l1`…`s4-l3` (« principal|précision »), `s5-title`,
+`s5-i0`…`s5-i3`, `s6-title`, `s7-slogan`, `s7-msg`, `s7-url`, `s7-contact` (éléments séparés par `|`).
+La mention « Bientôt disponible » de la scène 6 se retire dans `tools/build.py` (élément `s6-tag`) au lancement de la plateforme.
 Dans un texte : `|` force un retour à la ligne, `*mot*` ou `*deux mots*` passe en orange.
 
 Les données des graphiques sont en tête de `tools/build.py` : `S2_SAINE`, `S2_DEFAUT` (rendement en %, par mois) et

@@ -1,5 +1,5 @@
 <template>
-  <!-- Scène 6 — Call to action -->
+  <!-- Scène 6 — Plateforme en ligne (bientôt disponible) -->
   <style>
     @font-face { font-family: "Comfortaa"; src: url("assets/fonts/comfortaa-var.woff2") format("woff2"); font-weight: 300 700; font-style: normal; }
     #root { position: absolute; inset: 0; overflow: hidden; font-family: "Comfortaa", sans-serif; color: #111111; }
@@ -11,52 +11,44 @@
     #root .acc { color: #FF5700; }
     #root .label { position: absolute; font-family: "Comfortaa", sans-serif; font-weight: 600; font-size: 32px; line-height: 1.2; color: #6B6B70; white-space: nowrap; }
 
-    #root .cta1 { left: 0; width: 1920px; top: 552px; text-align: center; font-size: 56px; line-height: 1.18; }
-    #root .cta2 { position: absolute; left: 0; width: 1920px; top: 722px; text-align: center; font-family: "Comfortaa", sans-serif; font-weight: 600; font-size: 38px; color: #111111; }
-    #root .cta3 { position: absolute; left: 0; width: 1920px; top: 808px; text-align: center; font-family: "Comfortaa", sans-serif; font-weight: 600; font-size: 32px; color: #6B6B70; display: flex; justify-content: center; align-items: center; }
-    #root .cta3 .sq { display: inline-block; width: 10px; height: 10px; background: #FF5700; margin: 0 24px; }
-    #root #s6-scan, #root #s6-ballr, #root #s6-balll { opacity: 0; }
-    #root .cta1 { width: 1080px; top: 470px; font-size: 50px; }
-    #root .cta2 { width: 1080px; top: 680px; font-size: 34px; }
-    #root .cta3 { width: 1080px; top: 762px; font-size: 30px; flex-direction: column; line-height: 42px; }
-    #root .cta3 .sq { display: none; }
+    #root .ui { font-family: "Comfortaa", sans-serif; font-weight: 700; font-size: 36px; fill: #111111; stroke: none; }
+    #root .ui.sm { font-weight: 600; fill: #6B6B70; }
+    #root .tag6 { position: absolute; font-family: "Comfortaa", sans-serif; font-weight: 700; font-size: 30px; line-height: 1; padding: 10px 16px; border: 2px solid #FF5700; border-radius: 8px; color: #FF5700; background: #FFFFFF; white-space: nowrap; }
+    #root #s6-fill, #root #s6-dots, #root .s6-mod, #root .s6-mk, #root .s6-ring, #root .s6-doc2, #root .s6-bars, #root #s6-st0, #root .ui, #root #s6-adot { opacity: 0; }
   </style>
   <div
     id="root"
     data-composition-id="s6"
     data-width="1080"
     data-height="1080"
-    data-composition-variables="[{&quot;id&quot;: &quot;s6-slogan&quot;, &quot;type&quot;: &quot;string&quot;, &quot;label&quot;: &quot;Scène 6 — slogan&quot;, &quot;default&quot;: &quot;Inspections techniques|aériennes,|révélez *l’invisible*.&quot;}, {&quot;id&quot;: &quot;s6-msg&quot;, &quot;type&quot;: &quot;string&quot;, &quot;label&quot;: &quot;Scène 6 — message&quot;, &quot;default&quot;: &quot;Faites contrôler votre installation.&quot;}, {&quot;id&quot;: &quot;s6-contact&quot;, &quot;type&quot;: &quot;string&quot;, &quot;label&quot;: &quot;Scène 6 — contact (| sépare les éléments)&quot;, &quot;default&quot;: &quot;www.flyscanair.com|06 22 80 57 69|contact@flyscanair.com&quot;}]"
+    data-composition-variables="[{&quot;id&quot;: &quot;s6-title&quot;, &quot;type&quot;: &quot;string&quot;, &quot;label&quot;: &quot;Scène 6 — titre&quot;, &quot;default&quot;: &quot;Suivez vos installations sur|notre *plateforme* en ligne.&quot;}]"
   >
-    <svg class="world" viewBox="0 0 1080 1080" width="1080" height="1080" style="width: 1080px; height: 1080px">
-      <defs>
-        <radialGradient id="s6-ball" cx="0.36" cy="0.34" r="0.7">
-          <stop offset="0" stop-color="#FF9C84"/>
-          <stop offset="0.35" stop-color="#E0402F"/>
-          <stop offset="1" stop-color="#A51F17"/>
-        </radialGradient>
-        <linearGradient id="s6-word" gradientUnits="userSpaceOnUse" x1="140" y1="0" x2="1198" y2="0">
-          <stop offset="0" stop-color="#E2392D"/>
-          <stop offset="0.47" stop-color="#E9862A"/>
-          <stop offset="0.6" stop-color="#E8842A"/>
-          <stop offset="1" stop-color="#DC382D"/>
-        </linearGradient>
-        <clipPath id="s6-clip"><rect id="s6-cliprect" x="120" y="100" width="0" height="260"/></clipPath>
-      </defs>
-      <g id="s6-logo" transform="translate(159 175) scale(0.6)">
-        <path id="s6-coil" stroke-dashoffset="1.05" class="d" pathLength="1" d="M30 218 H95 Q125 218 125 248 V375 A35 35 0 0 0 195 375 V75 A35 35 0 0 1 265 75 V375 A35 35 0 0 0 335 375 V75 A35 35 0 0 1 405 75 V375 A35 35 0 0 0 475 375 V75 A35 35 0 0 1 545 75 V375 A35 35 0 0 0 615 375 V75 A35 35 0 0 1 685 75 V290 Q685 335 730 335 H1200 Q1245 335 1245 290 V215 Q1245 170 1200 170 H1087.5" fill="none" stroke="#6D6C74" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
-        <g clip-path="url(#s6-clip)">
-          <text id="s6-word" x="140" y="292" font-family="Comfortaa" font-weight="700" font-size="174" fill="url(#s6-word)" stroke="url(#s6-word)" stroke-width="10" stroke-linejoin="round" paint-order="stroke">Fly Scan’Aır</text>
-        </g>
-        <line id="s6-scan" x1="0" y1="118" x2="0" y2="336" stroke="#FF5700" stroke-width="4"/>
-        <circle id="s6-ballr" cx="1087.5" cy="170" r="12" fill="url(#s6-ball)"/>
-        <circle id="s6-balll" cx="30" cy="218" r="12" fill="url(#s6-ball)"/>
+    <div class="box" data-layout-allow-overflow style="position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; transform-origin: 0 0; transform: translate(126.5px, 300px) scale(0.78)">
+    <svg id="s6-svg" class="world" viewBox="0 0 1920 1080" width="1920" height="1080">
+      <g id="s6-ui" fill="none" stroke-linecap="round" stroke-linejoin="round">
+        <rect id="s6-fill" x="0" y="0" width="1060" height="660" rx="18" fill="#FFFFFF" stroke="none"/>
+        <rect id="s6-frame" stroke-dashoffset="1.05" class="d" pathLength="1" x="0" y="0" width="1060" height="660" rx="18" stroke="#111111" stroke-width="2.5"/>
+        <line id="s6-bar" stroke-dashoffset="1.05" class="d" pathLength="1" x1="0" y1="60" x2="1060" y2="60" stroke="#111111" stroke-width="2"/>
+        <g id="s6-dots" stroke="#111111" stroke-width="2"><circle cx="32" cy="30" r="7"/><circle cx="58" cy="30" r="7"/><circle cx="84" cy="30" r="7"/></g>
+        <line id="s6-side" stroke-dashoffset="1.05" class="d" pathLength="1" x1="96" y1="60" x2="96" y2="660" stroke="#111111" stroke-width="1.5"/>
+        <g stroke="#111111" stroke-width="2"><path stroke-dashoffset="1.05" class="d s6-ic" pathLength="1" d="M36 108h11v11h-11zM51 108h11v11h-11zM36 123h11v11h-11zM51 123h11v11h-11z"/><path stroke-dashoffset="1.05" class="d s6-ic" pathLength="1" d="M38 186h16l6 6v24h-22zM43 199h12M43 206h12"/><path stroke-dashoffset="1.05" class="d s6-ic" pathLength="1" d="M37 290h24M40 290v-10a9 9 0 0 1 18 0v10M46 296h6"/><path stroke-dashoffset="1.05" class="d s6-ic" pathLength="1" d="M36 372l9-11 8 6 10-13M36 376h26"/></g>
+        <text id="s6-h1" class="ui" x="130" y="118">Centrale photovoltaïque</text>
+        <text id="s6-h2" class="ui" x="630" y="118">Rapports</text>
+        <g id="s6-field"><g class="s6-mod"><rect x="140" y="168" width="80" height="56" fill="#FFF1E8" stroke="#111111" stroke-width="1.5"/><path d="M166.7 168V224M193.3 168V224M140 196.0H220" stroke="#FFC9AE" stroke-width="1"/></g><g class="s6-mod"><rect x="230" y="168" width="80" height="56" fill="#FFEADF" stroke="#111111" stroke-width="1.5"/><path d="M256.7 168V224M283.3 168V224M230 196.0H310" stroke="#FFC9AE" stroke-width="1"/></g><g class="s6-mod"><rect x="320" y="168" width="80" height="56" fill="#FFF1E8" stroke="#111111" stroke-width="1.5"/><path d="M346.7 168V224M373.3 168V224M320 196.0H400" stroke="#FFC9AE" stroke-width="1"/></g><g class="s6-mod"><rect x="410" y="168" width="80" height="56" fill="#FFEADF" stroke="#111111" stroke-width="1.5"/><path d="M436.7 168V224M463.3 168V224M410 196.0H490" stroke="#FFC9AE" stroke-width="1"/></g><g class="s6-mod"><rect x="500" y="168" width="80" height="56" fill="#FFF1E8" stroke="#111111" stroke-width="1.5"/><path d="M526.7 168V224M553.3 168V224M500 196.0H580" stroke="#FFC9AE" stroke-width="1"/></g><g class="s6-mod"><rect x="140" y="238" width="80" height="56" fill="#FFEADF" stroke="#111111" stroke-width="1.5"/><path d="M166.7 238V294M193.3 238V294M140 266.0H220" stroke="#FFC9AE" stroke-width="1"/></g><g class="s6-mod"><rect x="230" y="238" width="80" height="56" fill="#FFF1E8" stroke="#111111" stroke-width="1.5"/><path d="M256.7 238V294M283.3 238V294M230 266.0H310" stroke="#FFC9AE" stroke-width="1"/></g><g class="s6-mod"><rect x="320" y="238" width="80" height="56" fill="#FFEADF" stroke="#111111" stroke-width="1.5"/><path d="M346.7 238V294M373.3 238V294M320 266.0H400" stroke="#FFC9AE" stroke-width="1"/></g><g class="s6-mod"><rect x="410" y="238" width="80" height="56" fill="#FFF1E8" stroke="#111111" stroke-width="1.5"/><path d="M436.7 238V294M463.3 238V294M410 266.0H490" stroke="#FFC9AE" stroke-width="1"/></g><g class="s6-mod"><rect x="500" y="238" width="80" height="56" fill="#FFEADF" stroke="#111111" stroke-width="1.5"/><path d="M526.7 238V294M553.3 238V294M500 266.0H580" stroke="#FFC9AE" stroke-width="1"/></g><g class="s6-mod"><rect x="140" y="308" width="80" height="56" fill="#FFF1E8" stroke="#111111" stroke-width="1.5"/><path d="M166.7 308V364M193.3 308V364M140 336.0H220" stroke="#FFC9AE" stroke-width="1"/></g><g class="s6-mod"><rect x="230" y="308" width="80" height="56" fill="#FFD9C6" stroke="#111111" stroke-width="1.5"/><path d="M256.7 308V364M283.3 308V364M230 336.0H310" stroke="#FFC9AE" stroke-width="1"/></g><g class="s6-mod"><rect x="320" y="308" width="80" height="56" fill="#FFF1E8" stroke="#111111" stroke-width="1.5"/><path d="M346.7 308V364M373.3 308V364M320 336.0H400" stroke="#FFC9AE" stroke-width="1"/></g><g class="s6-mod"><rect x="410" y="308" width="80" height="56" fill="#FFEADF" stroke="#111111" stroke-width="1.5"/><path d="M436.7 308V364M463.3 308V364M410 336.0H490" stroke="#FFC9AE" stroke-width="1"/></g><g class="s6-mod"><rect x="500" y="308" width="80" height="56" fill="#FFF1E8" stroke="#111111" stroke-width="1.5"/><path d="M526.7 308V364M553.3 308V364M500 336.0H580" stroke="#FFC9AE" stroke-width="1"/></g></g>
+        <text id="s6-cap" class="ui sm" x="140" y="412">Plan thermique</text>
+        <circle id="s6-adot" cx="148" cy="457.8" r="7" fill="#FF5700"/>
+        <text id="s6-anom" class="ui" x="166" y="470">3 anomalies à traiter</text>
+        <rect stroke-dashoffset="1.05" class="d s6-row" pathLength="1" x="630" y="150" width="400" height="70" rx="10" fill="none" stroke="#111111" stroke-width="2"/><g class="s6-doc"><rect x="648" y="168" width="26" height="34" rx="3" fill="#FFFFFF" stroke="#111111" stroke-width="2"/><path d="M653 178h16M653 185h16M653 192h10" stroke="#111111" stroke-width="1.5"/></g><text id="s6-new" class="ui" x="686" y="196">Nouveau rapport</text><circle id="s6-st0" cx="1030" cy="150" r="9" fill="#FF5700" stroke="#FFFFFF" stroke-width="3"/><rect stroke-dashoffset="1.05" class="d s6-row" pathLength="1" x="630" y="238" width="400" height="70" rx="10" fill="none" stroke="#C9CBD1" stroke-width="2"/><g class="s6-doc2"><rect x="648" y="256" width="26" height="34" rx="3" fill="#FFFFFF" stroke="#A1A1AA" stroke-width="2"/><path d="M653 266h16M653 273h16M653 280h10" stroke="#A1A1AA" stroke-width="1.5"/></g><g class="s6-bars"><line x1="692" y1="266" x2="900" y2="266" stroke="#E4E4E7" stroke-width="9" stroke-linecap="round"/><line x1="692" y1="285" x2="830" y2="285" stroke="#E4E4E7" stroke-width="9" stroke-linecap="round"/><circle cx="1012" cy="273" r="7" fill="#C9CBD1"/></g><rect stroke-dashoffset="1.05" class="d s6-row" pathLength="1" x="630" y="326" width="400" height="70" rx="10" fill="none" stroke="#C9CBD1" stroke-width="2"/><g class="s6-doc2"><rect x="648" y="344" width="26" height="34" rx="3" fill="#FFFFFF" stroke="#A1A1AA" stroke-width="2"/><path d="M653 354h16M653 361h16M653 368h10" stroke="#A1A1AA" stroke-width="1.5"/></g><g class="s6-bars"><line x1="692" y1="354" x2="900" y2="354" stroke="#E4E4E7" stroke-width="9" stroke-linecap="round"/><line x1="692" y1="373" x2="830" y2="373" stroke="#E4E4E7" stroke-width="9" stroke-linecap="round"/><circle cx="1012" cy="361" r="7" fill="#C9CBD1"/></g>
+        <text id="s6-suivi" class="ui" x="630" y="470">Suivi de production</text>
+        <line id="s6-base" x1="630" y1="622" x2="1030" y2="622" stroke="#E4E4E7" stroke-width="2"/>
+        <path id="s6-spark" stroke-dashoffset="1.05" class="d" pathLength="1" d="M630 604 C690 596 730 566 790 574 S890 548 950 538 S1010 520 1030 516" stroke="#111111" stroke-width="2.5"/>
+        <circle class="s6-ring" cx="450" cy="196" r="10" fill="none" stroke="#FF5700" stroke-width="2"/><circle class="s6-ring" cx="270" cy="266" r="10" fill="none" stroke="#FF5700" stroke-width="2"/><circle class="s6-ring" cx="540" cy="336" r="10" fill="none" stroke="#FF5700" stroke-width="2"/>
       </g>
-      <circle id="s6-dot" cx="177" cy="305.8" r="5.8" fill="#FF5700"/>
+      <circle id="s6-mk1" class="s6-mk" cx="450" cy="196" r="10" fill="#FF5700"/><circle id="s6-mk0" class="s6-mk" cx="270" cy="266" r="10" fill="#FF5700"/><circle id="s6-mk2" class="s6-mk" cx="540" cy="336" r="10" fill="#FF5700"/>
     </svg>
-    <div id="s6-slogan" class="title cta1">Inspections techniques aériennes,<br />révélez l’invisible.</div>
-    <div id="s6-msg" class="cta2">Faites contrôler votre installation.</div>
-    <div id="s6-contact" class="cta3">www.flyscanair.com · 06 22 80 57 69 · contact@flyscanair.com</div>
+    </div>
+    <div id="s6-title" class="title" style="left: 108px; top: 96px; font-size: 44px">Suivez vos installations<br />sur notre plateforme<br />en ligne.</div>
+    <div id="s6-tag" class="tag6" style="left: 108px; top: 214px">Bientôt disponible</div>
   </div>
   <script>
     (function () {
@@ -113,30 +105,37 @@
       const fadeOut = (t, els, d = 0.3, stagger = 0, ease = "power1.in") =>
         tl.to(els, { opacity: 0, duration: d, ease, stagger }, t);
 
-      const slogan = words($("#s6-slogan"), txt("s6-slogan", "Inspections techniques|aériennes,|révélez *l’invisible*."));
-      const msg = words($("#s6-msg"), txt("s6-msg", "Faites contrôler votre installation."));
-      const contact = txt("s6-contact", "www.flyscanair.com|06 22 80 57 69|contact@flyscanair.com");
-      const cEl = $("#s6-contact");
-      cEl.textContent = "";
-      contact.split("|").forEach((part, i) => {
-        if (i) { const q = document.createElement("i"); q.className = "sq"; cEl.appendChild(q); }
-        const sp = document.createElement("span"); sp.textContent = part.trim(); cEl.appendChild(sp);
+      const title = words($("#s6-title"), txt("s6-title", "Suivez vos installations sur|notre *plateforme* en ligne."));
+      // 1. la fenêtre de la plateforme se dessine autour du rapport qui arrive
+      fadeIn(0.0, $("#s6-fill"), 0.4);
+      draw(0.0, $("#s6-frame"), 0.8, "power2.inOut");
+      draw(0.3, $("#s6-bar"), 0.45, "power2.out");
+      fadeIn(0.4, $("#s6-dots"), 0.3);
+      draw(0.45, $("#s6-side"), 0.45, "power2.out");
+      draw(0.6, $$(".s6-ic"), 0.35, "power2.out", 0.08);
+      blurIn(0.25, title, 0.15, 0.067);
+      blurIn(0.95, $("#s6-tag"), 0.2);
+      // 2. plan thermique, anomalies localisées
+      blurIn(0.6, [$("#s6-h1"), $("#s6-h2")], 0.2, 0.12);
+      fadeIn(0.7, $$(".s6-mod"), 0.3, 0.03);
+      tl.fromTo($$(".s6-mk"), { opacity: 0, scale: 0, transformOrigin: "50% 50%" }, { opacity: 1, scale: 1, duration: 0.3, ease: "back.out(2)", stagger: 0.12 }, 1.3);
+      [1.7, 2.7, 3.7].forEach((t) => {
+        tl.fromTo($$(".s6-ring"), { opacity: 0.85, scale: 1, transformOrigin: "50% 50%" }, { opacity: 0, scale: 2.8, duration: 0.9, ease: "power2.out", immediateRender: false }, t);
       });
-      // 1. le point orange devient la bille rouge du logo
-      tl.fromTo($("#s6-balll"), { opacity: 0 }, { opacity: 1, duration: 0.35, ease: "power1.inOut" }, 0.0);
-      tl.to($("#s6-dot"), { opacity: 0, duration: 0.35, ease: "power1.inOut" }, 0.0);
-      // 2. le serpentin se trace, la ligne de scan révèle le nom
-      draw(0.2, $("#s6-coil"), 1.7, "power1.inOut");
-      tl.fromTo($("#s6-scan"), { opacity: 0 }, { opacity: 1, duration: 0.12 }, 0.5);
-      tl.fromTo($("#s6-scan"), { x: 120 }, { x: 1230, duration: 1.3, ease: "power1.inOut" }, 0.5);
-      tl.fromTo($("#s6-cliprect"), { attr: { width: 0 } }, { attr: { width: 1110 }, duration: 1.3, ease: "power1.inOut" }, 0.5);
-      tl.to($("#s6-scan"), { opacity: 0, duration: 0.2 }, 1.75);
-      tl.fromTo($("#s6-ballr"), { opacity: 0, scale: 0, transformOrigin: "50% 50%" }, { opacity: 1, scale: 1, duration: 0.4, ease: "back.out(1.6)" }, 1.85);
-      // 3. slogan, message, contact
-      blurIn(2.1, slogan, 0.15, 0.067);
-      tl.fromTo(msg, { opacity: 0 }, { opacity: 1, duration: 0.2 }, 2.6);
-      tl.fromTo(msg, { color: "#D4D4D8" }, { color: "#111111", duration: 0.25, stagger: 0.08 }, 2.7);
-      if (contact) blurIn(3.1, $("#s6-contact"), 0.2);
+      blurIn(1.5, $("#s6-cap"), 0.18);
+      fadeIn(1.75, $("#s6-adot"), 0.15);
+      blurIn(1.75, $("#s6-anom"), 0.18);
+      // 3. rapports et suivi
+      draw(0.8, $$(".s6-row"), 0.4, "power2.out", 0.12);
+      blurIn(1.15, $("#s6-new"), 0.18);
+      fadeIn(1.25, $("#s6-st0"), 0.15);
+      fadeIn(1.1, [...$$(".s6-doc2"), ...$$(".s6-bars")], 0.3, 0.1);
+      blurIn(1.9, $("#s6-suivi"), 0.18);
+      draw(2.0, $("#s6-spark"), 0.7, "power2.inOut");
+      // 4. sortie : tout se floute ; un point du plan file vers le logo
+      blurOut(4.6, [...title, $("#s6-tag")], 0.18, 0.02);
+      tl.to([$("#s6-ui"), $("#s6-mk1"), $("#s6-mk2")], { opacity: 0, filter: "blur(8px)", duration: 0.22, ease: "power2.in" }, 4.62);
+      tl.to($("#s6-mk0"), { attr: { cx: 64.74, cy: 39.49, r: 9.23 }, duration: 0.6, ease: "power2.inOut" }, 4.75);
       window.__timelines["s6"] = tl;
     })();
   </script>

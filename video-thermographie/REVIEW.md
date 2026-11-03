@@ -1,5 +1,19 @@
 # REVIEW
 
+## Passage 4 — retours client (rapport, plateforme, site, LinkedIn, anomalies, drone)
+- Durée : 45,0 s (maximum du cahier des charges). Musique recalée sur les nouvelles scènes.
+- S3 : drone simplifié (corps, deux bras, quatre rotors, objectif) ; balayage 2,7 s → 1,5 s ; entrée du drone plus vive.
+- S3/S4 : signatures thermiques de la note technique : point chaud ponctuel (cellule fissurée), échauffement linéaire
+  d'une chaîne (diode by-pass défectueuse), boîte de jonction en surchauffe ; module à vide (échauffement uniforme) dans le champ.
+- S5 : « Rapport thermographique », tampon « Conforme IEC TS 62446-3 », titre « Un rapport aux normes, pour agir vite. »,
+  ligne « Justificatif assurance » (note technique § 2.4).
+- S6 (nouvelle) : la plateforme en ligne — le rapport rejoint la liste des rapports ; plan thermique, anomalies, suivi de
+  production. Mention « Bientôt disponible » (plateforme en développement). Aucun chiffre ni adresse inventés.
+- S7 : logo + slogan + message, puis navigateur dessiné avec la vraie capture du site (révélée par la ligne de scan,
+  adresse tapée), logo LinkedIn officiel (bleu #0A66C2) et coordonnées. L'adresse exacte de la page LinkedIn n'a pas été
+  fournie : seule la mention « Suivez-nous sur LinkedIn » est affichée.
+- `hyperframes check` : 0 erreur, 0 avertissement sur les trois formats.
+
 ## Passage 3 — déclinaisons 9:16 et 1:1
 - Version 16:9 inchangée : fichiers régénérés identiques à l’octet près (vérifié par `git diff`).
 - Même film dans les deux cadres : mêmes dessins, textes, minutage, transitions, musique. Adaptations de mise en page
