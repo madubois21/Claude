@@ -306,13 +306,16 @@ def hval(*k):
 
 
 def cell_tint(r, c, ox, oy, s):
-    """Thermogramme : chaque cellule a sa propre température, à peine différente de ses voisines."""
+    """Thermogramme : chaque cellule a sa propre température, à peine différente de ses voisines.
+    Cellules regroupées par nuance (6 niveaux) : un seul tracé par nuance, pour alléger la page."""
     cw, ch = CWU * s, CHU * s
-    return "".join(
-        f'<rect x="{n(ox + i * cw)}" y="{n(oy + j * ch)}" width="{n(cw)}" height="{n(ch)}" fill="{ACC}" '
-        f'fill-opacity="{0.015 + 0.055 * hval(r, c, i, j):.3f}"/>'
-        for j in range(CR) for i in range(CC)
-    )
+    levels = {}
+    for j in range(CR):
+        for i in range(CC):
+            lv = min(5, int(hval(r, c, i, j) * 6))
+            levels.setdefault(lv, []).append(f"M{n(ox + i * cw)} {n(oy + j * ch)}h{n(cw)}v{n(ch)}h{n(-cw)}Z")
+    return "".join(f'<path d="{"".join(d)}" fill="{ACC}" fill-opacity="{0.015 + 0.055 * (lv + 0.5) / 6:.3f}"/>'
+                   for lv, d in sorted(levels.items()))
 
 
 def anomalies_svg(r, c, ox, oy, s, prefix, hero_ids=False):
@@ -1188,7 +1191,7 @@ def build_s5():
     p1 = f"""      <div id="s5-p1" class="s5-page">
       <svg class="world" viewBox="0 0 {SW} {SH}" width="{SW}" height="{SH}">{rule}
         <g id="s5-badge1"><rect x="640" y="{655 - pfs}" width="140" height="{pfs + 20}" rx="8" fill="#FF8A4C"/>
-        <text class="pg b" x="710" y="{655 + 2}" text-anchor="middle" font-size="{pfs}" fill="#FFFFFF">Cat. 4</text></g>
+        <text class="pg b" x="710" y="{655 + 2}" text-anchor="middle" font-size="{pfs}" fill="#111111">Cat. 4</text></g>
         <g id="s5-badge2"><rect x="640" y="{655 - pfs}" width="140" height="{pfs + 20}" rx="8" fill="{ACC}"/>
         <text class="pg b" x="710" y="{655 + 2}" text-anchor="middle" font-size="{pfs}" fill="#FFFFFF">Cat. 5</text></g>
       </svg>
@@ -1208,7 +1211,7 @@ def build_s5():
     rows_html = []
     for i, (k, lab, col, cnt) in enumerate(S5_CATS):
         y = 452 + i * 72
-        ink = "#FFFFFF" if k >= 4 else "#111111"
+        ink = "#FFFFFF" if k >= 5 else "#111111"  # blanc seulement sur l'orange vif (contraste)
         swatches.append(f'<g class="s5-sw"><rect x="260" y="{y - 22}" width="44" height="44" rx="8" fill="{col}"/>'
                         f'<text class="pg b" x="282" y="{y + pfs * 0.36:.1f}" text-anchor="middle" font-size="{pfs}" fill="{ink}">{k}</text></g>')
         bars.append(f'<rect class="s5-gbar" x="680" y="{y - 9}" width="{cnt * 46}" height="18" rx="9" fill="{col}" data-w="{cnt * 46}"/>')
@@ -1613,6 +1616,7 @@ def build_s6():
 # --------------------------------------------------------------------------
 # S7 — Logo, slogan, puis site web + LinkedIn
 # --------------------------------------------------------------------------
+S7_DUR = 10.2  # logo (0–3,9 s), puis site web + LinkedIn tenus ~4,8 s jusqu'à la fin (plus de bouclage)
 SITE_IMG = (1360, 649)  # capture du site (assets/images/site-flyscanair.jpg)
 
 
@@ -1677,18 +1681,8 @@ def build_s7():
     <div id="s7-slogan" class="title cta1">Inspections techniques aériennes,<br />révélez l’invisible.</div>
     <div id="s7-msg" class="cta2">Faites contrôler votre installation.</div>
     </div>"""
-    # ligne de sol de la scène 1, recalculée à l'écran : la fin rejoint la première image (boucle sans coupure)
-    if L:
-        s1s, s1tx, s1ty = L["s1_box"]
-        g1, g2 = s1_ground()
-        loop = (s1s * g1 + s1tx, s1s * g2 + s1tx, s1s * 880 + s1ty, 2.5 * s1s)
-    else:
-        loop = (120, 1800, 880, 2.5)
     body = (top + "\n" + box(web_svg, P7["web"]) + "\n" + box(in_svg, P7["inb"]) + f"""
-    <div id="s7-contact" class="cta3"></div>
-    <svg class="world" viewBox="0 0 {W} {H}" width="{W}" height="{H}"{CANVAS}>
-      <line id="s7-loop" class="d" pathLength="1" x1="{n(loop[0])}" y1="{n(loop[2])}" x2="{n(loop[1])}" y2="{n(loop[2])}" stroke="{INK}" stroke-width="{n(loop[3])}" stroke-linecap="round"/>
-    </svg>""")
+    <div id="s7-contact" class="cta3"></div>""")
     ct, cs = P7["contacts"]
     css = f"""
     #root .cta1 {{ left: 0; width: {W}px; top: {P7["slogan"][0]}px; text-align: center; font-size: {P7["slogan"][1]}px; line-height: 1.18; }}
@@ -1746,20 +1740,8 @@ def build_s7():
       tl.fromTo($("#s7-in"), {{ opacity: 0, scale: 0.6, transformOrigin: "50% 50%" }}, {{ opacity: 1, scale: 1, duration: 0.45, ease: "back.out(1.6)" }}, 4.5);
       blurIn(4.85, [$("#s7-inname"), $("#s7-capi")], 0.2, 0.1);
       blurIn(5.05, $("#s7-contact"), 0.2);
-      // C. sortie pour la boucle : tout se retire, puis la ligne de sol de la scène 1 commence à se tracer
-      blurOut(7.2, [$("#s7-contact"), $("#s7-capw"), $("#s7-inname"), $("#s7-capi")], 0.2, 0.04);
-      tl.to(letters.slice().reverse(), {{ opacity: 0, duration: 0.04, stagger: 0.012 }}, 7.2);
-      tl.fromTo($("#s7-scan"), {{ x: {BX + BW} }}, {{ x: {BX}, duration: 0.38, ease: "power1.inOut", immediateRender: false }}, 7.25);
-      tl.to($("#s7-scan"), {{ opacity: 1, duration: 0.05 }}, 7.25);
-      tl.to($("#s7-cliprect"), {{ attr: {{ width: 0 }}, duration: 0.38, ease: "power1.inOut" }}, 7.25);
-      tl.to($("#s7-scan"), {{ opacity: 0, duration: 0.1 }}, 7.63);
-      tl.to($("#s7-in"), {{ opacity: 0, scale: 0.6, duration: 0.3, ease: "power2.in" }}, 7.3);
-      undraw(7.45, [$("#s7-bar"), $("#s7-frame")], 0.35, "power2.in", 0.05);
-      fadeOut(7.45, [$("#s7-dots"), $("#s7-pill"), $("#s7-wfill")], 0.25);
-      blurOut(7.22, slogan, 0.16, 0.02);
-      fadeOut(7.3, [$("#s7-word"), $("#s7-ballr"), $("#s7-balll")], 0.3);
-      undraw(7.3, $("#s7-coil"), 0.45, "power2.in");
-      tl.fromTo($("#s7-loop"), {{ attr: {{ "stroke-dashoffset": 1.05 }} }}, {{ attr: {{ "stroke-dashoffset": 0.62 }}, duration: 0.5, ease: "power1.in" }}, 7.7);"""
+      // C. fin : le carton (site web, LinkedIn, coordonnées) reste affiché jusqu'à la dernière image
+      tl.set({{}}, {{}}, {n(S7_DUR)});"""
     write_scene(
         "s7",
         "Scène 7 — Logo, slogan, site web et LinkedIn",
@@ -1781,8 +1763,8 @@ def build_s7():
 # index.html
 # --------------------------------------------------------------------------
 SCENES = [("s1", 0, 7.2), ("s2", 7.2, 6.6), ("s3", 13.8, 6.6), ("s4", 20.4, 7.2), ("s5", 27.6, 15.6),
-          ("s6", 43.2, 6.6), ("s7", 49.8, 8.2)]
-TOTAL = 58.0
+          ("s6", 43.2, 6.6), ("s7", 49.8, S7_DUR)]
+TOTAL = 60.0
 
 # (id, file, hit time in the film, volume): the file's measured peak lands one frame after its picture
 SFX = [
@@ -1831,7 +1813,7 @@ def build_index(sfx_offsets):
     vo = json.load(open(vo_path, encoding="utf-8")) if os.path.exists(vo_path) else []
     music_attr = ""
     if vo:
-        duck, base, pts_ = 0.32, 1.0, [{"t": 0, "v": 1.0}]
+        duck, base, pts_ = 0.4, 1.0, [{"t": 0, "v": 1.0}]  # musique dynamique : -8 dB sous la voix
         segs = []
         for v in vo:
             s0, s1 = v["start"] - 0.3, v["start"] + v["dur"] + 0.45

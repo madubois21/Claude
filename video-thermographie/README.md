@@ -1,6 +1,6 @@
 # Fly Scan’Air — vidéo motion design « Inspection thermographique par drone »
 
-Vidéo full motion design de 58 s, en boucle sans coupure, 16:9 (1920 × 1080, 30 i/s), pensée pour LinkedIn, déclinée en 9:16 et 1:1.
+Vidéo full motion design de 60 s, qui se termine sur le site web et LinkedIn, 16:9 (1920 × 1080, 30 i/s), pensée pour LinkedIn, déclinée en 9:16 et 1:1.
 Réalisée avec [HyperFrames](https://hyperframes.heygen.com) : HTML + SVG + GSAP, rendus en MP4 image par image.
 
 ## Livrables
@@ -41,7 +41,7 @@ remonte dans les silences. Les textes à l’écran portent toujours le message 
 | 4 — Détection | `compositions/s4.html` | 20,4 – 27,6 s | zoom sur le module thermique (48 cellules) : point chaud (cellule fissurée), sous-chaîne échauffée (diode by-pass), boîte de jonction ; désignés par des lignes de rappel |
 | 5 — Rapport | `compositions/s5.html` | 27,6 – 43,2 s | trois pages : analyse détaillée (fiches défaut n°1 et n°2, vignette thermique avec cadre de détection, plan de localisation du module) ; résultats et gravité (+ histogramme production) ; couverture « Rapport d’inspection thermique » avec tampon « Conforme IEC TS 62446-3 » et checklist |
 | 6 — Plateforme en ligne | `compositions/s6.html` | 43,2 – 49,8 s | le rapport rejoint la plateforme : plan thermique, rapports, planning des inspections à venir — « Bientôt disponible » |
-| 7 — Fin | `compositions/s7.html` | 49,8 – 58 s | logo, slogan, message, puis site web (capture animée) + LinkedIn (linkedin.com/company/fly-scan-air) + coordonnées ; sortie qui rejoint la première image (boucle) |
+| 7 — Fin | `compositions/s7.html` | 49,8 – 60 s | logo, slogan, message, puis site web (capture animée) + LinkedIn (linkedin.com/company/fly-scan-air) + coordonnées, tenus à l’écran jusqu’à la fin (≈ 4,8 s) |
 
 Charte : fond blanc, traits noirs fins, accent `#FF5700`, typographie Comfortaa (textes et logotype).
 Vocabulaire technique des anomalies repris de la note technique Fly Scan’Air (norme IEC TS 62446-3).
@@ -73,8 +73,9 @@ La géométrie (perspective du toit, champ de panneaux, raccords de zoom au pixe
 `python3 tools/logo_trace.py` revectorise les lettres du logo à partir de `assets/images/logo-flyscanair.png`
 (nécessite `pip install potracer`) ; le résultat, `assets/logo-letters.json`, est lu par `tools/build.py`.
 
-`python3 tools/music.py` régénère la musique (synthèse déterministe, 100 BPM, la mineur → do majeur ; nappes,
-basse en croches, grosse caisse à la noire, clap discret sur 2 et 4, charleston en croches).
+`python3 tools/music.py` régénère la musique (synthèse déterministe, électro-pop 100 BPM en mi mineur / sol majeur :
+grosse caisse à la noire, clap, charleston en doubles-croches, basse pompée, accords sur les contretemps, arpège,
+montées et impacts aux changements de scène, accord final à 57 s ; `MUSIC_DEBUG=1` affiche l’équilibre par bande).
 
 `python3 tools/voiceover.py` retraite la voix off à partir des fichiers FLORA `raw_XX.wav` : coupe les silences,
 raccourcit les pauses trop longues, accélère très légèrement certaines phrases (×1,02 à ×1,04, hauteur conservée),

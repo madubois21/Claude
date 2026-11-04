@@ -1,5 +1,19 @@
 # REVIEW
 
+## Passage 9 — musique dynamique, fin sur le site et LinkedIn
+- Musique entièrement recomposée (`tools/music.py`) : électro-pop entraînante, 100 BPM (toutes les coupes tombent sur un
+  temps et chaque scène démarre sur un temps fort), mi mineur / sol majeur. Intro à l'arpège filtré, grosse caisse à la
+  noire, clap sur 2 et 4, charleston en doubles-croches, basse en croches pompée, accords sur les contretemps, impacts
+  et cymbales aux changements de scène, montée en scène 6 (roulement qui accélère, filtre qui s'ouvre), retombée sur le
+  logo, cadence IV – V – I et accord final à 57 s.
+- Mélange réglé sans écoute, à la mesure : répartition par bande proche d'un mixage pop (graves -5 à -6 dB, médiums
+  -8 à -13 dB, aigus -17 à -20 dB) ; normalisation linéaire (-16 LUFS) pour garder les nuances (intro 5 dB plus douce).
+  Sous la voix, la musique descend à 0,4 (-8 dB).
+- Plus de sortie en boucle : à partir de 53,7 s le site web, LinkedIn et les coordonnées restent affichés jusqu'à la
+  dernière image ; scène 7 allongée à 10,2 s, vidéo de 60 s.
+- Contraste : « Cat. 4 » (et le 4 de la légende de gravité) en noir sur l'orange clair.
+- Cellules thermiques regroupées par nuance (6 tracés par module au lieu de 48 rectangles) : page plus légère, même image.
+
 ## Passage 8 — icônes, anomalies, rapport, logo
 - S2 : icônes incendie et assurance en trait de 6 px (coche 7 px), accordées à la graisse de Comfortaa.
 - Anomalies (S3, S4, vignette du rapport) au rendu thermique réaliste, inspiré des vignettes du rapport type :

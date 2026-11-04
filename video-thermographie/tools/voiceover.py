@@ -28,7 +28,7 @@ SR = 48000
 
 # (id, run FLORA, début absolu (s), pause interne max (s), tempo, texte)
 # Placement calé sur l'image : S1 0–7,2 · S2 7,2–13,8 · S3 13,8–20,4 · S4 20,4–27,6 · S5 27,6–43,2 ·
-# S6 43,2–49,8 · S7 49,8–58,0 (la voix se termine avant la sortie en boucle, 57,0 s).
+# S6 43,2–49,8 · S7 49,8–60,0 (fin sur le site web et LinkedIn).
 LINES = [
     ("01", "m170bcwv0qx4nt99xpssgpz26d8hhbf6", 0.90, 0.30, 1.00,
      "Sur une toiture solaire, certains défauts restent totalement invisibles à l'œil nu."),
@@ -52,7 +52,7 @@ LINES = [
      "Faites contrôler votre installation : rendez-vous sur notre site."),
 ]
 GAP = 0.15  # silence minimal entre deux phrases
-END = 57.0  # la sortie en boucle commence ici
+END = 59.0  # la voix doit être terminée avant la dernière seconde
 
 
 def ff(*args, capture=False):
@@ -164,7 +164,7 @@ def main():
         if start < prev_end + GAP - 1e-6:
             warn, ok = "  <-- CHEVAUCHE la phrase précédente", False
         if start + d > END + 1e-6:
-            warn, ok = "  <-- DÉPASSE la sortie en boucle", False
+            warn, ok = "  <-- DÉPASSE la fin de la vidéo", False
         print(f"vo_{vid}: {start:6.2f} -> {start + d:6.2f} s  x{tempo:.2f}  "
               f"({len(x) / SR:4.2f} s brut -> {d:4.2f} s)  parole {' '.join(f'{a:.2f}-{b:.2f}' for a, b in segs)}{warn}")
         prev_end = start + d

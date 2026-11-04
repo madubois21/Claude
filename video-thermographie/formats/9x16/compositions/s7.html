@@ -84,9 +84,6 @@
     <div id="s7-capi" class="cap7 grey" style="left: 1020px; width: 800px; top: 718px; font-size: 34px; line-height: 1.25">linkedin.com/company/fly-scan-air</div>
     </div>
     <div id="s7-contact" class="cta3"></div>
-    <svg class="world" viewBox="0 0 1080 1920" width="1080" height="1920" style="width: 1080px; height: 1920px">
-      <line id="s7-loop" stroke-dashoffset="1.05" class="d" pathLength="1" x1="40" y1="1512" x2="1040" y2="1512" stroke="#111111" stroke-width="2.88" stroke-linecap="round"/>
-    </svg>
   </div>
   <script>
     (function () {
@@ -196,20 +193,8 @@
       tl.fromTo($("#s7-in"), { opacity: 0, scale: 0.6, transformOrigin: "50% 50%" }, { opacity: 1, scale: 1, duration: 0.45, ease: "back.out(1.6)" }, 4.5);
       blurIn(4.85, [$("#s7-inname"), $("#s7-capi")], 0.2, 0.1);
       blurIn(5.05, $("#s7-contact"), 0.2);
-      // C. sortie pour la boucle : tout se retire, puis la ligne de sol de la scène 1 commence à se tracer
-      blurOut(7.2, [$("#s7-contact"), $("#s7-capw"), $("#s7-inname"), $("#s7-capi")], 0.2, 0.04);
-      tl.to(letters.slice().reverse(), { opacity: 0, duration: 0.04, stagger: 0.012 }, 7.2);
-      tl.fromTo($("#s7-scan"), { x: 1060 }, { x: 300, duration: 0.38, ease: "power1.inOut", immediateRender: false }, 7.25);
-      tl.to($("#s7-scan"), { opacity: 1, duration: 0.05 }, 7.25);
-      tl.to($("#s7-cliprect"), { attr: { width: 0 }, duration: 0.38, ease: "power1.inOut" }, 7.25);
-      tl.to($("#s7-scan"), { opacity: 0, duration: 0.1 }, 7.63);
-      tl.to($("#s7-in"), { opacity: 0, scale: 0.6, duration: 0.3, ease: "power2.in" }, 7.3);
-      undraw(7.45, [$("#s7-bar"), $("#s7-frame")], 0.35, "power2.in", 0.05);
-      fadeOut(7.45, [$("#s7-dots"), $("#s7-pill"), $("#s7-wfill")], 0.25);
-      blurOut(7.22, slogan, 0.16, 0.02);
-      fadeOut(7.3, [$("#s7-word"), $("#s7-ballr"), $("#s7-balll")], 0.3);
-      undraw(7.3, $("#s7-coil"), 0.45, "power2.in");
-      tl.fromTo($("#s7-loop"), { attr: { "stroke-dashoffset": 1.05 } }, { attr: { "stroke-dashoffset": 0.62 }, duration: 0.5, ease: "power1.in" }, 7.7);
+      // C. fin : le carton (site web, LinkedIn, coordonnées) reste affiché jusqu'à la dernière image
+      tl.set({}, {}, 10.2);
       window.__timelines["s7"] = tl;
     })();
   </script>
