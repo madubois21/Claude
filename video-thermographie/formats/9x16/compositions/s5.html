@@ -1,5 +1,5 @@
 <template>
-  <!-- Scène 5 — Rapport d'inspection thermique : défaut, résultats, couverture conforme IEC TS 62446-3 -->
+  <!-- Scène 5 — Rapport d'inspection thermique : anomalies, résultats, couverture conforme IEC TS 62446-3 -->
   <style>
     @font-face { font-family: "Comfortaa"; src: url("assets/fonts/comfortaa-var.woff2") format("woff2"); font-weight: 300 700; font-style: normal; }
     #root { position: absolute; inset: 0; overflow: hidden; font-family: "Comfortaa", sans-serif; color: #111111; }
@@ -39,7 +39,7 @@
     data-composition-id="s5"
     data-width="1080"
     data-height="1920"
-    data-composition-variables="[{&quot;id&quot;: &quot;s5-t1&quot;, &quot;type&quot;: &quot;string&quot;, &quot;label&quot;: &quot;Scène 5 — titre page 1&quot;, &quot;default&quot;: &quot;Chaque défaut est|localisé et *qualifié*.&quot;}, {&quot;id&quot;: &quot;s5-t2&quot;, &quot;type&quot;: &quot;string&quot;, &quot;label&quot;: &quot;Scène 5 — titre page 2&quot;, &quot;default&quot;: &quot;Classés par *gravité*,|avec l’action à mener.&quot;}, {&quot;id&quot;: &quot;s5-t3&quot;, &quot;type&quot;: &quot;string&quot;, &quot;label&quot;: &quot;Scène 5 — titre page 3&quot;, &quot;default&quot;: &quot;Un rapport *aux normes*,|pour agir rapidement.&quot;}, {&quot;id&quot;: &quot;s5-i0&quot;, &quot;type&quot;: &quot;string&quot;, &quot;label&quot;: &quot;Scène 5 — ligne 1&quot;, &quot;default&quot;: &quot;Anomalies localisées&quot;}, {&quot;id&quot;: &quot;s5-i1&quot;, &quot;type&quot;: &quot;string&quot;, &quot;label&quot;: &quot;Scène 5 — ligne 2&quot;, &quot;default&quot;: &quot;Priorités d’intervention&quot;}, {&quot;id&quot;: &quot;s5-i2&quot;, &quot;type&quot;: &quot;string&quot;, &quot;label&quot;: &quot;Scène 5 — ligne 3&quot;, &quot;default&quot;: &quot;Recommandations&quot;}, {&quot;id&quot;: &quot;s5-i3&quot;, &quot;type&quot;: &quot;string&quot;, &quot;label&quot;: &quot;Scène 5 — ligne 4&quot;, &quot;default&quot;: &quot;Justificatif assurance&quot;}]"
+    data-composition-variables="[{&quot;id&quot;: &quot;s5-t1&quot;, &quot;type&quot;: &quot;string&quot;, &quot;label&quot;: &quot;Scène 5 — titre page 1&quot;, &quot;default&quot;: &quot;Chaque anomalie est|localisée et *qualifiée*.&quot;}, {&quot;id&quot;: &quot;s5-t2&quot;, &quot;type&quot;: &quot;string&quot;, &quot;label&quot;: &quot;Scène 5 — titre page 2&quot;, &quot;default&quot;: &quot;Classés par *gravité*,|avec l’action à mener.&quot;}, {&quot;id&quot;: &quot;s5-t3&quot;, &quot;type&quot;: &quot;string&quot;, &quot;label&quot;: &quot;Scène 5 — titre page 3&quot;, &quot;default&quot;: &quot;Un rapport *aux normes*,|pour agir rapidement.&quot;}, {&quot;id&quot;: &quot;s5-i0&quot;, &quot;type&quot;: &quot;string&quot;, &quot;label&quot;: &quot;Scène 5 — ligne 1&quot;, &quot;default&quot;: &quot;Anomalies localisées&quot;}, {&quot;id&quot;: &quot;s5-i1&quot;, &quot;type&quot;: &quot;string&quot;, &quot;label&quot;: &quot;Scène 5 — ligne 2&quot;, &quot;default&quot;: &quot;Priorités d’intervention&quot;}, {&quot;id&quot;: &quot;s5-i2&quot;, &quot;type&quot;: &quot;string&quot;, &quot;label&quot;: &quot;Scène 5 — ligne 3&quot;, &quot;default&quot;: &quot;Recommandations&quot;}, {&quot;id&quot;: &quot;s5-i3&quot;, &quot;type&quot;: &quot;string&quot;, &quot;label&quot;: &quot;Scène 5 — ligne 4&quot;, &quot;default&quot;: &quot;Justificatif assurance&quot;}]"
   >
     <div class="box" data-layout-allow-overflow style="position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; transform-origin: 0 0; transform: translate(124px, 423.2px) scale(0.8)">
     <div id="s5-docw" style="position: absolute; left: 0; top: 0; width: 1920px; height: 1080px">
@@ -50,28 +50,31 @@
       <path id="s5-doc" stroke-dashoffset="1.05" class="d" pathLength="1" d="M220 96 H820 V944 H220 Z" fill="none" stroke="#111111" stroke-width="2" stroke-linejoin="round"/>
     </svg>
       <div id="s5-p1" class="s5-page">
-      <svg class="world" viewBox="0 0 1920 1080" width="1920" height="1080"><line stroke-dashoffset="1.05" class="d s5-rule" pathLength="1" x1="260" y1="178" x2="780" y2="178" stroke="#111111" stroke-width="1.5"/>
-        <g id="s5-badge1"><rect x="640" y="620" width="140" height="55" rx="8" fill="#FF8A4C"/>
-        <text class="pg b" x="710" y="657" text-anchor="middle" font-size="35" fill="#111111">Cat. 4</text></g>
-        <g id="s5-badge2"><rect x="640" y="620" width="140" height="55" rx="8" fill="#FF5700"/>
-        <text class="pg b" x="710" y="657" text-anchor="middle" font-size="35" fill="#FFFFFF">Cat. 5</text></g>
-      </svg>
-      <svg id="s5-thumb" class="world zoom" viewBox="-360 -139.23 3544.62 1993.85" width="1920" height="1080">
+      <svg class="world" viewBox="0 0 1920 1080" width="1920" height="1080"><line stroke-dashoffset="1.05" class="d s5-rule" pathLength="1" x1="260" y1="178" x2="780" y2="178" stroke="#111111" stroke-width="1.5"/></svg>
+      <svg id="s5-thumb" class="world zoom" viewBox="-588.57 -227.14 4388.57 2468.57" width="1920" height="1080">
         <defs><radialGradient id="s5-hot"><stop offset="0" stop-color="#FF5700" stop-opacity="1"/><stop offset="0.3" stop-color="#FF5700" stop-opacity="0.9"/><stop offset="0.62" stop-color="#FF7A33" stop-opacity="0.42"/><stop offset="1" stop-color="#FF9A66" stop-opacity="0"/></radialGradient><radialGradient id="s5-warm"><stop offset="0" stop-color="#FF5700" stop-opacity="0.62"/><stop offset="1" stop-color="#FF5700" stop-opacity="0.26"/></radialGradient><linearGradient id="s5-band" x1="0" x2="1" y1="0" y2="0"><stop offset="0" stop-color="#FF5700" stop-opacity="0.28"/><stop offset="0.5" stop-color="#FF5700" stop-opacity="0.72"/><stop offset="1" stop-color="#FF5700" stop-opacity="0.28"/></linearGradient></defs>
         <g><rect x="120" y="230" width="960" height="731.43" fill="#FFEADF"/><path d="M120 351.9h120v121.9h-120ZM480 351.9h120v121.9h-120ZM960 351.9h120v121.9h-120ZM360 595.71h120v121.9h-120ZM720 595.71h120v121.9h-120ZM480 717.62h120v121.9h-120Z" fill="#FF5700" fill-opacity="0.020"/><path d="M360 351.9h120v121.9h-120ZM600 351.9h120v121.9h-120ZM720 351.9h120v121.9h-120ZM120 595.71h120v121.9h-120ZM480 595.71h120v121.9h-120ZM840 595.71h120v121.9h-120ZM960 595.71h120v121.9h-120ZM360 717.62h120v121.9h-120ZM840 717.62h120v121.9h-120ZM960 717.62h120v121.9h-120ZM240 839.52h120v121.9h-120Z" fill="#FF5700" fill-opacity="0.029"/><path d="M840 351.9h120v121.9h-120ZM240 473.81h120v121.9h-120ZM360 473.81h120v121.9h-120ZM600 595.71h120v121.9h-120ZM600 717.62h120v121.9h-120ZM720 717.62h120v121.9h-120ZM120 839.52h120v121.9h-120ZM480 839.52h120v121.9h-120Z" fill="#FF5700" fill-opacity="0.038"/><path d="M240 230h120v121.9h-120ZM360 230h120v121.9h-120ZM960 230h120v121.9h-120ZM720 473.81h120v121.9h-120ZM840 473.81h120v121.9h-120ZM960 839.52h120v121.9h-120Z" fill="#FF5700" fill-opacity="0.047"/><path d="M120 230h120v121.9h-120ZM480 230h120v121.9h-120ZM600 230h120v121.9h-120ZM720 230h120v121.9h-120ZM840 230h120v121.9h-120ZM120 473.81h120v121.9h-120ZM960 473.81h120v121.9h-120ZM240 595.71h120v121.9h-120ZM840 839.52h120v121.9h-120Z" fill="#FF5700" fill-opacity="0.056"/><path d="M240 351.9h120v121.9h-120ZM480 473.81h120v121.9h-120ZM600 473.81h120v121.9h-120ZM120 717.62h120v121.9h-120ZM240 717.62h120v121.9h-120ZM360 839.52h120v121.9h-120ZM600 839.52h120v121.9h-120ZM720 839.52h120v121.9h-120Z" fill="#FF5700" fill-opacity="0.065"/><path d="M153.6 236V955.43M180 236V955.43M206.4 236V955.43M273.6 236V955.43M300 236V955.43M326.4 236V955.43M393.6 236V955.43M420 236V955.43M446.4 236V955.43M513.6 236V955.43M540 236V955.43M566.4 236V955.43M633.6 236V955.43M660 236V955.43M686.4 236V955.43M753.6 236V955.43M780 236V955.43M806.4 236V955.43M873.6 236V955.43M900 236V955.43M926.4 236V955.43M993.6 236V955.43M1020 236V955.43M1046.4 236V955.43" stroke="#FFDCCB" stroke-width="1" fill="none"/><g class="s5-anom" data-x="420"><rect x="360" y="717.62" width="120" height="121.9" fill="#FF5700" fill-opacity="0.340"/><circle cx="396" cy="751.75" r="31.2" fill="url(#s5-hot)"/><circle cx="423.6" cy="784.67" r="43.2" fill="url(#s5-hot)"/><circle cx="446.4" cy="815.14" r="26.4" fill="url(#s5-hot)"/><circle cx="396" cy="751.75" r="6.86" fill="#FF5700"/><circle cx="423.6" cy="784.67" r="9.5" fill="#FF5700"/><circle cx="446.4" cy="815.14" r="5.81" fill="#FF5700"/></g><g class="s5-anom" data-x="216"><rect x="120" y="230" width="120" height="121.9" fill="#FF5700" fill-opacity="0.248"/><rect x="240" y="230" width="120" height="121.9" fill="#FF5700" fill-opacity="0.220"/><rect x="360" y="230" width="120" height="121.9" fill="#FF5700" fill-opacity="0.250"/><rect x="480" y="230" width="120" height="121.9" fill="#FF5700" fill-opacity="0.223"/><rect x="600" y="230" width="120" height="121.9" fill="#FF5700" fill-opacity="0.276"/><rect x="720" y="230" width="120" height="121.9" fill="#FF5700" fill-opacity="0.249"/><rect x="840" y="230" width="120" height="121.9" fill="#FF5700" fill-opacity="0.221"/><rect x="960" y="230" width="120" height="121.9" fill="#FF5700" fill-opacity="0.251"/><rect x="120" y="351.9" width="120" height="121.9" fill="#FF5700" fill-opacity="0.290"/><rect x="240" y="351.9" width="120" height="121.9" fill="#FF5700" fill-opacity="0.226"/><rect x="360" y="351.9" width="120" height="121.9" fill="#FF5700" fill-opacity="0.292"/><rect x="480" y="351.9" width="120" height="121.9" fill="#FF5700" fill-opacity="0.261"/><rect x="600" y="351.9" width="120" height="121.9" fill="#FF5700" fill-opacity="0.238"/><rect x="720" y="351.9" width="120" height="121.9" fill="#FF5700" fill-opacity="0.287"/><rect x="840" y="351.9" width="120" height="121.9" fill="#FF5700" fill-opacity="0.273"/><rect x="960" y="351.9" width="120" height="121.9" fill="#FF5700" fill-opacity="0.289"/></g><g class="s5-anom" data-x="1005.6"><ellipse cx="1005.6" cy="595.71" rx="72" ry="121.9" fill="url(#s5-hot)" fill-opacity="0.8"/><rect x="984" y="549.39" width="43.2" height="92.65" rx="14.4" fill="#FF5700" fill-opacity="0.85"/></g><path d="M240 230V961.43M360 230V961.43M480 230V961.43M600 230V961.43M720 230V961.43M840 230V961.43M960 230V961.43M120 351.9H1080M120 473.81H1080M120 595.71H1080M120 717.62H1080M120 839.52H1080" stroke="#FFC9AE" stroke-width="1" fill="none"/><rect x="134" y="244" width="932" height="703.43" fill="none" stroke="#111111" stroke-width="1.2"/><rect x="120" y="230" width="960" height="731.43" fill="none" stroke="#111111" stroke-width="2"/></g>
         <rect id="s5-bbox" x="324" y="681.05" width="192" height="195.05" rx="6" fill="none" stroke="#FF5700" stroke-width="3"/>
       </svg>
       <div stroke-dashoffset="1.05" class="dochead" style="left: 260px; top: 128px">Analyse détaillée</div>
-      <div class="pgt s5-f1 b" style="left: 260px; top: 618px; font-size: 39px">Défaut n°1</div>
-      <div class="pgt s5-f1" style="left: 260px; top: 682px">Point chaud (hot-spot)</div>
-      <div class="pgt s5-f1 grey" style="left: 260px; top: 732px">cellule fissurée</div>
-      <div class="pgt s5-f1" style="left: 260px; top: 783px">ΔT 11,2 °C · MaxT 58 °C</div>
-      <div class="pgt s5-f1" style="left: 260px; top: 834px"><span class="acc">→</span> Contrôle électrique</div>
-      <div class="pgt s5-f2 b" style="left: 260px; top: 618px; font-size: 39px">Défaut n°2</div>
-      <div class="pgt s5-f2" style="left: 260px; top: 682px">Diode by-pass</div>
-      <div class="pgt s5-f2 grey" style="left: 260px; top: 732px">échauffement linéaire</div>
-      <div class="pgt s5-f2" style="left: 260px; top: 783px">ΔT 7,8 °C · MaxT 54 °C</div>
-      <div class="pgt s5-f2" style="left: 260px; top: 834px"><span class="acc">→</span> Remplacer la diode</div>
+      <div class="pgt s5-f1 b" style="left: 260px; top: 537.5px; font-size: 41px">Anomalie n°1</div>
+      <svg class="world s5-f1" viewBox="0 0 1920 1080" width="1920" height="1080"><line x1="260" y1="601" x2="780" y2="601" stroke="#E4E4E7" stroke-width="2"/><rect x="260" y="724.25" width="250" height="112.5" rx="10" fill="#FFFFFF" stroke="#E4E4E7" stroke-width="2"/><rect x="530" y="724.25" width="250" height="112.5" rx="10" fill="#FFFFFF" stroke="#E4E4E7" stroke-width="2"/><rect x="260" y="852.5" width="520" height="64.75" rx="10" fill="#FFF1E8"/><rect x="260" y="852.5" width="6" height="64.75" rx="3" fill="#FF5700"/><g id="s5-badge1"><rect x="629.5" y="537.62" width="150.5" height="51" rx="8" fill="#FF8A4C"/><text class="pg b" x="704.75" y="575.73" text-anchor="middle" font-size="35" fill="#111111">Cat. 4</text></g></svg>
+      <div class="pgt s5-f1 b" style="left: 260px; top: 616.75px; font-size: 37px">Point chaud (hot-spot)</div>
+      <div class="pgt s5-f1 grey" style="left: 260px; top: 663px;">cellule fissurée</div>
+      <div class="pgt s5-f1 grey" style="left: 275.75px; top: 733px;">ΔT</div>
+      <div class="pgt s5-f1 b" style="left: 275.75px; top: 776.75px; font-size: 41px">11,2 °C</div>
+      <div class="pgt s5-f1 grey" style="left: 545.75px; top: 733px;">MaxT</div>
+      <div class="pgt s5-f1 b" style="left: 545.75px; top: 776.75px; font-size: 41px">58 °C</div>
+      <div class="pgt s5-f1" style="left: 281px; top: 863px;"><span class="acc">→</span> Contrôle électrique</div>
+      <div class="pgt s5-f2 b" style="left: 260px; top: 537.5px; font-size: 41px">Anomalie n°2</div>
+      <svg class="world s5-f2" viewBox="0 0 1920 1080" width="1920" height="1080"><line x1="260" y1="601" x2="780" y2="601" stroke="#E4E4E7" stroke-width="2"/><rect x="260" y="724.25" width="250" height="112.5" rx="10" fill="#FFFFFF" stroke="#E4E4E7" stroke-width="2"/><rect x="530" y="724.25" width="250" height="112.5" rx="10" fill="#FFFFFF" stroke="#E4E4E7" stroke-width="2"/><rect x="260" y="852.5" width="520" height="64.75" rx="10" fill="#FFF1E8"/><rect x="260" y="852.5" width="6" height="64.75" rx="3" fill="#FF5700"/><g id="s5-badge2"><rect x="629.5" y="537.62" width="150.5" height="51" rx="8" fill="#FF5700"/><text class="pg b" x="704.75" y="575.73" text-anchor="middle" font-size="35" fill="#FFFFFF">Cat. 5</text></g></svg>
+      <div class="pgt s5-f2 b" style="left: 260px; top: 616.75px; font-size: 37px">Diode by-pass</div>
+      <div class="pgt s5-f2 grey" style="left: 260px; top: 663px;">échauffement linéaire</div>
+      <div class="pgt s5-f2 grey" style="left: 275.75px; top: 733px;">ΔT</div>
+      <div class="pgt s5-f2 b" style="left: 275.75px; top: 776.75px; font-size: 41px">7,8 °C</div>
+      <div class="pgt s5-f2 grey" style="left: 545.75px; top: 733px;">MaxT</div>
+      <div class="pgt s5-f2 b" style="left: 545.75px; top: 776.75px; font-size: 41px">54 °C</div>
+      <div class="pgt s5-f2" style="left: 281px; top: 863px;"><span class="acc">→</span> Remplacer la diode</div>
       </div>
       <div id="s5-p2" class="s5-page">
       <svg class="world" viewBox="0 0 1920 1080" width="1920" height="1080"><line stroke-dashoffset="1.05" class="d s5-rule" pathLength="1" x1="260" y1="178" x2="780" y2="178" stroke="#111111" stroke-width="1.5"/><line class="s5-foot" x1="260" y1="890" x2="660" y2="890" stroke="#E4E4E7" stroke-width="8" stroke-linecap="round"/><line class="s5-foot" x1="260" y1="914" x2="560" y2="914" stroke="#E4E4E7" stroke-width="8" stroke-linecap="round"/><line stroke-dashoffset="1.05" class="d s5-card" pathLength="1" x1="260" y1="254" x2="780" y2="254" stroke="#E4E4E7" stroke-width="2"/><line stroke-dashoffset="1.05" class="d s5-card" pathLength="1" x1="260" y1="308" x2="780" y2="308" stroke="#E4E4E7" stroke-width="2"/><line stroke-dashoffset="1.05" class="d s5-card" pathLength="1" x1="260" y1="362" x2="780" y2="362" stroke="#E4E4E7" stroke-width="2"/><g class="s5-sw"><rect x="260" y="430" width="44" height="44" rx="8" fill="#FF5700"/><text class="pg b" x="282" y="464.6" text-anchor="middle" font-size="35" fill="#FFFFFF">5</text></g><g class="s5-sw"><rect x="260" y="502" width="44" height="44" rx="8" fill="#FF8A4C"/><text class="pg b" x="282" y="536.6" text-anchor="middle" font-size="35" fill="#111111">4</text></g><g class="s5-sw"><rect x="260" y="574" width="44" height="44" rx="8" fill="#FFBE9A"/><text class="pg b" x="282" y="608.6" text-anchor="middle" font-size="35" fill="#111111">3</text></g><g class="s5-sw"><rect x="260" y="646" width="44" height="44" rx="8" fill="#A1A1AA"/><text class="pg b" x="282" y="680.6" text-anchor="middle" font-size="35" fill="#111111">2</text></g><g class="s5-sw"><rect x="260" y="718" width="44" height="44" rx="8" fill="#D4D4D8"/><text class="pg b" x="282" y="752.6" text-anchor="middle" font-size="35" fill="#111111">1</text></g><rect class="s5-gbar" x="680" y="443" width="46" height="18" rx="9" fill="#FF5700" data-w="46"/><rect class="s5-gbar" x="680" y="515" width="92" height="18" rx="9" fill="#FF8A4C" data-w="92"/><rect class="s5-gbar" x="680" y="587" width="46" height="18" rx="9" fill="#FFBE9A" data-w="46"/><rect class="s5-gbar" x="680" y="659" width="92" height="18" rx="9" fill="#A1A1AA" data-w="92"/><rect class="s5-gbar" x="680" y="731" width="46" height="18" rx="9" fill="#D4D4D8" data-w="46"/></svg>
@@ -79,10 +82,10 @@
       <div id="s5-n0" class="num" style="left: 260px; top: 202px">0</div>
       <div id="s5-n1" class="num" style="left: 260px; top: 256px">0</div>
       <div id="s5-n2" class="num" style="left: 260px; top: 310px">0 / 7</div>
-      <div class="pgt s5-cardl" style="left: 410px; top: 208px">défauts détectés</div>
+      <div class="pgt s5-cardl" style="left: 410px; top: 208px">anomalies</div>
       <div class="pgt s5-cardl" style="left: 410px; top: 262px">modules impactés</div>
-      <div class="pgt s5-cardl" style="left: 410px; top: 316px">défauts résolus</div>
-      <div id="s5-sub" class="pgt b" style="left: 260px; top: 365px">Gravité des défauts</div>
+      <div class="pgt s5-cardl" style="left: 410px; top: 316px">résolues</div>
+      <div id="s5-sub" class="pgt b" style="left: 260px; top: 365px">Gravité des anomalies</div>
       <div class="pgt s5-cl" style="left: 322px; top: 430px">Critique</div><div class="pgt s5-cl" style="left: 322px; top: 502px">Important</div><div class="pgt s5-cl" style="left: 322px; top: 574px">Impact physique</div><div class="pgt s5-cl" style="left: 322px; top: 646px">Usure anormale</div><div class="pgt s5-cl" style="left: 322px; top: 718px">Esthétique</div>
       </div>
       <div id="s5-p3" class="s5-page">
@@ -123,7 +126,7 @@
     </svg>
     <div id="s5-plan-cap" class="label" style="left: 1050px; top: 698px; color: #111111">Rangée B · module 5</div>
     </div>
-    <div id="s5-t1" class="title" style="left: 108px; top: 300px; font-size: 64px">Chaque défaut est<br />localisé et qualifié.</div>
+    <div id="s5-t1" class="title" style="left: 108px; top: 300px; font-size: 64px">Chaque anomalie est<br />localisée et qualifiée.</div>
     <div id="s5-t2" class="title" style="left: 108px; top: 300px; font-size: 64px">Classés par gravité,<br />avec l’action à mener.</div>
     <div id="s5-t3" class="title" style="left: 108px; top: 300px; font-size: 64px">Un rapport aux normes,<br />pour agir rapidement.</div>
   </div>
@@ -190,7 +193,7 @@
       const fadeOut = (t, els, d = 0.3, stagger = 0, ease = "power1.in") =>
         tl.to(els, { opacity: 0, duration: d, ease, stagger }, t);
 
-      const t1 = words($("#s5-t1"), txt("s5-t1", "Chaque défaut est|localisé et *qualifié*."));
+      const t1 = words($("#s5-t1"), txt("s5-t1", "Chaque anomalie est|localisée et *qualifiée*."));
       const t2 = words($("#s5-t2"), txt("s5-t2", "Classés par *gravité*,|avec l’action à mener."));
       const t3 = words($("#s5-t3"), txt("s5-t3", "Un rapport *aux normes*,|pour agir rapidement."));
       ["s5-i0", "s5-i1", "s5-i2", "s5-i3"].forEach((id) => { const v = txt(id, ""); if (v) $("#" + id).textContent = v; });
@@ -208,7 +211,7 @@
       //   défaut n°1 : le cadre de détection se pose sur la cellule fissurée, la fiche se remplit
       const bbox = $("#s5-bbox");
       tl.fromTo(bbox, { opacity: 0, scale: 1.35, transformOrigin: "50% 50%" }, { opacity: 1, scale: 1, duration: 0.35, ease: "back.out(1.6)" }, 1.45);
-      blurIn(1.7, $$("#s5-p1 .s5-f1"), 0.18, 0.3);
+      blurIn(1.7, $$("#s5-p1 .s5-f1"), 0.18, 0.13);
       tl.fromTo($("#s5-badge1"), { opacity: 0, scale: 0.6, transformOrigin: "50% 50%" }, { opacity: 1, scale: 1, duration: 0.3, ease: "back.out(1.8)" }, 1.85);
       //   plan de localisation : le champ se dessine, le module concerné s'allume
       blurIn(2.6, $("#s5-plan-lab"), 0.18);
@@ -220,7 +223,7 @@
       blurOut(5.15, $$("#s5-p1 .s5-f1"), 0.16, 0.02);
       fadeOut(5.15, $("#s5-badge1"), 0.15);
       tl.to(bbox, { attr: { x: 136.8, y: 247.07, width: 926.4, height: 209.68 }, duration: 0.55, ease: "power2.inOut" }, 5.2);
-      blurIn(5.5, $$("#s5-p1 .s5-f2"), 0.18, 0.12);
+      blurIn(5.5, $$("#s5-p1 .s5-f2"), 0.18, 0.09);
       tl.fromTo($("#s5-ph"), { scale: 1 }, { scale: 1.12, duration: 0.22, ease: "power2.out", yoyo: true, repeat: 1, immediateRender: false }, 5.3);
       tl.fromTo($("#s5-badge2"), { opacity: 0, scale: 0.6, transformOrigin: "50% 50%" }, { opacity: 1, scale: 1, duration: 0.3, ease: "back.out(1.8)" }, 6.85); // « …et qualifié »
       // PAGE 2 — résultats et gravité

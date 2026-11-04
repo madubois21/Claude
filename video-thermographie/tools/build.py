@@ -433,7 +433,8 @@ S4_START_VB = (S4X - HAND[0] / k4, S4Y - HAND[1] / k4, W / k4, H / k4)
 SETTLE = L["s4_settle"] if L else (S4X, S4Y, S4PW)  # panneau posé en S4
 ks = SETTLE[2] / S4PW
 S4_SETTLE_VB = (S4X - SETTLE[0] / ks, S4Y - SETTLE[1] / ks, W / ks, H / ks)
-THUMB = (260, 200, 520)  # x, y, width of report thumbnail (scène de référence)
+THUMB_W = {"16x9": 500, "9x16": 420, "1x1": 360}[FMT]  # vignette du rapport : place pour la fiche en dessous
+THUMB = (260 + (520 - THUMB_W) / 2, 200, THUMB_W)  # x, y, largeur (scène de référence), centrée dans la page
 k5 = THUMB[2] / S4PW
 THUMB_LOCAL_VB = (S4X - THUMB[0] / k5, S4Y - THUMB[1] / k5, SW / k5, SH / k5)
 if L:  # vignette vue à l'écran à travers la boîte du rapport
@@ -1166,17 +1167,50 @@ def mini_logo(x, y, sc, prefix):
     )
 
 
-def s5_card(k, pfs, rows):
-    """Fiche d'un défaut (page « Analyse détaillée ») : numéro, type, origine, mesures, action."""
-    sp = pfs * 1.45
-    y0 = 655 - pfs * 1.05
-    ys = [y0, y0 + sp * 1.25, y0 + sp * 2.25, y0 + sp * 3.25, y0 + sp * 4.25]
-    out = []
-    for i, (txt_, y) in enumerate(zip(rows, ys)):
-        cls = " b" if i == 0 else (" grey" if i == 2 else "")
-        size = f"; font-size: {pfs + 4}px" if i == 0 else ""
-        html = txt_.replace("→", '<span class="acc">→</span>')
-        out.append(f'<div class="pgt s5-f{k}{cls}" style="left: 260px; top: {y:.0f}px{size}">{html}</div>')
+def s5_card(k, pfs, num, cat, cat_fill, cat_ink, typ, sig, dt, mx, act):
+    """Fiche d'une anomalie (page « Analyse détaillée »), sous la vignette : lisible d'un coup d'œil.
+    En-tête (numéro + catégorie) / type en gras et signature thermique / ΔT et MaxT dans deux cases / action encadrée."""
+    x0, x1 = 260, 780
+    hf, tf = pfs + 6, pfs + 2  # en-tête, type
+    lh = 1.25
+    y_head = THUMB[1] + THUMB[2] * S4PH / S4PW + 0.5 * pfs
+    y_rule = y_head + hf * lh + 0.35 * pfs
+    y_type = y_rule + 0.45 * pfs
+    y_sig = y_type + tf * lh
+    y_tile = y_sig + pfs * lh + 0.5 * pfs
+    tile_h = pfs * lh + hf * lh + 0.5 * pfs
+    y_act = y_tile + tile_h + 0.45 * pfs
+    act_h = pfs * lh + 0.6 * pfs
+    assert y_act + act_h <= 936, f"fiche trop haute ({y_act + act_h:.0f})"
+    bw = max(140, 4.3 * pfs)
+    bh = pfs + 16
+    yc = y_head + hf * lh / 2
+    tw = (x1 - x0 - 20) / 2
+    shapes = (
+        f'<line x1="{x0}" y1="{n(y_rule)}" x2="{x1}" y2="{n(y_rule)}" stroke="#E4E4E7" stroke-width="2"/>'
+        + "".join(f'<rect x="{n(x)}" y="{n(y_tile)}" width="{n(tw)}" height="{n(tile_h)}" rx="10" fill="#FFFFFF" stroke="#E4E4E7" stroke-width="2"/>'
+                  for x in (x0, x0 + tw + 20))
+        + f'<rect x="{x0}" y="{n(y_act)}" width="{x1 - x0}" height="{n(act_h)}" rx="10" fill="#FFF1E8"/>'
+        + f'<rect x="{x0}" y="{n(y_act)}" width="6" height="{n(act_h)}" rx="3" fill="{ACC}"/>'
+        + f'<g id="s5-badge{k}"><rect x="{n(x1 - bw)}" y="{n(yc - bh / 2)}" width="{n(bw)}" height="{n(bh)}" rx="8" fill="{cat_fill}"/>'
+        f'<text class="pg b" x="{n(x1 - bw / 2)}" y="{n(yc + 0.36 * pfs)}" text-anchor="middle" font-size="{pfs}" fill="{cat_ink}">{cat}</text></g>'
+    )
+    pad = 0.45 * pfs
+    rows = [
+        (x0, y_head, f"b; font-size: {hf}px", num),
+        (x0, y_type, f"b; font-size: {tf}px", typ),
+        (x0, y_sig, "grey", sig),
+        (x0 + pad, y_tile + 0.25 * pfs, "grey", "ΔT"),
+        (x0 + pad, y_tile + 0.25 * pfs + pfs * lh, f"b; font-size: {hf}px", dt),
+        (x0 + tw + 20 + pad, y_tile + 0.25 * pfs, "grey", "MaxT"),
+        (x0 + tw + 20 + pad, y_tile + 0.25 * pfs + pfs * lh, f"b; font-size: {hf}px", mx),
+        (x0 + 0.6 * pfs, y_act + 0.3 * pfs, "", f'<span class="acc">→</span> {act}'),
+    ]
+    out = [f'<svg class="world s5-f{k}" viewBox="0 0 {SW} {SH}" width="{SW}" height="{SH}">{shapes}</svg>']
+    for x, y, style, html in rows:
+        cls, _, extra = style.partition(";")
+        cls = f" {cls}" if cls else ""
+        out.insert(0 if html == num else len(out), f'<div class="pgt s5-f{k}{cls}" style="left: {n(x)}px; top: {n(y)}px;{extra}">{html}</div>')
     return "\n      ".join(out)
 
 
@@ -1189,20 +1223,15 @@ def build_s5():
     rule = '<line class="d s5-rule" pathLength="1" x1="260" y1="178" x2="780" y2="178" stroke="#111111" stroke-width="1.5"/>'
     # ---- page 1 : analyse détaillée (la vignette du panneau arrive de la scène 4)
     p1 = f"""      <div id="s5-p1" class="s5-page">
-      <svg class="world" viewBox="0 0 {SW} {SH}" width="{SW}" height="{SH}">{rule}
-        <g id="s5-badge1"><rect x="640" y="{655 - pfs}" width="140" height="{pfs + 20}" rx="8" fill="#FF8A4C"/>
-        <text class="pg b" x="710" y="{655 + 2}" text-anchor="middle" font-size="{pfs}" fill="#111111">Cat. 4</text></g>
-        <g id="s5-badge2"><rect x="640" y="{655 - pfs}" width="140" height="{pfs + 20}" rx="8" fill="{ACC}"/>
-        <text class="pg b" x="710" y="{655 + 2}" text-anchor="middle" font-size="{pfs}" fill="#FFFFFF">Cat. 5</text></g>
-      </svg>
+      <svg class="world" viewBox="0 0 {SW} {SH}" width="{SW}" height="{SH}">{rule}</svg>
       <svg id="s5-thumb" class="world zoom" viewBox="{vb(THUMB_LOCAL_VB)}" width="{SW}" height="{SH}">
         <defs>{thermal_defs("s5")}</defs>
         {hero_panel_svg("s5", with_ids=False)}
         <rect id="s5-bbox" x="{n(BOX1[0])}" y="{n(BOX1[1])}" width="{n(BOX1[2])}" height="{n(BOX1[3])}" rx="6" fill="none" stroke="{ACC}" stroke-width="3"/>
       </svg>
       <div class="dochead" style="left: 260px; top: 128px">Analyse détaillée</div>
-      {s5_card(1, pfs, ["Défaut n°1", "Point chaud (hot-spot)", "cellule fissurée", "ΔT 11,2 °C · MaxT 58 °C", "→ Contrôle électrique"])}
-      {s5_card(2, pfs, ["Défaut n°2", "Diode by-pass", "échauffement linéaire", "ΔT 7,8 °C · MaxT 54 °C", "→ Remplacer la diode"])}
+      {s5_card(1, pfs, "Anomalie n°1", "Cat. 4", "#FF8A4C", "#111111", "Point chaud (hot-spot)", "cellule fissurée", "11,2 °C", "58 °C", "Contrôle électrique")}
+      {s5_card(2, pfs, "Anomalie n°2", "Cat. 5", ACC, "#FFFFFF", "Diode by-pass", "échauffement linéaire", "7,8 °C", "54 °C", "Remplacer la diode")}
       </div>"""
     # ---- page 2 : résultats + gravité
     cards, swatches, bars = [], [], []
@@ -1222,10 +1251,10 @@ def build_s5():
       <div id="s5-n0" class="num" style="left: 260px; top: 202px">0</div>
       <div id="s5-n1" class="num" style="left: 260px; top: 256px">0</div>
       <div id="s5-n2" class="num" style="left: 260px; top: 310px">0 / 7</div>
-      <div class="pgt s5-cardl" style="left: 410px; top: {230 - pfs * 0.62:.0f}px">défauts détectés</div>
+      <div class="pgt s5-cardl" style="left: 410px; top: {230 - pfs * 0.62:.0f}px">anomalies</div>
       <div class="pgt s5-cardl" style="left: 410px; top: {284 - pfs * 0.62:.0f}px">modules impactés</div>
-      <div class="pgt s5-cardl" style="left: 410px; top: {338 - pfs * 0.62:.0f}px">défauts résolus</div>
-      <div id="s5-sub" class="pgt b" style="left: 260px; top: {400 - pfs:.0f}px">Gravité des défauts</div>
+      <div class="pgt s5-cardl" style="left: 410px; top: {338 - pfs * 0.62:.0f}px">résolues</div>
+      <div id="s5-sub" class="pgt b" style="left: 260px; top: {400 - pfs:.0f}px">Gravité des anomalies</div>
       {"".join(rows_html)}
       </div>"""
     # ---- page 3 : couverture + tampon de conformité
@@ -1331,7 +1360,7 @@ def build_s5():
 {plan_part}"""
     tst = tstyle(L and L["s5_title"], "left: 960px; top: 150px")
     titles = "\n".join(f'    <div id="s5-t{i}" class="title" style="{tst}">{t}</div>' for i, t in (
-        (1, "Chaque défaut est<br />localisé et qualifié."),
+        (1, "Chaque anomalie est<br />localisée et qualifiée."),
         (2, "Classés par gravité,<br />avec l’action à mener."),
         (3, "Un rapport aux normes,<br />pour agir rapidement."),
     ))
@@ -1369,7 +1398,7 @@ def build_s5():
     dcx, dcy = dx + dw / 2, dy + dh / 2
     carry = dict(x=(icx - btx) / bs - dcx, y=(icy - bty) / bs - dcy, scale=ich / (dh * bs))
     js = """
-      const t1 = words($("#s5-t1"), txt("s5-t1", "Chaque défaut est|localisé et *qualifié*."));
+      const t1 = words($("#s5-t1"), txt("s5-t1", "Chaque anomalie est|localisée et *qualifiée*."));
       const t2 = words($("#s5-t2"), txt("s5-t2", "Classés par *gravité*,|avec l’action à mener."));
       const t3 = words($("#s5-t3"), txt("s5-t3", "Un rapport *aux normes*,|pour agir rapidement."));
       ["s5-i0", "s5-i1", "s5-i2", "s5-i3"].forEach((id) => { const v = txt(id, ""); if (v) $("#" + id).textContent = v; });
@@ -1387,7 +1416,7 @@ def build_s5():
       //   défaut n°1 : le cadre de détection se pose sur la cellule fissurée, la fiche se remplit
       const bbox = $("#s5-bbox");
       tl.fromTo(bbox, { opacity: 0, scale: 1.35, transformOrigin: "50% 50%" }, { opacity: 1, scale: 1, duration: 0.35, ease: "back.out(1.6)" }, 1.45);
-      blurIn(1.7, $$("#s5-p1 .s5-f1"), 0.18, 0.3);
+      blurIn(1.7, $$("#s5-p1 .s5-f1"), 0.18, 0.13);
       tl.fromTo($("#s5-badge1"), { opacity: 0, scale: 0.6, transformOrigin: "50% 50%" }, { opacity: 1, scale: 1, duration: 0.3, ease: "back.out(1.8)" }, 1.85);
       //   plan de localisation : le champ se dessine, le module concerné s'allume
       blurIn(2.6, $("#s5-plan-lab"), 0.18);
@@ -1399,7 +1428,7 @@ def build_s5():
       blurOut(5.15, $$("#s5-p1 .s5-f1"), 0.16, 0.02);
       fadeOut(5.15, $("#s5-badge1"), 0.15);
       tl.to(bbox, { attr: { x: __B2X__, y: __B2Y__, width: __B2W__, height: __B2H__ }, duration: 0.55, ease: "power2.inOut" }, 5.2);
-      blurIn(5.5, $$("#s5-p1 .s5-f2"), 0.18, 0.12);
+      blurIn(5.5, $$("#s5-p1 .s5-f2"), 0.18, 0.09);
       tl.fromTo($("#s5-ph"), { scale: 1 }, { scale: 1.12, duration: 0.22, ease: "power2.out", yoyo: true, repeat: 1, immediateRender: false }, 5.3);
       tl.fromTo($("#s5-badge2"), { opacity: 0, scale: 0.6, transformOrigin: "50% 50%" }, { opacity: 1, scale: 1, duration: 0.3, ease: "back.out(1.8)" }, 6.85); // « …et qualifié »
       // PAGE 2 — résultats et gravité
@@ -1460,9 +1489,9 @@ def build_s5():
           .replace("__CS__", f'{carry["scale"]:.5f}').replace("__OX__", n(dcx)).replace("__OY__", n(dcy)))
     write_scene(
         "s5",
-        "Scène 5 — Rapport d'inspection thermique : défaut, résultats, couverture conforme IEC TS 62446-3",
+        "Scène 5 — Rapport d'inspection thermique : anomalies, résultats, couverture conforme IEC TS 62446-3",
         [
-            svar("s5-t1", "Scène 5 — titre page 1", "Chaque défaut est|localisé et *qualifié*."),
+            svar("s5-t1", "Scène 5 — titre page 1", "Chaque anomalie est|localisée et *qualifiée*."),
             svar("s5-t2", "Scène 5 — titre page 2", "Classés par *gravité*,|avec l’action à mener."),
             svar("s5-t3", "Scène 5 — titre page 3", "Un rapport *aux normes*,|pour agir rapidement."),
             svar("s5-i0", "Scène 5 — ligne 1", items[0]),
@@ -1813,7 +1842,8 @@ def build_index(sfx_offsets):
     vo = json.load(open(vo_path, encoding="utf-8")) if os.path.exists(vo_path) else []
     music_attr = ""
     if vo:
-        duck, base, pts_ = 0.4, 1.0, [{"t": 0, "v": 1.0}]  # musique dynamique : -8 dB sous la voix
+        duck, base = 0.28, 0.85  # musique -1,4 dB partout, -11 dB sous la voix
+        pts_ = [{"t": 0, "v": base}]
         segs = []
         for v in vo:
             s0, s1 = v["start"] - 0.3, v["start"] + v["dur"] + 0.45

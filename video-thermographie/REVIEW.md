@@ -1,5 +1,15 @@
 # REVIEW
 
+## Passage 10 — fiches anomalie, niveau de la musique
+- « Défaut » devient « Anomalie » sur les fiches et dans le rapport (titre « Chaque anomalie est localisée et qualifiée. »,
+  « Gravité des anomalies », « 7 anomalies », « 0 / 7 résolues »). La voix off dit toujours « chaque défaut » : à
+  régénérer dans FLORA si le mot doit changer aussi. Le terme « Défauts invisibles » de la scène 2 (texte imposé par le
+  cahier des charges) et les légendes des graphiques du client (« Avec défauts ») sont conservés.
+- Fiche anomalie remise en page : en-tête (numéro + catégorie), filet, type en gras et signature thermique en gris,
+  ΔT et MaxT dans deux cases (libellé gris, valeur en gras), action dans un encadré pêche bordé d'orange.
+  Vignette légèrement réduite et centrée (500 / 420 / 360 px selon le format) pour laisser respirer la fiche.
+- Musique : 0,85 (−1,4 dB) sur toute la vidéo, 0,28 (−11 dB au lieu de −8 dB) sous la voix.
+
 ## Passage 9 — musique dynamique, fin sur le site et LinkedIn
 - Musique entièrement recomposée (`tools/music.py`) : électro-pop entraînante, 100 BPM (toutes les coupes tombent sur un
   temps et chaque scène démarre sur un temps fort), mi mineur / sol majeur. Intro à l'arpège filtré, grosse caisse à la

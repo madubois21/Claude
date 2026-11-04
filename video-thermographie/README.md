@@ -18,8 +18,8 @@ Réalisée avec [HyperFrames](https://hyperframes.heygen.com) : HTML + SVG + GSA
 | Capture du site, logo LinkedIn | `assets/images/site-flyscanair.jpg` ; logo LinkedIn : icône Font Awesome Free (CC BY 4.0, `assets/images/LICENSE-fontawesome.txt`) |
 | Fiche technique | `SPEC.md` ; note de revue : `REVIEW.md` |
 
-Voix off en français (10 phrases, voix masculine grave « Umbriel ») ; la musique s’efface sous la voix (−10 dB) et
-remonte dans les silences. Les textes à l’écran portent toujours le message seuls, pour la lecture sans le son sur LinkedIn.
+Voix off en français (10 phrases, voix masculine grave « Umbriel ») ; la musique, à 0,85 (−1,4 dB), s’efface sous la voix
+(0,28, soit −11 dB) et remonte dans les silences. Les textes à l’écran portent toujours le message seuls, pour la lecture sans le son sur LinkedIn.
 
 | Scène | Voix off |
 | --- | --- |
@@ -39,7 +39,7 @@ remonte dans les silences. Les textes à l’écran portent toujours le message 
 | 2 — Les risques | `compositions/s2.html` | 7,2 – 13,8 s | graphique « Rendement (%) » (installation saine vs avec défauts), icônes incendie + assurance |
 | 3 — Inspection drone | `compositions/s3.html` | 13,8 – 20,4 s | champ de panneaux, drone schématique + HUD, balayage thermique rapide (1,5 s) |
 | 4 — Détection | `compositions/s4.html` | 20,4 – 27,6 s | zoom sur le module thermique (48 cellules) : point chaud (cellule fissurée), sous-chaîne échauffée (diode by-pass), boîte de jonction ; désignés par des lignes de rappel |
-| 5 — Rapport | `compositions/s5.html` | 27,6 – 43,2 s | trois pages : analyse détaillée (fiches défaut n°1 et n°2, vignette thermique avec cadre de détection, plan de localisation du module) ; résultats et gravité (+ histogramme production) ; couverture « Rapport d’inspection thermique » avec tampon « Conforme IEC TS 62446-3 » et checklist |
+| 5 — Rapport | `compositions/s5.html` | 27,6 – 43,2 s | trois pages : analyse détaillée (fiches anomalie n°1 et n°2 : type, signature, ΔT / MaxT, action ; vignette thermique avec cadre de détection ; plan de localisation du module) ; résultats et gravité (+ histogramme production) ; couverture « Rapport d’inspection thermique » avec tampon « Conforme IEC TS 62446-3 » et checklist |
 | 6 — Plateforme en ligne | `compositions/s6.html` | 43,2 – 49,8 s | le rapport rejoint la plateforme : plan thermique, rapports, planning des inspections à venir — « Bientôt disponible » |
 | 7 — Fin | `compositions/s7.html` | 49,8 – 60 s | logo, slogan, message, puis site web (capture animée) + LinkedIn (linkedin.com/company/fly-scan-air) + coordonnées, tenus à l’écran jusqu’à la fin (≈ 4,8 s) |
 
