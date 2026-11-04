@@ -1,5 +1,15 @@
 # REVIEW
 
+## Passage 11 — fiches au format des rapports, icônes Phosphor
+- Fiches défaut sur le modèle des rapports Fly Scan'Air (exemples fournis) : titre « Défaut #1 » en couleur, filet
+  vertical à gauche, libellés en gras (Catégorie [pastille], Statut [« À traiter »], Type, ΔT | MaxT), séparateur,
+  puis Origine, Action et Note en italique. Couleurs Fly Scan'Air (orange au lieu du bleu du rapport type), valeurs
+  illustratives. En 16:9 la fiche est à droite de la page, en 9:16 sous la page, en 1:1 à droite (champs empilés).
+- La page « Analyse détaillée » garde la vignette thermique (cadre de détection) et reçoit le plan de localisation.
+- Retour à « défaut » partout (titre « Chaque défaut est localisé et qualifié. », « défauts détectés », etc.).
+- S2 : icônes Phosphor (licence MIT) « fire » et « shield-check », graisse regular ; intérieur de la flamme et coche en
+  orange ; la flamme monte, le bouclier apparaît, la coche se trace.
+
 ## Passage 10 — fiches anomalie, niveau de la musique
 - « Défaut » devient « Anomalie » sur les fiches et dans le rapport (titre « Chaque anomalie est localisée et qualifiée. »,
   « Gravité des anomalies », « 7 anomalies », « 0 / 7 résolues »). La voix off dit toujours « chaque défaut » : à

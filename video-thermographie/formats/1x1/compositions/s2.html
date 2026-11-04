@@ -15,7 +15,7 @@
     #root .term { color: #D4D4D8; }
     #root .sq { display: inline-block; width: 14px; height: 14px; background: #FF5700; margin: 0 28px; }
     #root .tick text { font-family: "Comfortaa", sans-serif; font-weight: 600; font-size: 28px; fill: #6B6B70; }
-    #root #s2-end0, #root #s2-end1, #root #s2-flamei, #root #s2-grid, #root #s2-yt, #root #s2-xt { opacity: 0; }
+    #root #s2-end0, #root #s2-end1, #root #s2-grid, #root #s2-yt, #root #s2-xt { opacity: 0; }
     #root .head { flex-direction: column; align-items: flex-start; }
     #root .hrow { display: flex; align-items: center; line-height: 1.45; }
     #root .hrow .sq { margin: 0 22px 0 0; }
@@ -62,14 +62,7 @@
     <div class="box" data-layout-allow-overflow style="position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; transform-origin: 0 0; transform: translate(-317.6px, -238.4px) scale(0.72)">
     <svg class="world" viewBox="0 0 1920 1080" width="1920" height="1080">
       <g fill="none" stroke="#111111" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-        <g transform="translate(1430 590)" stroke-width="6">
-          <path id="s2-flame" stroke-dashoffset="1.05" class="d" pathLength="1" d="M0 -110 C20 -70 75 -45 75 25 C75 75 42 105 0 105 C-42 105 -75 75 -75 25 C-75 -20 -40 -40 -30 -75 C-10 -45 0 -30 5 -10 C20 -40 15 -80 0 -110 Z"/>
-          <path id="s2-flamei" d="M0 28 C18 44 30 60 30 76 C30 93 17 104 0 104 C-17 104 -30 93 -30 76 C-30 58 -14 46 0 28 Z" fill="#FF5700" stroke="none"/>
-        </g>
-        <g transform="translate(1705 590)" stroke-width="6">
-          <path id="s2-shield" stroke-dashoffset="1.05" class="d" pathLength="1" d="M0 -112 L86 -82 L86 0 C86 60 46 96 0 116 C-46 96 -86 60 -86 0 L-86 -82 Z"/>
-          <path id="s2-check" stroke-dashoffset="1.05" class="d" pathLength="1" d="M-36 2 L-8 30 L40 -24" stroke-width="7"/>
-        </g>
+        <g transform="translate(1314.8 477.5) scale(0.9)" stroke="none"><clipPath id="s2-fclip"><rect id="s2-fclipr" x="0" y="256" width="256" height="0"/></clipPath><g clip-path="url(#s2-fclip)"><path id="s2-flamei" d="M208,144a80,80,0,0,1-160,0c0-30.57,14.42-58.26,31-80l33,32,26.27-72C159.86,41.92,208,88.15,208,144Z" fill="#FF5700" fill-opacity="0.3"/><path id="s2-flame" d="M216,144a88,88,0,0,1-176,0c0-27.92,11-56.47,32.66-84.85a8,8,0,0,1,11.93-.89l24.12,23.41,22-60.41a8,8,0,0,1,12.63-3.41C165.21,36,216,84.55,216,144Zm-16,0c0-46.09-35.79-85.92-58.21-106.33L119.52,98.74a8,8,0,0,1-13.09,3L80.06,76.16C64.09,99.21,56,122,56,144a72,72,0,0,0,144,0Z" fill="#111111"/><path id="s2-flamec" d="M183.89,153.34a57.6,57.6,0,0,1-46.56,46.55A8.75,8.75,0,0,1,136,200a8,8,0,0,1-1.32-15.89c16.57-2.79,30.63-16.85,33.44-33.45a8,8,0,0,1,15.78,2.68Z" fill="#FF5700"/></g></g><g transform="translate(1589.8 464) scale(0.9)" stroke="none"><g id="s2-shieldg"><path d="M216,56v56c0,96-88,120-88,120S40,208,40,112V56a8,8,0,0,1,8-8H208A8,8,0,0,1,216,56Z" fill="#FF5700" fill-opacity="0.1"/><path id="s2-shield" d="M208,40H48A16,16,0,0,0,32,56v56c0,52.72,25.52,84.67,46.93,102.19,23.06,18.86,46,25.26,47,25.53a8,8,0,0,0,4.2,0c1-.27,23.91-6.67,47-25.53C198.48,196.67,224,164.72,224,112V56A16,16,0,0,0,208,40Zm0,72c0,37.07-13.66,67.16-40.6,89.42A129.3,129.3,0,0,1,128,223.62a128.25,128.25,0,0,1-38.92-21.81C61.82,179.51,48,149.3,48,112l0-56,160,0Z" fill="#111111"/><clipPath id="s2-cclip"><rect id="s2-cclipr" x="78" y="90" width="0" height="84"/></clipPath><path id="s2-check" d="M82.34,141.66a8,8,0,0,1,11.32-11.32L112,148.69l50.34-50.35a8,8,0,0,1,11.32,11.32l-56,56a8,8,0,0,1-11.32,0Z" fill="#FF5700" clip-path="url(#s2-cclip)"/></g></g>
       </g>
     </svg>
     <div id="s2-lab-f" class="label ilab" style="left: 1300px; top: 735px; width: 260px; text-align: center">Incendie</div>
@@ -164,13 +157,13 @@
       blurIn(2.2, [$("#s2-lab-s0"), $("#s2-lab-s1")], 0.18, 0.12);
       tl.fromTo($("#s2-t1"), { color: "#D4D4D8" }, { color: "#111111", duration: 0.3 }, 1.9);
       // 3. icône incendie
-      draw(2.6, $("#s2-flame"), 0.8);
-      fadeIn(3.1, $("#s2-flamei"), 0.4);
+      tl.fromTo($("#s2-fclipr"), { attr: { y: 256, height: 0 } }, { attr: { y: 0, height: 256 }, duration: 0.7, ease: "power2.out" }, 2.6);
+      tl.fromTo($("#s2-flamec"), { opacity: 0 }, { opacity: 1, duration: 0.3 }, 3.1);
       blurIn(3.1, $("#s2-lab-f"), 0.2);
       tl.fromTo($("#s2-t2"), { color: "#D4D4D8" }, { color: "#111111", duration: 0.3 }, 3.0);
       // 4. icône assurance
-      draw(3.4, $("#s2-shield"), 0.8);
-      draw(4.05, $("#s2-check"), 0.3, "power2.out");
+      tl.fromTo($("#s2-shieldg"), { opacity: 0, scale: 0.8, transformOrigin: "50% 50%" }, { opacity: 1, scale: 1, duration: 0.5, ease: "back.out(1.6)" }, 3.4);
+      tl.fromTo($("#s2-cclipr"), { attr: { width: 0 } }, { attr: { width: 100 }, duration: 0.35, ease: "power2.out" }, 4.05);
       blurIn(3.9, $("#s2-lab-s"), 0.2);
       tl.fromTo($("#s2-t3"), { color: "#D4D4D8" }, { color: "#111111", duration: 0.3 }, 3.85);
       // 5. sortie : flou + fondu

@@ -433,8 +433,7 @@ S4_START_VB = (S4X - HAND[0] / k4, S4Y - HAND[1] / k4, W / k4, H / k4)
 SETTLE = L["s4_settle"] if L else (S4X, S4Y, S4PW)  # panneau posé en S4
 ks = SETTLE[2] / S4PW
 S4_SETTLE_VB = (S4X - SETTLE[0] / ks, S4Y - SETTLE[1] / ks, W / ks, H / ks)
-THUMB_W = {"16x9": 500, "9x16": 420, "1x1": 360}[FMT]  # vignette du rapport : place pour la fiche en dessous
-THUMB = (260 + (520 - THUMB_W) / 2, 200, THUMB_W)  # x, y, largeur (scène de référence), centrée dans la page
+THUMB = (260, 200, 520)  # x, y, largeur de la vignette du rapport (scène de référence)
 k5 = THUMB[2] / S4PW
 THUMB_LOCAL_VB = (S4X - THUMB[0] / k5, S4Y - THUMB[1] / k5, SW / k5, SH / k5)
 if L:  # vignette vue à l'écran à travers la boîte du rapport
@@ -670,6 +669,40 @@ S2_SAINE = [(0, 98.2), (1, 97.9), (2, 97.4), (3, 96.6), (4, 96.3), (5, 96.0), (5
 S2_DEFAUT = [(0, 98.2), (1, 96.6), (2, 94.0), (3, 90.0), (4, 86.7), (5, 85.4), (5.4, 85.2)]
 
 
+# Icônes Phosphor (phosphoricons.com, licence MIT, assets/images/LICENSE-phosphor.txt), graisse « regular »,
+# repère 256 x 256 ; « fire » et « shield-check », découpées en sous-tracés pour animer l'intérieur et la coche.
+PH_FIRE_BG = "M208,144a80,80,0,0,1-160,0c0-30.57,14.42-58.26,31-80l33,32,26.27-72C159.86,41.92,208,88.15,208,144Z"  # duotone
+PH_FIRE_CURL = "M183.89,153.34a57.6,57.6,0,0,1-46.56,46.55A8.75,8.75,0,0,1,136,200a8,8,0,0,1-1.32-15.89c16.57-2.79,30.63-16.85,33.44-33.45a8,8,0,0,1,15.78,2.68Z"
+PH_FIRE = ("M216,144a88,88,0,0,1-176,0c0-27.92,11-56.47,32.66-84.85a8,8,0,0,1,11.93-.89l24.12,23.41,22-60.41a8,8,0,0,1,12.63-3.41"
+           "C165.21,36,216,84.55,216,144Zm-16,0c0-46.09-35.79-85.92-58.21-106.33L119.52,98.74a8,8,0,0,1-13.09,3L80.06,76.16"
+           "C64.09,99.21,56,122,56,144a72,72,0,0,0,144,0Z")
+PH_SHIELD_BG = "M216,56v56c0,96-88,120-88,120S40,208,40,112V56a8,8,0,0,1,8-8H208A8,8,0,0,1,216,56Z"  # duotone
+PH_SHIELD = ("M208,40H48A16,16,0,0,0,32,56v56c0,52.72,25.52,84.67,46.93,102.19,23.06,18.86,46,25.26,47,25.53a8,8,0,0,0,4.2,0"
+             "c1-.27,23.91-6.67,47-25.53C198.48,196.67,224,164.72,224,112V56A16,16,0,0,0,208,40Zm0,72c0,37.07-13.66,67.16-40.6,89.42"
+             "A129.3,129.3,0,0,1,128,223.62a128.25,128.25,0,0,1-38.92-21.81C61.82,179.51,48,149.3,48,112l0-56,160,0Z")
+PH_CHECK = "M82.34,141.66a8,8,0,0,1,11.32-11.32L112,148.69l50.34-50.35a8,8,0,0,1,11.32,11.32l-56,56a8,8,0,0,1-11.32,0Z"
+PH_S = 0.9  # 256 -> 230 px
+
+
+def s2_icons(FX, SX, IY):
+    """Incendie (flamme Phosphor, intérieur orange) et assurance (bouclier Phosphor, coche orange)."""
+    fx, fy = FX - 128 * PH_S, IY - 125 * PH_S
+    sx, sy = SX - 128 * PH_S, IY - 140 * PH_S
+    return (
+        f'<g transform="translate({n(fx)} {n(fy)}) scale({PH_S})" stroke="none">'
+        '<clipPath id="s2-fclip"><rect id="s2-fclipr" x="0" y="256" width="256" height="0"/></clipPath>'
+        '<g clip-path="url(#s2-fclip)">'
+        f'<path id="s2-flamei" d="{PH_FIRE_BG}" fill="{ACC}" fill-opacity="0.3"/>'
+        f'<path id="s2-flame" d="{PH_FIRE}" fill="{INK}"/>'
+        f'<path id="s2-flamec" d="{PH_FIRE_CURL}" fill="{ACC}"/></g></g>'
+        f'<g transform="translate({n(sx)} {n(sy)}) scale({PH_S})" stroke="none"><g id="s2-shieldg">'
+        f'<path d="{PH_SHIELD_BG}" fill="{ACC}" fill-opacity="0.1"/>'
+        f'<path id="s2-shield" d="{PH_SHIELD}" fill="{INK}"/>'
+        '<clipPath id="s2-cclip"><rect id="s2-cclipr" x="78" y="90" width="0" height="84"/></clipPath>'
+        f'<path id="s2-check" d="{PH_CHECK}" fill="{ACC}" clip-path="url(#s2-cclip)"/></g></g>'
+    )
+
+
 def s2_xy(m, v):
     return S2_X0 + m * S2_DX, S2_Y0 - (v - 80) * S2_DY
 
@@ -717,14 +750,7 @@ def build_s2():
         <polyline id="s2-ya" class="d" pathLength="1" points="{S2_X0 - 9},{ax_y1 + 12} {S2_X0},{ax_y1} {S2_X0 + 9},{ax_y1 + 12}"/>
         <path id="s2-saine" class="d" pathLength="1" d="{p_saine}" stroke="#A1A1AA" stroke-width="4"/>
         <path id="s2-defaut" class="d" pathLength="1" d="{p_defaut}" stroke="{ACC}" stroke-width="4.5"/>
-        <g transform="translate({FX} {IY})" stroke-width="6">
-          <path id="s2-flame" class="d" pathLength="1" d="{flame_o}"/>
-          <path id="s2-flamei" d="{flame_i}" fill="{ACC}" stroke="none"/>
-        </g>
-        <g transform="translate({SX} {IY})" stroke-width="6">
-          <path id="s2-shield" class="d" pathLength="1" d="{shield}"/>
-          <path id="s2-check" class="d" pathLength="1" d="{check}" stroke-width="7"/>
-        </g>
+        {s2_icons(FX, SX, IY)}
       </g>
       <circle id="s2-end0" cx="{n(gs[0])}" cy="{n(gs[1])}" r="9" fill="#FFFFFF" stroke="#A1A1AA" stroke-width="3.5"/>
       <circle id="s2-end1" cx="{n(gd[0])}" cy="{n(gd[1])}" r="9" fill="#FFFFFF" stroke="{ACC}" stroke-width="3.5"/>
@@ -778,14 +804,7 @@ def build_s2():
     <div id="s2-lab-s1" class="label" style="left: {n(xend + 22)}px; top: {n(gd[1] - 24)}px; color: #111111">Avec défauts</div>"""
         icons = f"""    <svg class="world" viewBox="0 0 {SW} {SH}" width="{SW}" height="{SH}">
       <g fill="none" stroke="{INK}" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-        <g transform="translate({FX} {IY})" stroke-width="6">
-          <path id="s2-flame" class="d" pathLength="1" d="{flame_o}"/>
-          <path id="s2-flamei" d="{flame_i}" fill="{ACC}" stroke="none"/>
-        </g>
-        <g transform="translate({SX} {IY})" stroke-width="6">
-          <path id="s2-shield" class="d" pathLength="1" d="{shield}"/>
-          <path id="s2-check" class="d" pathLength="1" d="{check}" stroke-width="7"/>
-        </g>
+        {s2_icons(FX, SX, IY)}
       </g>
     </svg>
     <div id="s2-lab-f" class="label ilab" style="left: {FX - 130}px; top: 735px; width: 260px; text-align: center">Incendie</div>
@@ -804,7 +823,7 @@ def build_s2():
     #root .term { color: #D4D4D8; }
     #root .sq { display: inline-block; width: 14px; height: 14px; background: #FF5700; margin: 0 28px; }
     #root .tick text { font-family: "Comfortaa", sans-serif; font-weight: 600; font-size: 28px; fill: #6B6B70; }
-    #root #s2-end0, #root #s2-end1, #root #s2-flamei, #root #s2-grid, #root #s2-yt, #root #s2-xt { opacity: 0; }"""
+    #root #s2-end0, #root #s2-end1, #root #s2-grid, #root #s2-yt, #root #s2-xt { opacity: 0; }"""
     if L:
         fs = L["s2_fs"]
         css += f"""
@@ -835,13 +854,13 @@ def build_s2():
       blurIn(2.2, [$("#s2-lab-s0"), $("#s2-lab-s1")], 0.18, 0.12);
       tl.fromTo($("#s2-t1"), { color: "#D4D4D8" }, { color: "#111111", duration: 0.3 }, 1.9);
       // 3. icône incendie
-      draw(2.6, $("#s2-flame"), 0.8);
-      fadeIn(3.1, $("#s2-flamei"), 0.4);
+      tl.fromTo($("#s2-fclipr"), { attr: { y: 256, height: 0 } }, { attr: { y: 0, height: 256 }, duration: 0.7, ease: "power2.out" }, 2.6);
+      tl.fromTo($("#s2-flamec"), { opacity: 0 }, { opacity: 1, duration: 0.3 }, 3.1);
       blurIn(3.1, $("#s2-lab-f"), 0.2);
       tl.fromTo($("#s2-t2"), { color: "#D4D4D8" }, { color: "#111111", duration: 0.3 }, 3.0);
       // 4. icône assurance
-      draw(3.4, $("#s2-shield"), 0.8);
-      draw(4.05, $("#s2-check"), 0.3, "power2.out");
+      tl.fromTo($("#s2-shieldg"), { opacity: 0, scale: 0.8, transformOrigin: "50% 50%" }, { opacity: 1, scale: 1, duration: 0.5, ease: "back.out(1.6)" }, 3.4);
+      tl.fromTo($("#s2-cclipr"), { attr: { width: 0 } }, { attr: { width: 100 }, duration: 0.35, ease: "power2.out" }, 4.05);
       blurIn(3.9, $("#s2-lab-s"), 0.2);
       tl.fromTo($("#s2-t3"), { color: "#D4D4D8" }, { color: "#111111", duration: 0.3 }, 3.85);
       // 5. sortie : flou + fondu
@@ -1167,51 +1186,98 @@ def mini_logo(x, y, sc, prefix):
     )
 
 
-def s5_card(k, pfs, num, cat, cat_fill, cat_ink, typ, sig, dt, mx, act):
-    """Fiche d'une anomalie (page « Analyse détaillée »), sous la vignette : lisible d'un coup d'œil.
-    En-tête (numéro + catégorie) / type en gras et signature thermique / ΔT et MaxT dans deux cases / action encadrée."""
-    x0, x1 = 260, 780
-    hf, tf = pfs + 6, pfs + 2  # en-tête, type
-    lh = 1.25
-    y_head = THUMB[1] + THUMB[2] * S4PH / S4PW + 0.5 * pfs
-    y_rule = y_head + hf * lh + 0.35 * pfs
-    y_type = y_rule + 0.45 * pfs
-    y_sig = y_type + tf * lh
-    y_tile = y_sig + pfs * lh + 0.5 * pfs
-    tile_h = pfs * lh + hf * lh + 0.5 * pfs
-    y_act = y_tile + tile_h + 0.45 * pfs
-    act_h = pfs * lh + 0.6 * pfs
-    assert y_act + act_h <= 936, f"fiche trop haute ({y_act + act_h:.0f})"
-    bw = max(140, 4.3 * pfs)
-    bh = pfs + 16
-    yc = y_head + hf * lh / 2
-    tw = (x1 - x0 - 20) / 2
-    shapes = (
-        f'<line x1="{x0}" y1="{n(y_rule)}" x2="{x1}" y2="{n(y_rule)}" stroke="#E4E4E7" stroke-width="2"/>'
-        + "".join(f'<rect x="{n(x)}" y="{n(y_tile)}" width="{n(tw)}" height="{n(tile_h)}" rx="10" fill="#FFFFFF" stroke="#E4E4E7" stroke-width="2"/>'
-                  for x in (x0, x0 + tw + 20))
-        + f'<rect x="{x0}" y="{n(y_act)}" width="{x1 - x0}" height="{n(act_h)}" rx="10" fill="#FFF1E8"/>'
-        + f'<rect x="{x0}" y="{n(y_act)}" width="6" height="{n(act_h)}" rx="3" fill="{ACC}"/>'
-        + f'<g id="s5-badge{k}"><rect x="{n(x1 - bw)}" y="{n(yc - bh / 2)}" width="{n(bw)}" height="{n(bh)}" rx="8" fill="{cat_fill}"/>'
-        f'<text class="pg b" x="{n(x1 - bw / 2)}" y="{n(yc + 0.36 * pfs)}" text-anchor="middle" font-size="{pfs}" fill="{cat_ink}">{cat}</text></g>'
-    )
-    pad = 0.45 * pfs
-    rows = [
-        (x0, y_head, f"b; font-size: {hf}px", num),
-        (x0, y_type, f"b; font-size: {tf}px", typ),
-        (x0, y_sig, "grey", sig),
-        (x0 + pad, y_tile + 0.25 * pfs, "grey", "ΔT"),
-        (x0 + pad, y_tile + 0.25 * pfs + pfs * lh, f"b; font-size: {hf}px", dt),
-        (x0 + tw + 20 + pad, y_tile + 0.25 * pfs, "grey", "MaxT"),
-        (x0 + tw + 20 + pad, y_tile + 0.25 * pfs + pfs * lh, f"b; font-size: {hf}px", mx),
-        (x0 + 0.6 * pfs, y_act + 0.3 * pfs, "", f'<span class="acc">→</span> {act}'),
-    ]
-    out = [f'<svg class="world s5-f{k}" viewBox="0 0 {SW} {SH}" width="{SW}" height="{SH}">{shapes}</svg>']
-    for x, y, style, html in rows:
-        cls, _, extra = style.partition(";")
-        cls = f" {cls}" if cls else ""
-        out.insert(0 if html == num else len(out), f'<div class="pgt s5-f{k}{cls}" style="left: {n(x)}px; top: {n(y)}px;{extra}">{html}</div>')
-    return "\n      ".join(out)
+S5_CARD = {  # fiche défaut, en coordonnées écran : x, y, largeur, corps du texte, champs empilés (format étroit)
+    "16x9": (980, 352, 820, 30, False),
+    "9x16": (108, 1212, 864, 32, False),
+    "1x1": (510, 292, 545, 28, True),
+}[FMT]
+S5_DEFAUTS = [  # valeurs illustratives (aucune donnée du rapport type)
+    dict(num="Défaut #1", cat=4, cat_fill="#FF8A4C", cat_ink="#111111", statut="À traiter", type="Point chaud",
+         dt="11,2 °C", mx="58 °C", origine="Cellule fissurée", action="Contrôle électrique", note="Échauffement localisé"),
+    dict(num="Défaut #2", cat=5, cat_fill=ACC, cat_ink="#FFFFFF", statut="À traiter", type="Diode by-pass",
+         dt="7,8 °C", mx="54 °C", origine="Diode défectueuse", action="Remplacer la diode", note="Échauffement linéaire"),
+]
+
+
+def s5_plan(pfs):
+    """Plan de localisation (page « Analyse détaillée », sous la vignette) : 7 x 3 modules, module concerné en orange."""
+    lab_y = 612
+    tick_y = lab_y + pfs * 1.25 + pfs * 0.95
+    px0 = 260 + pfs * 1.1
+    gx_, gy_ = 8, 8
+    mw = (780 - px0 - 6 * gx_) / 7
+    mh = mw * 0.62
+    py0 = tick_y + pfs * 0.4
+    mods, ticks = [], []
+    for r_ in range(ROWS):
+        for c_ in range(COLS):
+            if (r_, c_) == HERO:
+                continue
+            fill = "#FFD2BC" if (r_, c_) in ANOM else PANEL
+            mods.append(f'<rect class="s5-pm" x="{n(px0 + c_ * (mw + gx_))}" y="{n(py0 + r_ * (mh + gy_))}" width="{n(mw)}" height="{n(mh)}" rx="4" fill="{fill}" stroke="{INK}" stroke-width="1.5"/>')
+    hx_, hy_ = px0 + HERO[1] * (mw + gx_), py0 + HERO[0] * (mh + gy_)
+    hero = f'<g id="s5-ph"><rect x="{n(hx_)}" y="{n(hy_)}" width="{n(mw)}" height="{n(mh)}" rx="4" fill="{ACC}" stroke="{INK}" stroke-width="1.5"/></g>'
+    for r_ in range(ROWS):
+        ticks.append(f'<text class="pg" x="262" y="{n(py0 + r_ * (mh + gy_) + mh / 2 + pfs * 0.36)}" font-size="{pfs}" fill="#6B6B70">{"ABC"[r_]}</text>')
+    for c_ in range(COLS):
+        ticks.append(f'<text class="pg" x="{n(px0 + c_ * (mw + gx_) + mw / 2)}" y="{n(tick_y)}" text-anchor="middle" font-size="{pfs}" fill="#6B6B70">{c_ + 1}</text>')
+    cap_y = py0 + 3 * mh + 2 * gy_ + pfs * 0.35
+    return (f'<div id="s5-plan-lab" class="pgt grey" style="left: 260px; top: {n(lab_y)}px">Localisation</div>\n'
+            f'      <svg id="s5-plan" class="world" viewBox="0 0 {SW} {SH}" width="{SW}" height="{SH}"><g id="s5-pticks">{"".join(ticks)}</g>{"".join(mods)}{hero}</svg>\n'
+            f'      <div id="s5-plan-cap" class="pgt" style="left: {n(px0)}px; top: {n(cap_y)}px">Rangée B · module 5</div>')
+
+
+def s5_card(k, d):
+    """Fiche d'un défaut, mise en page des rapports Fly Scan'Air : titre en couleur, filet vertical à gauche,
+    libellés en gras (Catégorie, Statut, Type, ΔT, MaxT), séparateur, puis Origine / Action / Note en italique."""
+    x0, y0, w, f, stacked = S5_CARD
+    rh = f * 1.9  # hauteur d'une ligne
+    lx = x0 + 30  # libellés
+    vx = lx + f * 6.4  # valeurs (après « Catégorie : »)
+    x2 = x0 + w * 0.53  # deuxième colonne (Statut, MaxT)
+    vx2 = x2 + f * 4.6
+    yb = y0 + f * 1.45 * 1.2 + f * 0.55
+    rows = []  # (y, [(x, kind, texte)])
+    y = yb
+    badge = ("badge", str(d["cat"]))
+    pill = ("pill", d["statut"])
+    if stacked:
+        lines = [[("Catégorie :", badge)], [("Statut :", pill)], [("Type :", ("v", d["type"]))],
+                 [("ΔT :", ("v", d["dt"]))], [("MaxT :", ("v", d["mx"]))], "rule",
+                 [("Origine :", ("it", d["origine"]))], [("Action :", ("it", d["action"]))], [("Note :", ("it", d["note"]))]]
+    else:
+        lines = [[("Catégorie :", badge), ("Statut :", pill)], [("Type :", ("v", d["type"]))],
+                 [("ΔT :", ("v", d["dt"])), ("MaxT :", ("v", d["mx"]))], "rule",
+                 [("Origine :", ("it", d["origine"]))], [("Action :", ("it", d["action"]))], [("Note :", ("it", d["note"]))]]
+    html, shapes = [], []
+    cls = f"s5-c{k}"
+    html.append(f'<div class="rct {cls}" style="left: {n(x0)}px; top: {n(y0)}px; font-size: {n(f * 1.45)}px">{d["num"]}</div>')
+    for line in lines:
+        if line == "rule":
+            shapes.append(f'<line x1="{n(lx)}" y1="{n(y + rh * 0.3)}" x2="{n(x0 + w)}" y2="{n(y + rh * 0.3)}" stroke="#D4D4D8" stroke-width="2"/>')
+            y += rh * 0.6
+            continue
+        ty = y + (rh - f * 1.25) / 2
+        for col, (lab, (kind, val)) in enumerate(line):
+            lxx, vxx = (lx, vx) if col == 0 else (x2, vx2)
+            html.append(f'<div class="rcl {cls}" style="left: {n(lxx)}px; top: {n(ty)}px; font-size: {f}px">{lab}</div>')
+            if kind == "badge":
+                b = f * 1.5
+                shapes.append(f'<g id="s5-badge{k}"><rect x="{n(vxx)}" y="{n(y + (rh - b) / 2)}" width="{n(b)}" height="{n(b)}" rx="7" fill="{d["cat_fill"]}"/>'
+                              f'<text class="pg b" x="{n(vxx + b / 2)}" y="{n(y + rh / 2 + f * 0.36)}" text-anchor="middle" font-size="{f}" fill="{d["cat_ink"]}">{val}</text></g>')
+            elif kind == "pill":
+                ph, pw = f * 1.45, len(val) * f * 0.6 + f * 1.1
+                shapes.append(f'<rect x="{n(vxx)}" y="{n(y + (rh - ph) / 2)}" width="{n(pw)}" height="{n(ph)}" rx="{n(ph / 2)}" fill="#FFD2BC"/>'
+                              f'<text class="pg" x="{n(vxx + pw / 2)}" y="{n(y + rh / 2 + f * 0.36)}" text-anchor="middle" font-size="{f}" fill="#111111" font-weight="600">{val}</text>')
+            else:
+                it = " it" if kind == "it" else ""
+                html.append(f'<div class="rcv{it} {cls}" style="left: {n(vxx)}px; top: {n(ty)}px; font-size: {f}px">{val}</div>')
+        if len(line) == 2 and line[1][1][0] == "v":  # séparateur vertical entre ΔT et MaxT
+            shapes.append(f'<line x1="{n(x2 - f * 0.9)}" y1="{n(y + rh * 0.22)}" x2="{n(x2 - f * 0.9)}" y2="{n(y + rh * 0.78)}" stroke="#A1A1AA" stroke-width="2"/>')
+        y += rh
+    shapes.insert(0, f'<line x1="{n(x0 + 4)}" y1="{n(yb)}" x2="{n(x0 + 4)}" y2="{n(y)}" stroke="#D4D4D8" stroke-width="3"/>')
+    svg = f'<svg class="world {cls}" viewBox="0 0 {W} {H}" width="{W}" height="{H}"{CANVAS}>{"".join(shapes)}</svg>'
+    return "\n    ".join([html[0], svg] + html[1:])
 
 
 def build_s5():
@@ -1230,8 +1296,7 @@ def build_s5():
         <rect id="s5-bbox" x="{n(BOX1[0])}" y="{n(BOX1[1])}" width="{n(BOX1[2])}" height="{n(BOX1[3])}" rx="6" fill="none" stroke="{ACC}" stroke-width="3"/>
       </svg>
       <div class="dochead" style="left: 260px; top: 128px">Analyse détaillée</div>
-      {s5_card(1, pfs, "Anomalie n°1", "Cat. 4", "#FF8A4C", "#111111", "Point chaud (hot-spot)", "cellule fissurée", "11,2 °C", "58 °C", "Contrôle électrique")}
-      {s5_card(2, pfs, "Anomalie n°2", "Cat. 5", ACC, "#FFFFFF", "Diode by-pass", "échauffement linéaire", "7,8 °C", "54 °C", "Remplacer la diode")}
+      {s5_plan(pfs)}
       </div>"""
     # ---- page 2 : résultats + gravité
     cards, swatches, bars = [], [], []
@@ -1251,10 +1316,10 @@ def build_s5():
       <div id="s5-n0" class="num" style="left: 260px; top: 202px">0</div>
       <div id="s5-n1" class="num" style="left: 260px; top: 256px">0</div>
       <div id="s5-n2" class="num" style="left: 260px; top: 310px">0 / 7</div>
-      <div class="pgt s5-cardl" style="left: 410px; top: {230 - pfs * 0.62:.0f}px">anomalies</div>
+      <div class="pgt s5-cardl" style="left: 410px; top: {230 - pfs * 0.62:.0f}px">défauts détectés</div>
       <div class="pgt s5-cardl" style="left: 410px; top: {284 - pfs * 0.62:.0f}px">modules impactés</div>
-      <div class="pgt s5-cardl" style="left: 410px; top: {338 - pfs * 0.62:.0f}px">résolues</div>
-      <div id="s5-sub" class="pgt b" style="left: 260px; top: {400 - pfs:.0f}px">Gravité des anomalies</div>
+      <div class="pgt s5-cardl" style="left: 410px; top: {338 - pfs * 0.62:.0f}px">défauts résolus</div>
+      <div id="s5-sub" class="pgt b" style="left: 260px; top: {400 - pfs:.0f}px">Gravité des défauts</div>
       {"".join(rows_html)}
       </div>"""
     # ---- page 3 : couverture + tampon de conformité
@@ -1310,30 +1375,6 @@ def build_s5():
             f'fill="{col}" data-top="{n(S5_AY - h)}" data-h="{n(h + 12)}"/>'
         )
         cats.append(f'<div id="s5-cat{i}" class="cat" style="left: {cx - 170}px; top: {S5_AY + 18}px">{name.replace("|", "<br />")}</div>')
-    # plan de localisation (page 1) : champ de 7 x 3 modules, module concerné en orange
-    impacted = set(ANOM)
-    bfs = L["s5_fs"]["tick"] if L else 28  # repère du module, lisible dans chaque format
-    mw, mh, gx_, gy_, px0, py0 = 96, 66, 10, 14, 1050, 452
-    plan = []
-    for r_ in range(ROWS):
-        for c_ in range(COLS):
-            x_, y_ = px0 + c_ * (mw + gx_), py0 + r_ * (mh + gy_)
-            if (r_, c_) == HERO:
-                continue
-            fill = "#FFD2BC" if (r_, c_) in impacted else PANEL
-            plan.append(f'<rect class="s5-pm" x="{x_}" y="{y_}" width="{mw}" height="{mh}" rx="4" fill="{fill}" stroke="{INK}" stroke-width="1.5"/>')
-    hx_, hy_ = px0 + HERO[1] * (mw + gx_), py0 + HERO[0] * (mh + gy_)
-    plan_hero = (f'<g id="s5-ph"><rect x="{hx_}" y="{hy_}" width="{mw}" height="{mh}" rx="4" fill="{ACC}" stroke="{INK}" stroke-width="1.5"/>'
-                 f'<text class="pg b" x="{hx_ + mw / 2}" y="{hy_ + mh / 2 + 10}" text-anchor="middle" font-size="{bfs}" fill="#FFFFFF">B5</text></g>')
-    plan_ticks = "".join(f'<text x="{px0 - 18}" y="{py0 + r_ * (mh + gy_) + mh / 2 + 10}" text-anchor="end">{"ABC"[r_]}</text>' for r_ in range(ROWS))
-    plan_ticks += "".join(f'<text x="{px0 + c_ * (mw + gx_) + mw / 2}" y="{py0 - 16}" text-anchor="middle">{c_ + 1}</text>' for c_ in range(COLS))
-    tfs, lfs = (L["s5_fs"]["tick"], L["s5_fs"]["label"]) if L else (28, 32)
-    plan_lab_y = py0 - 16 - tfs * 0.8 - 14 - lfs * 1.2  # au-dessus des numéros de colonnes, quelle que soit la taille du texte
-    plan_part = f"""    <div id="s5-plan-lab" class="label" style="left: 1010px; top: {plan_lab_y:.0f}px">Localisation</div>
-    <svg id="s5-plan" class="world" viewBox="0 0 {SW} {SH}" width="{SW}" height="{SH}">
-      <g class="tick" id="s5-pticks">{plan_ticks}</g>{"".join(plan)}{plan_hero}
-    </svg>
-    <div id="s5-plan-cap" class="label" style="left: 1050px; top: {py0 + 3 * (mh + gy_) + 6}px; color: #111111">Rangée B · module 5</div>"""
     items = ["Anomalies localisées", "Priorités d’intervention", "Recommandations", "Justificatif assurance"]
     crow = [440, 520, 600, 680]
     cboxes = "".join(f'<rect class="d s5-box" pathLength="1" x="1010" y="{y - 17}" width="34" height="34" rx="4" fill="none" stroke="{INK}" stroke-width="2"/>' for y in crow)
@@ -1356,15 +1397,16 @@ def build_s5():
     <div id="s5-lab-y" class="label" style="left: 1010px; top: 318px">Production (kWh/an)</div>
     {"".join(cats)}
     <svg id="s5-check" class="world" viewBox="0 0 {SW} {SH}" width="{SW}" height="{SH}">{cboxes}{cchecks}</svg>
-    {ctexts}
-{plan_part}"""
+    {ctexts}"""
     tst = tstyle(L and L["s5_title"], "left: 960px; top: 150px")
     titles = "\n".join(f'    <div id="s5-t{i}" class="title" style="{tst}">{t}</div>' for i, t in (
-        (1, "Chaque anomalie est<br />localisée et qualifiée."),
+        (1, "Chaque défaut est<br />localisé et qualifié."),
         (2, "Classés par gravité,<br />avec l’action à mener."),
         (3, "Un rapport aux normes,<br />pour agir rapidement."),
     ))
-    body = box(doc_part, L["s5_doc"] if L else None) + "\n" + box(chart_part, L["s5_chart"] if L else None) + "\n" + titles
+    cards_html = "\n    ".join(s5_card(k + 1, d) for k, d in enumerate(S5_DEFAUTS))
+    body = (box(doc_part, L["s5_doc"] if L else None) + "\n" + box(chart_part, L["s5_chart"] if L else None) + "\n" + titles
+            + "\n    " + cards_html)
     css = f"""
     #root #s5-paper, #root .s5-sheet {{ position: absolute; background: #FFFFFF; opacity: 0; }}
     #root #s5-paper {{ box-shadow: 0 18px 40px rgba(17, 17, 17, 0.08); }}
@@ -1382,6 +1424,10 @@ def build_s5():
     #root .item {{ position: absolute; font-family: "Comfortaa", sans-serif; font-weight: 600; font-size: 30px; line-height: 42px; color: #111111; white-space: nowrap; }}
     #root .tick text {{ font-family: "Comfortaa", sans-serif; font-weight: 600; font-size: 28px; fill: #6B6B70; }}
     #root .stamp {{ font-family: "Comfortaa", sans-serif; font-weight: 700; fill: #FF5700; }}
+    #root .rct {{ position: absolute; font-family: "Comfortaa", sans-serif; font-weight: 700; line-height: 1.2; color: #FF5700; white-space: nowrap; }}
+    #root .rcl {{ position: absolute; font-family: "Comfortaa", sans-serif; font-weight: 700; line-height: 1.25; color: #111111; white-space: nowrap; }}
+    #root .rcv {{ position: absolute; font-family: "Comfortaa", sans-serif; font-weight: 600; line-height: 1.25; color: #111111; white-space: nowrap; }}
+    #root .rcv.it {{ font-style: italic; color: #3F3F46; }}
     #root .cat {{ position: absolute; width: 340px; text-align: center; font-family: "Comfortaa", sans-serif; font-weight: 600; font-size: 28px; line-height: 36px; color: #111111; }}
     #root #s5-grid, #root #s5-yt, #root #s5-stamp, #root .s5-foot, #root #s5-hotc, #root #s5-mlogo, #root .s5-sw, #root #s5-badge1, #root #s5-badge2, #root #s5-bbox, #root #s5-plan-lab, #root #s5-plan-cap, #root #s5-pticks, #root .s5-pm, #root #s5-ph {{ opacity: 0; }}"""
     if L:
@@ -1398,7 +1444,7 @@ def build_s5():
     dcx, dcy = dx + dw / 2, dy + dh / 2
     carry = dict(x=(icx - btx) / bs - dcx, y=(icy - bty) / bs - dcy, scale=ich / (dh * bs))
     js = """
-      const t1 = words($("#s5-t1"), txt("s5-t1", "Chaque anomalie est|localisée et *qualifiée*."));
+      const t1 = words($("#s5-t1"), txt("s5-t1", "Chaque défaut est|localisé et *qualifié*."));
       const t2 = words($("#s5-t2"), txt("s5-t2", "Classés par *gravité*,|avec l’action à mener."));
       const t3 = words($("#s5-t3"), txt("s5-t3", "Un rapport *aux normes*,|pour agir rapidement."));
       ["s5-i0", "s5-i1", "s5-i2", "s5-i3"].forEach((id) => { const v = txt(id, ""); if (v) $("#" + id).textContent = v; });
@@ -1416,8 +1462,8 @@ def build_s5():
       //   défaut n°1 : le cadre de détection se pose sur la cellule fissurée, la fiche se remplit
       const bbox = $("#s5-bbox");
       tl.fromTo(bbox, { opacity: 0, scale: 1.35, transformOrigin: "50% 50%" }, { opacity: 1, scale: 1, duration: 0.35, ease: "back.out(1.6)" }, 1.45);
-      blurIn(1.7, $$("#s5-p1 .s5-f1"), 0.18, 0.13);
-      tl.fromTo($("#s5-badge1"), { opacity: 0, scale: 0.6, transformOrigin: "50% 50%" }, { opacity: 1, scale: 1, duration: 0.3, ease: "back.out(1.8)" }, 1.85);
+      blurIn(1.7, $$(".s5-c1"), 0.18, 0.06);
+      tl.fromTo($("#s5-badge1"), { opacity: 0, scale: 0.6, transformOrigin: "50% 50%" }, { opacity: 1, scale: 1, duration: 0.3, ease: "back.out(1.8)" }, 2.0);
       //   plan de localisation : le champ se dessine, le module concerné s'allume
       blurIn(2.6, $("#s5-plan-lab"), 0.18);
       fadeIn(2.7, $("#s5-pticks"), 0.3);
@@ -1425,15 +1471,16 @@ def build_s5():
       tl.fromTo($("#s5-ph"), { opacity: 0, scale: 0.5, transformOrigin: "50% 50%" }, { opacity: 1, scale: 1, duration: 0.35, ease: "back.out(2)" }, 3.45);
       blurIn(3.7, $("#s5-plan-cap"), 0.18);
       //   défaut n°2 (voix : « chaque défaut y est décrit… ») : le cadre glisse sur la sous-chaîne
-      blurOut(5.15, $$("#s5-p1 .s5-f1"), 0.16, 0.02);
+      blurOut(5.15, $$(".s5-c1"), 0.16, 0.006);
       fadeOut(5.15, $("#s5-badge1"), 0.15);
       tl.to(bbox, { attr: { x: __B2X__, y: __B2Y__, width: __B2W__, height: __B2H__ }, duration: 0.55, ease: "power2.inOut" }, 5.2);
-      blurIn(5.5, $$("#s5-p1 .s5-f2"), 0.18, 0.09);
+      blurIn(5.5, $$(".s5-c2"), 0.18, 0.05);
       tl.fromTo($("#s5-ph"), { scale: 1 }, { scale: 1.12, duration: 0.22, ease: "power2.out", yoyo: true, repeat: 1, immediateRender: false }, 5.3);
       tl.fromTo($("#s5-badge2"), { opacity: 0, scale: 0.6, transformOrigin: "50% 50%" }, { opacity: 1, scale: 1, duration: 0.3, ease: "back.out(1.8)" }, 6.85); // « …et qualifié »
       // PAGE 2 — résultats et gravité
       blurOut(8.05, t1, 0.16, 0.02);
       blurOut(8.0, [$("#s5-plan-lab"), $("#s5-plan"), $("#s5-plan-cap")], 0.2, 0.02);
+      blurOut(7.95, $$(".s5-c2"), 0.16, 0.006);
       pageOut(8.05, P1);
       pageIn(8.25, P2);
       draw(8.3, P2.querySelector(".s5-rule"), 0.4, "power2.out");
@@ -1489,9 +1536,9 @@ def build_s5():
           .replace("__CS__", f'{carry["scale"]:.5f}').replace("__OX__", n(dcx)).replace("__OY__", n(dcy)))
     write_scene(
         "s5",
-        "Scène 5 — Rapport d'inspection thermique : anomalies, résultats, couverture conforme IEC TS 62446-3",
+        "Scène 5 — Rapport d'inspection thermique : défauts, résultats, couverture conforme IEC TS 62446-3",
         [
-            svar("s5-t1", "Scène 5 — titre page 1", "Chaque anomalie est|localisée et *qualifiée*."),
+            svar("s5-t1", "Scène 5 — titre page 1", "Chaque défaut est|localisé et *qualifié*."),
             svar("s5-t2", "Scène 5 — titre page 2", "Classés par *gravité*,|avec l’action à mener."),
             svar("s5-t3", "Scène 5 — titre page 3", "Un rapport *aux normes*,|pour agir rapidement."),
             svar("s5-i0", "Scène 5 — ligne 1", items[0]),
