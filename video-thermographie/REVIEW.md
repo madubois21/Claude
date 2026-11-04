@@ -9,7 +9,7 @@
 - Mélange réglé sans écoute, à la mesure : répartition par bande proche d'un mixage pop (graves -5 à -6 dB, médiums
   -8 à -13 dB, aigus -17 à -20 dB) ; normalisation linéaire (-16 LUFS) pour garder les nuances (intro 5 dB plus douce).
   Sous la voix, la musique descend à 0,4 (-8 dB).
-- Plus de sortie en boucle : à partir de 53,7 s le site web, LinkedIn et les coordonnées restent affichés jusqu'à la
+- Plus de sortie en boucle : complet vers 55 s, le carton site web + LinkedIn + coordonnées reste affiché jusqu'à la
   dernière image ; scène 7 allongée à 10,2 s, vidéo de 60 s.
 - Contraste : « Cat. 4 » (et le 4 de la légende de gravité) en noir sur l'orange clair.
 - Cellules thermiques regroupées par nuance (6 tracés par module au lieu de 48 rectangles) : page plus légère, même image.
