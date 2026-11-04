@@ -17,7 +17,7 @@ contact www.flyscanair.com · 06 22 80 57 69 · contact@flyscanair.com ; plus de
 ```text
 GOAL:    le spectateur comprend qu'un défaut invisible coûte cher et qu'un survol thermique par drone le révèle ; il retient « faire contrôler son installation ».
 OUTPUT:  HyperFrames, 1920 x 1080, 30 fps, MP4 H.264 (version LinkedIn).
-TIME:    55,0 s x 30 = 1650 images, en boucle (passage 6 ; détail des coupes dans README.md). Musique 100 BPM : 1 temps = 0,6 s = 18 images, 1 mesure = 2,4 s.
+TIME:    58,0 s x 30 = 1740 images, en boucle (passage 8 ; détail des coupes dans README.md). Musique 100 BPM : 1 temps = 0,6 s = 18 images, 1 mesure = 2,4 s.
          Coupes : S1 0–7,2 · S2 7,2–13,2 · S3 13,2–21,0 · S4 21,0–27,6 · S5 27,6–34,2 · S6 34,2–40,8.
 LOOK:    fond #FFFFFF plat + trame de points Ø2 px #E4E4E7 au pas de 48 px (papier technique, aucun dégradé).
          Encre #111111 : traits de structure 2,5 px, détails 1,5 px, cellules 1 px #D4D4D8, fond de panneau #F3F3F4.

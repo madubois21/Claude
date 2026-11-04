@@ -17,6 +17,9 @@
 - Logo : lettres vectorisées directement depuis le logo fourni (potrace) au lieu de Comfortaa épaissie ; serpentin,
   billes et position de la bille sur le « i » remesurés sur la même image (boucles espacées de 68,6 px au lieu de 70).
 - Tampon de conformité sur fond blanc plein (contraste 3,2:1).
+- Rendus (trois formats) : 58,0 s, 30 i/s ; −15,9 LUFS intégré, crête vraie −1,6 dBTP. `hyperframes check` : 0 erreur ;
+  en 16:9, avertissements de lecture intermittents (fiche défaut n°2, tampon) qui disparaissent d'un passage à l'autre
+  sur le même fichier ; images relues : textes affichés plus de 2 s.
 
 ## Passage 7b — correctif du tracé des panneaux (9:16 et 1:1)
 - Défaut signalé : en scène 3, le contour de chaque panneau ne se traçait pas en entier (haut du bord gauche manquant),
