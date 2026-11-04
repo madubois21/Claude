@@ -178,21 +178,21 @@
       tl.fromTo(msg, { opacity: 0 }, { opacity: 1, duration: 0.2 }, 1.9);
       tl.fromTo(msg, { color: "#D4D4D8" }, { color: "#111111", duration: 0.25, stagger: 0.08 }, 2.0);
       // B. le logo monte ; site web et LinkedIn apparaissent
-      blurOut(3.85, msg, 0.16, 0.02); // le message reste lisible pendant que la voix le prononce
-      tl.to($("#s7-top"), { scale: 0.56, y: -62, transformOrigin: "540px 0px", duration: 0.55, ease: "power2.inOut" }, 3.88);
-      fadeIn(4.0, $("#s7-wfill"), 0.3);
-      draw(4.0, $("#s7-frame"), 0.6, "power2.inOut");
-      draw(4.25, $("#s7-bar"), 0.35, "power2.out");
-      fadeIn(4.3, [$("#s7-dots"), $("#s7-pill")], 0.25, 0.05);
-      tl.fromTo(letters, { opacity: 0 }, { opacity: 1, duration: 0.05, stagger: 0.03 }, 4.42);
-      tl.fromTo($("#s7-scan"), { opacity: 0 }, { opacity: 1, duration: 0.1 }, 4.6);
-      tl.fromTo($("#s7-scan"), { x: 300 }, { x: 1060, duration: 0.65, ease: "power1.inOut" }, 4.6);
-      tl.fromTo($("#s7-cliprect"), { attr: { width: 0 } }, { attr: { width: 760 }, duration: 0.65, ease: "power1.inOut" }, 4.6);
-      tl.to($("#s7-scan"), { opacity: 0, duration: 0.15 }, 5.25);
-      blurIn(4.9, $("#s7-capw"), 0.2);
-      tl.fromTo($("#s7-in"), { opacity: 0, scale: 0.6, transformOrigin: "50% 50%" }, { opacity: 1, scale: 1, duration: 0.45, ease: "back.out(1.6)" }, 4.5);
-      blurIn(4.85, [$("#s7-inname"), $("#s7-capi")], 0.2, 0.1);
-      blurIn(5.05, $("#s7-contact"), 0.2);
+      blurOut(4.15, msg, 0.16, 0.02); // le message reste lisible pendant que la voix le prononce
+      tl.to($("#s7-top"), { scale: 0.56, y: -62, transformOrigin: "540px 0px", duration: 0.55, ease: "power2.inOut" }, 4.18);
+      fadeIn(4.3, $("#s7-wfill"), 0.3);
+      draw(4.3, $("#s7-frame"), 0.6, "power2.inOut");
+      draw(4.55, $("#s7-bar"), 0.35, "power2.out");
+      fadeIn(4.6, [$("#s7-dots"), $("#s7-pill")], 0.25, 0.05);
+      tl.fromTo(letters, { opacity: 0 }, { opacity: 1, duration: 0.05, stagger: 0.03 }, 4.72);
+      tl.fromTo($("#s7-scan"), { opacity: 0 }, { opacity: 1, duration: 0.1 }, 4.9);
+      tl.fromTo($("#s7-scan"), { x: 300 }, { x: 1060, duration: 0.65, ease: "power1.inOut" }, 4.9);
+      tl.fromTo($("#s7-cliprect"), { attr: { width: 0 } }, { attr: { width: 760 }, duration: 0.65, ease: "power1.inOut" }, 4.9);
+      tl.to($("#s7-scan"), { opacity: 0, duration: 0.15 }, 5.55);
+      blurIn(5.2, $("#s7-capw"), 0.2);
+      tl.fromTo($("#s7-in"), { opacity: 0, scale: 0.6, transformOrigin: "50% 50%" }, { opacity: 1, scale: 1, duration: 0.45, ease: "back.out(1.6)" }, 4.8);
+      blurIn(5.15, [$("#s7-inname"), $("#s7-capi")], 0.2, 0.1);
+      blurIn(5.35, $("#s7-contact"), 0.2);
       // C. fin : le carton (site web, LinkedIn, coordonnées) reste affiché jusqu'à la dernière image
       tl.set({}, {}, 10.2);
       window.__timelines["s7"] = tl;

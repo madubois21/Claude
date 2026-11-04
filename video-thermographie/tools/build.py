@@ -49,7 +49,7 @@ LAYOUTS = {
         handoff=(220, 641, 640),
         s4_settle=(60, 560, 960), s4_title=(108, 330, 56), s4_title_text="Chaque anomalie est|détectée et localisée.",
         s4_rows=(1380, 1490, 1600), s4_order=(2, 0, 1), s4_fs=(34, 28), s4_band_col=0.8,
-        s4_lab=(("r", 1020, 480), ("l", 332, 520), ("l", 108, 560)),
+        s4_lab=(("r", 1020, 480), ("l", 300, 520), ("l", 108, 560)),
         s5_title=(108, 300, 64), s5_doc=(0.8, 124, 423.2), s5_chart=(0.8, -556, 975.6), s5_stamp=36, s5_pfs=35,
         s5_fs=dict(item=35, head=36, tick=36, label=38, cat=36, catlh=44),
     ),
@@ -61,7 +61,7 @@ LAYOUTS = {
         handoff=(270, 380, 540),
         s4_settle=(204, 170, 672), s4_title=(108, 90, 40), s4_title_text="Chaque anomalie est détectée et localisée.",
         s4_rows=(750, 825, 900), s4_order=(2, 0, 1), s4_fs=(30, 28), s4_band_col=0.8,
-        s4_lab=(("r", 1000, 420), ("l", 385, 480), ("l", 108, 560)),
+        s4_lab=(("r", 1000, 420), ("l", 380, 480), ("l", 108, 560)),
         s5_title=(108, 150, 52), s5_doc=(0.7, -90, 232.8), s5_chart=(0.58, -10, 175.6), s5_stamp=40, s5_pfs=40,
         s5_fs=dict(item=49, head=40, tick=49, label=49, cat=49, catlh=58),
     ),
@@ -230,7 +230,7 @@ HERO = (1, 4)  # (row, col) zoomed panel
 # anomalies par module, en cellules (colonne, ligne) — signatures thermiques de la note technique (IEC TS 62446-3)
 ANOM = {
     (0, 1): [("spot", 3, 2)],  # point chaud ponctuel
-    (1, 4): [("crack", 2, 4), ("band", 0), ("jbox",)],  # module zoomé en S4 : cellule fissurée, sous-chaîne, boîte de jonction
+    (1, 4): [("module",), ("spot", 0, 0), ("cell", 0, 2), ("spot", 0, 4)],  # module zoomé : comme sur la photo réelle (S4)
     (2, 2): [("module",)],  # module fonctionnant à vide : échauffement uniforme
     (2, 5): [("cell", 1, 2), ("cell", 1, 3)],  # cellules isolées plus chaudes
     (0, 6): [("spot", 6, 0)],
@@ -389,11 +389,40 @@ def th_fill(r, c):
 
 # hero panel in S4 world (used by S4 and S5 so the hand-off is exact)
 S4PW, S4PH = PW * K, PH * K  # 960 x 731.43
-HERO_ANCH = [(S4X + ax * K, S4Y + ay * K) for kind, *a in ANOM[HERO] for ax, ay in [anom_anchor(kind, *a)]]  # monde S4
-S4_LABELS = [  # texte principal | précision technique (note technique, § 3.2 et 3.7)
-    "Point chaud (hot-spot)|cellule fissurée",
-    "Diode by-pass défectueuse|échauffement linéaire",
-    "Boîte de jonction|connexion en surchauffe",
+# Photo thermique réelle (assets/images/thermo-panneau.jpg, 640 x 512, fournie par Fly Scan'Air). Son module central
+# (x 133–512, y 160–386 dans la photo) est calé sur le panneau zoomé ; les défauts sont relevés sur la photo.
+PHOTO = "assets/images/thermo-panneau.jpg"
+PHOTO_W, PHOTO_H = 640, 512
+PH_K = 0.86 * S4PW / (512 - 133)
+PH_C = ((133 + 512) / 2, (160 + 386) / 2)
+
+
+def photo_xy(px, py):
+    """Pixel de la photo -> monde S4."""
+    return S4X + S4PW / 2 + (px - PH_C[0]) * PH_K, S4Y + S4PH / 2 + (py - PH_C[1]) * PH_K
+
+
+def photo_box(px0, py0, px1, py1):
+    (x0, y0), (x1, y1) = photo_xy(px0, py0), photo_xy(px1, py1)
+    return (x0, y0, x1 - x0, y1 - y0)
+
+
+def photo_svg(prefix):
+    """La photo, recadrée sur le panneau zoomé (mêmes coordonnées que le panneau dessiné : raccords S3 -> S4 -> S5)."""
+    x, y = photo_xy(0, 0)
+    return (f'<clipPath id="{prefix}-pclip"><rect x="{n(S4X)}" y="{n(S4Y)}" width="{n(S4PW)}" height="{n(S4PH)}"/></clipPath>'
+            f'<g id="{prefix}-photo"><image href="{PHOTO}" x="{n(x)}" y="{n(y)}" width="{n(PHOTO_W * PH_K)}" height="{n(PHOTO_H * PH_K)}" '
+            f'preserveAspectRatio="none" clip-path="url(#{prefix}-pclip)"/>'
+            f'<rect x="{n(S4X)}" y="{n(S4Y)}" width="{n(S4PW)}" height="{n(S4PH)}" fill="none" stroke="{INK}" stroke-width="2"/></g>')
+
+
+# points d'ancrage des lignes de rappel, relevés sur la photo : points chauds, cellules échauffées, microfissures
+PHOTO_ANCH = [(201, 187), (177, 328), (400, 246)]
+HERO_ANCH = [photo_xy(*q) for q in PHOTO_ANCH]  # monde S4
+S4_LABELS = [  # texte principal | précision (défauts visibles sur la photo, vocabulaire de la note technique)
+    "Points chauds|échauffement localisé",
+    "Cellules échauffées|en bordure de module",
+    "Microfissures|réseau dans les cellules",
 ]
 
 
@@ -420,8 +449,8 @@ def cell_box(i0, j0, i1, j1, m):
     return (S4X + (i0 - m) * cw, S4Y + (j0 - m) * ch, (i1 - i0 + 1 + 2 * m) * cw, (j1 - j0 + 1 + 2 * m) * ch)
 
 
-BOX1 = cell_box(2, 4, 2, 4, 0.3)  # défaut n°1 : la cellule fissurée
-BOX2 = cell_box(0, 0, CC - 1, 1, -0.14)  # défaut n°2 : la sous-chaîne (deux rangées)
+BOX1 = photo_box(134, 154, 210, 204)  # défaut #1 : les points chauds (photo)
+BOX2 = photo_box(232, 202, 488, 352)  # défaut #2 : le réseau de microfissures (photo)
 
 
 # viewBoxes for the zoom hand-offs (rectangles à l'écran du panneau défectueux)
@@ -907,10 +936,10 @@ def drone_svg():
         </g>"""
 
 
-S3_DUR = 18.0  # survol : drone, caméra, puis deux repères pédagogiques (note technique Fly Scan'Air, § 2.1 et 3.2)
+S3_DUR = 19.2  # survol : drone, caméra, puis deux repères pédagogiques (note technique Fly Scan'Air, § 2.1 et 3.2)
 S3_FACTS = [  # (début, fin, chiffre, légende) — en temps local de la scène 3, calés sur les phrases 11 et 12 de la voix
-    (6.55, 11.55, "≈ 600 W/m²", "d’ensoleillement suffisent<br />pour révéler chaque défaut."),
-    (11.75, 17.15, "−0,5 % par degré", "de rendement perdu :<br />+10 °C, c’est déjà −5 %."),
+    (6.55, 12.3, "≈ 600 W/m²", "d’ensoleillement suffisent<br />pour révéler chaque défaut."),
+    (12.45, 18.45, "−0,5 % par degré", "de rendement perdu :<br />+10 °C, c’est déjà −5 %."),
 ]
 
 
@@ -992,7 +1021,7 @@ def build_s3():
     js = f"""
       const title = words($("#s3-title"), txt("s3-title", "Le scan infrarouge révèle|chaque *échauffement*."));
       const HOVER = {HOVER_X}, END = {SCAN_END_X}, Y = {DRONE_Y};
-      const T0 = 3.2, TD = 13.0; // survol lent : le temps d'expliquer
+      const T0 = 3.2, TD = 14.2; // survol lent : le temps d'expliquer
       // 1. le champ de panneaux se dessine (vue de dessus)
       draw(0.1, $$(".s3-pline"), 0.5, "power2.inOut", 0.03);
       fadeIn(0.3, $$(".s3-pfill"), 0.4, 0.03);
@@ -1106,6 +1135,7 @@ def build_s4():
       <defs>{thermal_defs("s4")}</defs>
       <g id="s4-neigh">{"".join(neigh)}</g>
       {hero_panel_svg("s4")}
+      {photo_svg("s4")}
       <g id="s4-leaders">{"".join(leaders)}{"".join(dots)}{"".join(pins)}</g>
     </svg>
     {"".join(labels)}
@@ -1131,11 +1161,12 @@ def build_s4():
       tl.fromTo(svg, {{ attr: {{ viewBox: "{vb(S4_START_VB)}" }} }}, {{ attr: {{ viewBox: "{vb(S4_SETTLE_VB)}" }}, duration: 0.95, ease: "power3.out" }}, 0);
       fadeOut(0.2, $("#s4-neigh"), 0.6, 0, "power1.inOut");
       fadeIn(0.55, [$("#s4-inner"), $("#s4-bus")], 0.6);
+      tl.fromTo($("#s4-photo"), {{ opacity: 0 }}, {{ opacity: 1, duration: 0.6, ease: "power1.inOut" }}, 0.3);  // la vraie image thermique
       // 2. titre : du gris à l'encre, mot à mot
       tl.fromTo(title, {{ opacity: 0 }}, {{ opacity: 1, duration: 0.2 }}, 0.75);
       tl.fromTo(title, {{ color: "#D4D4D8" }}, {{ color: "#111111", duration: 0.25, stagger: 0.08 }}, 0.95);
       // 3. chaque défaut est désigné : point sur l'anomalie, ligne de rappel, étiquette (calé sur la voix off)
-      [[0.8, 0], [1.55, 1], [3.3, 2]].forEach(([t, i]) => {{
+      [[0.35, 0], [1.05, 1], [2.4, 2]].forEach(([t, i]) => {{
         tl.fromTo($("#s4-pin" + i), {{ opacity: 0, scale: 0, transformOrigin: "50% 50%" }}, {{ opacity: 1, scale: 1, duration: 0.3, ease: "back.out(2)" }}, t + 0.1);
         draw(t + 0.25, $("#s4-ld" + i), 0.35, "power2.out");
         fadeIn(t + 0.58, $("#s4-dot" + i), 0.1);
@@ -1205,10 +1236,10 @@ S5_CARD = {  # fiche défaut, en coordonnées écran : x, y, largeur, corps du t
     "1x1": (510, 292, 545, 28, True),
 }[FMT]
 S5_DEFAUTS = [  # valeurs illustratives (aucune donnée du rapport type)
-    dict(num="Défaut #1", cat=4, cat_fill="#FF8A4C", cat_ink="#111111", statut="À traiter", type="Point chaud",
-         dt="11,2 °C", mx="58 °C", origine="Cellule fissurée", action="Contrôle électrique", note="Échauffement localisé"),
-    dict(num="Défaut #2", cat=5, cat_fill=ACC, cat_ink="#FFFFFF", statut="À traiter", type="Diode by-pass",
-         dt="7,8 °C", mx="54 °C", origine="Diode défectueuse", action="Remplacer la diode", note="Échauffement linéaire"),
+    dict(num="Défaut #1", cat=4, cat_fill="#FF8A4C", cat_ink="#111111", statut="À traiter", type="Points chauds",
+         dt="11,2 °C", mx="58 °C", origine="Cellule dégradée", action="Contrôle électrique", note="Échauffement localisé"),
+    dict(num="Défaut #2", cat=3, cat_fill="#FFBE9A", cat_ink="#111111", statut="À surveiller", type="Microfissures",
+         dt="4,6 °C", mx="51 °C", origine="Contrainte mécanique", action="Suivi du module", note="Réseau de fissures"),
 ]
 
 
@@ -1306,6 +1337,7 @@ def build_s5():
       <svg id="s5-thumb" class="world zoom" viewBox="{vb(THUMB_LOCAL_VB)}" width="{SW}" height="{SH}">
         <defs>{thermal_defs("s5")}</defs>
         {hero_panel_svg("s5", with_ids=False)}
+        {photo_svg("s5")}
         <rect id="s5-bbox" x="{n(BOX1[0])}" y="{n(BOX1[1])}" width="{n(BOX1[2])}" height="{n(BOX1[3])}" rx="6" fill="none" stroke="{ACC}" stroke-width="3"/>
       </svg>
       <div class="dochead" style="left: 260px; top: 128px">Analyse détaillée</div>
@@ -1814,21 +1846,21 @@ def build_s7():
       tl.fromTo(msg, {{ opacity: 0 }}, {{ opacity: 1, duration: 0.2 }}, 1.9);
       tl.fromTo(msg, {{ color: "#D4D4D8" }}, {{ color: "#111111", duration: 0.25, stagger: 0.08 }}, 2.0);
       // B. le logo monte ; site web et LinkedIn apparaissent
-      blurOut(3.85, msg, 0.16, 0.02); // le message reste lisible pendant que la voix le prononce
-      tl.to($("#s7-top"), {{ scale: {tsc}, y: {tty}, transformOrigin: "{n(W / 2)}px 0px", duration: 0.55, ease: "power2.inOut" }}, 3.88);
-      fadeIn(4.0, $("#s7-wfill"), 0.3);
-      draw(4.0, $("#s7-frame"), 0.6, "power2.inOut");
-      draw(4.25, $("#s7-bar"), 0.35, "power2.out");
-      fadeIn(4.3, [$("#s7-dots"), $("#s7-pill")], 0.25, 0.05);
-      tl.fromTo(letters, {{ opacity: 0 }}, {{ opacity: 1, duration: 0.05, stagger: 0.03 }}, 4.42);
-      tl.fromTo($("#s7-scan"), {{ opacity: 0 }}, {{ opacity: 1, duration: 0.1 }}, 4.6);
-      tl.fromTo($("#s7-scan"), {{ x: {BX} }}, {{ x: {BX + BW}, duration: 0.65, ease: "power1.inOut" }}, 4.6);
-      tl.fromTo($("#s7-cliprect"), {{ attr: {{ width: 0 }} }}, {{ attr: {{ width: {BW} }}, duration: 0.65, ease: "power1.inOut" }}, 4.6);
-      tl.to($("#s7-scan"), {{ opacity: 0, duration: 0.15 }}, 5.25);
-      blurIn(4.9, $("#s7-capw"), 0.2);
-      tl.fromTo($("#s7-in"), {{ opacity: 0, scale: 0.6, transformOrigin: "50% 50%" }}, {{ opacity: 1, scale: 1, duration: 0.45, ease: "back.out(1.6)" }}, 4.5);
-      blurIn(4.85, [$("#s7-inname"), $("#s7-capi")], 0.2, 0.1);
-      blurIn(5.05, $("#s7-contact"), 0.2);
+      blurOut(4.15, msg, 0.16, 0.02); // le message reste lisible pendant que la voix le prononce
+      tl.to($("#s7-top"), {{ scale: {tsc}, y: {tty}, transformOrigin: "{n(W / 2)}px 0px", duration: 0.55, ease: "power2.inOut" }}, 4.18);
+      fadeIn(4.3, $("#s7-wfill"), 0.3);
+      draw(4.3, $("#s7-frame"), 0.6, "power2.inOut");
+      draw(4.55, $("#s7-bar"), 0.35, "power2.out");
+      fadeIn(4.6, [$("#s7-dots"), $("#s7-pill")], 0.25, 0.05);
+      tl.fromTo(letters, {{ opacity: 0 }}, {{ opacity: 1, duration: 0.05, stagger: 0.03 }}, 4.72);
+      tl.fromTo($("#s7-scan"), {{ opacity: 0 }}, {{ opacity: 1, duration: 0.1 }}, 4.9);
+      tl.fromTo($("#s7-scan"), {{ x: {BX} }}, {{ x: {BX + BW}, duration: 0.65, ease: "power1.inOut" }}, 4.9);
+      tl.fromTo($("#s7-cliprect"), {{ attr: {{ width: 0 }} }}, {{ attr: {{ width: {BW} }}, duration: 0.65, ease: "power1.inOut" }}, 4.9);
+      tl.to($("#s7-scan"), {{ opacity: 0, duration: 0.15 }}, 5.55);
+      blurIn(5.2, $("#s7-capw"), 0.2);
+      tl.fromTo($("#s7-in"), {{ opacity: 0, scale: 0.6, transformOrigin: "50% 50%" }}, {{ opacity: 1, scale: 1, duration: 0.45, ease: "back.out(1.6)" }}, 4.8);
+      blurIn(5.15, [$("#s7-inname"), $("#s7-capi")], 0.2, 0.1);
+      blurIn(5.35, $("#s7-contact"), 0.2);
       // C. fin : le carton (site web, LinkedIn, coordonnées) reste affiché jusqu'à la dernière image
       tl.set({{}}, {{}}, {n(S7_DUR)});"""
     write_scene(
@@ -1851,33 +1883,33 @@ def build_s7():
 # --------------------------------------------------------------------------
 # index.html
 # --------------------------------------------------------------------------
-SCENES = [("s1", 0, 7.2), ("s2", 7.2, 6.6), ("s3", 13.8, S3_DUR), ("s4", 31.8, 7.2), ("s5", 39.0, 17.4),
-          ("s6", 56.4, 6.6), ("s7", 63.0, S7_DUR)]
-TOTAL = 73.2
+SCENES = [("s1", 0, 7.2), ("s2", 7.2, 6.6), ("s3", 13.8, S3_DUR), ("s4", 33.0, 7.2), ("s5", 40.2, 17.4),
+          ("s6", 57.6, 6.6), ("s7", 64.2, S7_DUR)]
+TOTAL = 74.4
 
 # (id, file, hit time in the film, volume): the file's measured peak lands one frame after its picture
 SFX = [
     ("sfx-drone", "whoosh-short.mp3", 13.8 + 0.72, 0.5),
     ("sfx-scan", "whoosh-cinematic.mp3", 13.8 + 3.95, 0.3),
     ("sfx-zoom", "whoosh-high.mp3", 13.8 + S3_DUR - 0.05, 0.45),
-    ("sfx-tick1", "key-press.mp3", 31.8 + 1.4, 0.5),
-    ("sfx-tick2", "key-press.mp3", 31.8 + 2.15, 0.45),
-    ("sfx-tick3", "key-press.mp3", 31.8 + 3.9, 0.5),
-    ("sfx-carry", "whoosh-low.mp3", 31.8 + 6.8, 0.35),
-    ("sfx-box1", "key-press.mp3", 39.0 + 1.5, 0.3),
-    ("sfx-box2", "key-press.mp3", 39.0 + 5.72, 0.3),
-    ("sfx-plan", "pop.mp3", 39.0 + 3.55, 0.25),
-    ("sfx-page2", "whoosh-high.mp3", 39.0 + 8.2, 0.18),
-    ("sfx-page3", "whoosh-high.mp3", 39.0 + 11.75, 0.18),
-    ("sfx-stamp", "pop.mp3", 39.0 + 12.88, 0.45),
-    ("sfx-check1", "click-soft.mp3", 39.0 + 13.72, 0.6),
-    ("sfx-check2", "click-soft.mp3", 39.0 + 14.32, 0.55),
-    ("sfx-check3", "click-soft.mp3", 39.0 + 14.92, 0.6),
-    ("sfx-check4", "click-soft.mp3", 39.0 + 15.52, 0.55),
-    ("sfx-doc", "whoosh-short.mp3", 39.0 + 16.89, 0.3),
-    ("sfx-logo", "impact-bass-1.mp3", 63.0 + 1.55, 0.22),
-    ("sfx-top", "whoosh-low.mp3", 63.0 + 4.13, 0.22),
-    ("sfx-type", "typing.mp3", 63.0 + 4.42, 0.35),
+    ("sfx-tick1", "key-press.mp3", 33.0 + 0.95, 0.5),
+    ("sfx-tick2", "key-press.mp3", 33.0 + 1.65, 0.45),
+    ("sfx-tick3", "key-press.mp3", 33.0 + 3.0, 0.5),
+    ("sfx-carry", "whoosh-low.mp3", 33.0 + 6.8, 0.35),
+    ("sfx-box1", "key-press.mp3", 40.2 + 1.5, 0.3),
+    ("sfx-box2", "key-press.mp3", 40.2 + 5.72, 0.3),
+    ("sfx-plan", "pop.mp3", 40.2 + 3.55, 0.25),
+    ("sfx-page2", "whoosh-high.mp3", 40.2 + 8.2, 0.18),
+    ("sfx-page3", "whoosh-high.mp3", 40.2 + 11.75, 0.18),
+    ("sfx-stamp", "pop.mp3", 40.2 + 12.88, 0.45),
+    ("sfx-check1", "click-soft.mp3", 40.2 + 13.72, 0.6),
+    ("sfx-check2", "click-soft.mp3", 40.2 + 14.32, 0.55),
+    ("sfx-check3", "click-soft.mp3", 40.2 + 14.92, 0.6),
+    ("sfx-check4", "click-soft.mp3", 40.2 + 15.52, 0.55),
+    ("sfx-doc", "whoosh-short.mp3", 40.2 + 16.89, 0.3),
+    ("sfx-logo", "impact-bass-1.mp3", 64.2 + 1.55, 0.22),
+    ("sfx-top", "whoosh-low.mp3", 64.2 + 4.43, 0.22),
+    ("sfx-type", "typing.mp3", 64.2 + 4.72, 0.35),
 ]
 
 

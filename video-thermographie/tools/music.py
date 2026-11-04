@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Musique originale, version dynamique (passages 9 et 12) : électro-pop entraînante, 73,2 s.
+"""Musique originale, version dynamique (passages 9 et 12) : électro-pop entraînante, 74,4 s.
 
 Tempo 100 BPM (1 temps = 0,6 s) : toutes les coupes de la vidéo tombent sur un temps, et chaque scène
 commence sur un temps fort. Mi mineur / sol majeur (Em – C – G – D).
@@ -7,7 +7,7 @@ commence sur un temps fort. Mi mineur / sol majeur (Em – C – G – D).
 - scènes 2 à 5 : grosse caisse à la noire, clap sur 2 et 4, charleston en doubles-croches, basse en croches
   pompée par la grosse caisse, accords « stab » sur les contretemps, arpège ; impact et cymbale à chaque scène ;
 - scène 6 : montée (roulement de caisse claire qui accélère, souffle qui monte, filtre qui s'ouvre) ;
-- scène 7 : retombée sur le logo, puis cadence IV – V – I et accord final net à 70,2 s, qui résonne jusqu’à 73,2 s
+- scène 7 : retombée sur le logo, puis cadence IV – V – I et accord final net à 71,4 s, qui résonne jusqu’à 74,4 s
   pendant que le site web et LinkedIn restent à l'écran.
 Synthèse déterministe (numpy). Sortie : assets/audio/music.wav (48 kHz, stéréo), -16 LUFS (normalisation linéaire).
 
@@ -21,7 +21,7 @@ import numpy as np
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SR = 48000
-TOTAL = 73.2
+TOTAL = 74.4
 BEAT = 0.6
 S16 = BEAT / 4
 N = int(TOTAL * SR)
@@ -32,12 +32,12 @@ SECTIONS = [
     (0.0, 7.2, "intro", ["Em", "C", "D"]),  # S1 le problème invisible
     (7.2, 13.8, "drop", ["Em", "C", "G"]),  # S2 les risques
     (13.8, 20.4, "drive", ["Em", "C", "D"]),  # S3 drone
-    (20.4, 31.8, "groove", ["G", "D", "Em", "C", "G"]),  # S3 « Le saviez-vous ? » (la voix explique)
-    (31.8, 39.0, "drive", ["Em", "C", "D"]),  # S4 détection
-    (39.0, 56.4, "groove", ["G", "D", "Em", "C", "G", "D", "Em", "C"]),  # S5 rapport
-    (56.4, 63.0, "build", ["Em", "C", "D"]),  # S6 plateforme : montée
-    (63.0, 70.2, "drop", ["G", "D", "C|D"]),  # S7 logo, site, LinkedIn
-    (70.2, 73.2, "end", ["G"]),  # accord final tenu
+    (20.4, 33.0, "groove", ["G", "D", "Em", "C", "G"]),  # S3 « Le saviez-vous ? » (la voix explique)
+    (33.0, 40.2, "drive", ["Em", "C", "D"]),  # S4 détection
+    (40.2, 57.6, "groove", ["G", "D", "Em", "C", "G", "D", "Em", "C"]),  # S5 rapport
+    (57.6, 64.2, "build", ["Em", "C", "D"]),  # S6 plateforme : montée
+    (64.2, 71.4, "drop", ["G", "D", "C|D"]),  # S7 logo, site, LinkedIn
+    (71.4, 74.4, "end", ["G"]),  # accord final tenu
 ]
 CHORDS = {  # basse (MIDI), accord (MIDI)
     "Em": (40, [64, 67, 71]),
@@ -61,7 +61,7 @@ def chord_at(t):
                 a, c = name.split("|")
                 name = a if ((t - s0) % (4 * BEAT)) < 2 * BEAT - 1e-6 else c
             return name, kind, s0, s1
-    return "G", "end", 70.2, TOTAL
+    return "G", "end", 71.4, TOTAL
 
 
 # ------------------------------------------------------------------ bus
@@ -214,7 +214,7 @@ for b in range(nbeats):
         if t0 >= 2.4:
             add("drums", HC, t0 + BEAT / 2, 0.25, 0.022)
     elif kind in ("drop", "drive", "groove", "build"):
-        cut_ = kind == "build" and t0 >= 61.8  # tout s'arrête juste avant la retombée sur le logo
+        cut_ = kind == "build" and t0 >= 63.0  # tout s'arrête juste avant la retombée sur le logo
         if not cut_:
             add("drums", K, t0, 0, 0.32)
             kicks.append(t0)
@@ -225,7 +225,7 @@ for b in range(nbeats):
             add("drums", CL, t0, 0.05, 0.22)
         if kind in ("drop", "drive"):
             add("drums", HO, t0 + BEAT / 2, -0.3, 0.02)
-    elif kind == "end" and abs(t0 - 70.2) < 1e-6:
+    elif kind == "end" and abs(t0 - 71.4) < 1e-6:
         add("drums", K, t0, 0, 0.42)
         kicks.append(t0)
     # roulement de fin de section (avant chaque nouvelle scène)
@@ -234,28 +234,28 @@ for b in range(nbeats):
             add("drums", SN[k], t0 + k * S16, 0.1, 0.16)
 
 # roulement qui accélère pendant la montée de la scène 6
-for t0, end, step, v in ((56.4, 58.8, BEAT, 0.12), (58.8, 61.2, BEAT / 2, 0.15), (61.2, 62.4, S16, 0.18), (62.4, 63.0, S16 / 2, 0.22)):
+for t0, end, step, v in ((57.6, 60.0, BEAT, 0.12), (60.0, 62.4, BEAT / 2, 0.15), (62.4, 63.6, S16, 0.18), (63.6, 64.2, S16 / 2, 0.22)):
     t = t0
     while t < end - 1e-6:
-        prog = (t - 56.4) / 6.6
+        prog = (t - 57.6) / 6.6
         add("drums", SN[min(3, int(prog * 4))], t, 0.1, 0.75 * (v + 0.12 * prog))
         t += step
 
 # cymbales, impacts et montées aux changements de scène
-for t0, big in ((7.2, True), (13.8, False), (31.8, True), (39.0, False), (56.4, False), (63.0, True), (70.2, True)):
+for t0, big in ((7.2, True), (13.8, False), (33.0, True), (40.2, False), (57.6, False), (64.2, True), (71.4, True)):
     add("fx", CR_, t0, 0.2, 0.14 if big else 0.09)
     add("fx", IMP, t0, 0, 0.2 if big else 0.11)
     add("fx", REV_CRASH, t0 - 0.9, -0.2, 0.12)
-for t0, gain in ((47.4, 0.08), (51.0, 0.08)):  # pages 2 et 3 du rapport
+for t0, gain in ((48.6, 0.08), (52.2, 0.08)):  # pages 2 et 3 du rapport
     add("fx", crash(1.4), t0, -0.25, gain)
 add("fx", riser(2.4), 4.8, 0, 0.15)  # intro -> scène 2
-add("fx", riser(6.6, 200, 11000), 56.4, 0, 0.22)  # grande montée -> logo
+add("fx", riser(6.6, 200, 11000), 57.6, 0, 0.22)  # grande montée -> logo
 
 # ------------------------------------------------------------------ basse : croches pompées
 t0 = 4.8
-while t0 < 70.2 - 1e-6:
+while t0 < 71.4 - 1e-6:
     name, kind, s0, s1 = chord_at(t0 + 1e-4)
-    if kind == "build" and t0 >= 61.8:  # coupure avant la retombée
+    if kind == "build" and t0 >= 63.0:  # coupure avant la retombée
         t0 = round(t0 + BEAT / 2, 6)
         continue
     root = CHORDS[name][0]
@@ -310,7 +310,7 @@ PL_E = env(PL_N, 0.002, 0.085, 0.02)
 pl_cache = {}
 arp_i = 0
 t0 = 0.0
-while t0 < 70.2 - 1e-6:
+while t0 < 71.4 - 1e-6:
     name, kind, s0, s1 = chord_at(t0 + 1e-4)
     tones = sorted(CHORDS[name][1])
     seq = [tones[0], tones[1], tones[2], tones[0] + 12, tones[2], tones[1], tones[0] + 12, tones[1] + 12]
@@ -324,7 +324,7 @@ while t0 < 70.2 - 1e-6:
     elif kind == "groove":
         gain, bright = 0.1, 5.0
     else:  # build : l'arpège monte en intensité
-        gain, bright = 0.065 + 0.08 * (t0 - 56.4) / 6.6, round(4 + 6 * (t0 - 56.4) / 6.6, 1)
+        gain, bright = 0.065 + 0.08 * (t0 - 57.6) / 6.6, round(4 + 6 * (t0 - 57.6) / 6.6, 1)
     key = (m, bright)
     if key not in pl_cache:
         pl_cache[key] = square(mtof(m), PL_N, bright) * PL_E
@@ -356,7 +356,7 @@ def reverb(x, seconds=2.2, mix=0.2, seed=1):
 
 music = BUS["music"] * pump[:, None]
 # montée de la scène 6 : la musique est filtrée puis s'ouvre sur la retombée (filtre appliqué à la seule montée)
-i0, i1 = int(56.4 * SR), int(63.0 * SR)
+i0, i1 = int(57.6 * SR), int(64.2 * SR)
 fc = 900 * (16000 / 900) ** np.linspace(0, 1, i1 - i0)
 for c in (0, 1):
     music[i0:i1, c] = onepole(music[i0:i1, c], fc)

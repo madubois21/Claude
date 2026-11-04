@@ -77,51 +77,70 @@
   "text": "Notre drone, équipé d'une caméra infrarouge, survole vos panneaux et révèle chaque échauffement."
  },
  {
-  "id": "04",
-  "file": "assets/audio/vo/vo_04.wav",
-  "start": 32.05,
-  "dur": 6.475,
+  "id": "11",
+  "file": "assets/audio/vo/vo_11.wav",
+  "start": 20.4,
+  "dur": 5.802,
   "tempo": 1.03,
-  "raw": 7.6,
+  "raw": 6.8,
   "speech": [
    [
-    32.089,
-    32.749
+    20.439,
+    22.371
    ],
    [
-    32.982,
-    34.836
+    22.623,
+    24.468
    ],
    [
-    35.069,
-    36.73
-   ],
-   [
-    36.963,
-    37.72
-   ],
-   [
-    37.836,
-    38.419
+    24.72,
+    26.089
    ]
   ],
-  "text": "Points chauds, diodes by-pass défectueuses, boîtes de jonction en surchauffe : chaque anomalie est localisée."
+  "text": "La mesure se fait en plein soleil : dès six cents watts par mètre carré, chaque défaut se révèle."
+ },
+ {
+  "id": "12",
+  "file": "assets/audio/vo/vo_12.wav",
+  "start": 26.38,
+  "dur": 6.259,
+  "tempo": 1.03,
+  "raw": 7.28,
+  "speech": [
+   [
+    26.419,
+    27.739
+   ],
+   [
+    27.972,
+    28.244
+   ],
+   [
+    28.37,
+    29.681
+   ],
+   [
+    29.933,
+    32.535
+   ]
+  ],
+  "text": "Chaque degré de trop coûte un demi pour cent de rendement : dix degrés, c'est déjà cinq pour cent de perte."
  },
  {
   "id": "05",
   "file": "assets/audio/vo/vo_05.wav",
-  "start": 41.4,
+  "start": 42.6,
   "dur": 5.118,
   "tempo": 1.04,
   "raw": 6.16,
   "speech": [
    [
-    41.438,
-    43.737
+    42.638,
+    44.937
    ],
    [
-    43.967,
-    46.41
+    45.167,
+    47.61
    ]
   ],
   "text": "Vous recevez ensuite un rapport détaillé : chaque défaut y est décrit et qualifié,"
@@ -129,18 +148,18 @@
  {
   "id": "06",
   "file": "assets/audio/vo/vo_06.wav",
-  "start": 47.35,
+  "start": 48.55,
   "dur": 3.17,
   "tempo": 1.04,
   "raw": 3.92,
   "speech": [
    [
-    47.388,
-    49.11
+    48.588,
+    50.31
    ],
    [
-    49.34,
-    50.417
+    50.54,
+    51.617
    ]
   ],
   "text": "classé par niveau de gravité, avec l'action à mener."
@@ -148,18 +167,18 @@
  {
   "id": "07",
   "file": "assets/audio/vo/vo_07.wav",
-  "start": 50.85,
+  "start": 52.05,
   "dur": 3.178,
   "tempo": 1.04,
   "raw": 3.92,
   "speech": [
    [
-    50.888,
-    51.956
+    52.088,
+    53.156
    ],
    [
-    52.187,
-    53.927
+    53.387,
+    55.127
    ]
   ],
   "text": "Un rapport aux normes, utile aussi auprès de votre assureur."
@@ -167,18 +186,18 @@
  {
   "id": "08",
   "file": "assets/audio/vo/vo_08.wav",
-  "start": 56.65,
+  "start": 57.85,
   "dur": 5.82,
   "tempo": 1.0,
   "raw": 6.4,
   "speech": [
    [
-    56.69,
-    57.35
+    57.89,
+    58.55
    ],
    [
-    57.54,
-    62.37
+    58.74,
+    63.57
    ]
   ],
   "text": "Bientôt, retrouvez vos rapports et planifiez vos prochaines inspections sur notre plateforme en ligne."
@@ -186,18 +205,18 @@
  {
   "id": "09",
   "file": "assets/audio/vo/vo_09.wav",
-  "start": 63.15,
+  "start": 64.35,
   "dur": 3.09,
   "tempo": 1.0,
   "raw": 3.76,
   "speech": [
    [
-    63.19,
-    64.4
+    64.39,
+    65.6
    ],
    [
-    64.66,
-    66.14
+    65.86,
+    67.34
    ]
   ],
   "text": "Fly Scan'Air. Révélez l'invisible."
@@ -205,22 +224,22 @@
  {
   "id": "10",
   "file": "assets/audio/vo/vo_10.wav",
-  "start": 66.4,
+  "start": 67.6,
   "dur": 3.346,
   "tempo": 1.02,
   "raw": 4.08,
   "speech": [
    [
-    66.439,
-    68.135
+    67.639,
+    69.335
    ],
    [
-    68.429,
-    69.488
+    69.629,
+    70.688
    ],
    [
-    69.606,
-    69.645
+    70.806,
+    70.845
    ]
   ],
   "text": "Faites contrôler votre installation : rendez-vous sur notre site."
