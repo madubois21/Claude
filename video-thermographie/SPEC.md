@@ -2,6 +2,7 @@
 
 Source : `Cahier_des_charges.pdf` (structure en 6 scènes, textes S1 et S2 imposés).
 Choix validés avec le client : pas de voix off ; musique originale composée ; 16:9 seul pour ce premier passage.
+Passage 12 : 74,4 s (max. 1 min 15) ; survol pédagogique (600 W/m², 0,5 %/°C) ; vraie photo thermique en S4 et dans le rapport.
 Passage 9 : nouvelle musique électro-pop dynamique ; plus de bouclage : la vidéo (60 s) s'arrête sur le site web et LinkedIn.
 Passage 8 : 58 s (rapport +3 s : fiches défaut n°1 et n°2, plan de localisation) ; anomalies au rendu thermique réaliste
 (module de 8 x 6 cellules, sous-chaîne, cellule fissurée, boîte de jonction) désignées par des lignes de rappel, sans cercles ;
@@ -18,7 +19,7 @@ contact www.flyscanair.com · 06 22 80 57 69 · contact@flyscanair.com ; plus de
 ```text
 GOAL:    le spectateur comprend qu'un défaut invisible coûte cher et qu'un survol thermique par drone le révèle ; il retient « faire contrôler son installation ».
 OUTPUT:  HyperFrames, 1920 x 1080, 30 fps, MP4 H.264 (version LinkedIn).
-TIME:    60,0 s x 30 = 1800 images, fin tenue sur le site web et LinkedIn (passage 9 ; détail des coupes dans README.md). Musique 100 BPM : 1 temps = 0,6 s = 18 images, 1 mesure = 2,4 s.
+TIME:    74,4 s x 30 = 2232 images, fin tenue sur le site web et LinkedIn (passage 12 ; détail des coupes dans README.md). Musique 100 BPM : 1 temps = 0,6 s = 18 images, 1 mesure = 2,4 s.
          Coupes : S1 0–7,2 · S2 7,2–13,2 · S3 13,2–21,0 · S4 21,0–27,6 · S5 27,6–34,2 · S6 34,2–40,8.
 LOOK:    fond #FFFFFF plat + trame de points Ø2 px #E4E4E7 au pas de 48 px (papier technique, aucun dégradé).
          Encre #111111 : traits de structure 2,5 px, détails 1,5 px, cellules 1 px #D4D4D8, fond de panneau #F3F3F4.

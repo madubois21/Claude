@@ -1,5 +1,17 @@
 # REVIEW
 
+## Passage 12 — icônes au trait orange, survol pédagogique, vraie photo thermique, page normes
+- S2 : icônes Phosphor en contour orange, intérieur transparent.
+- S3 : survol lent (19,2 s) ; deux « Le saviez-vous ? » tirés de la note technique Fly Scan'Air : ≈ 600 W/m²
+  d'ensoleillement (§ 3.2) et −0,5 % de rendement par degré, +10 °C = −5 % (§ 2.1), lus par la voix (phrases 11 et 12,
+  FLORA, Umbriel, ×1,03).
+- S4 : la photo thermique fournie remplace le panneau dessiné pendant que le zoom se pose ; lignes de rappel sur les
+  défauts visibles (points chauds, cellules échauffées, microfissures) ; phrase de voix 04 régénérée pour coller à
+  l'image. Le module survolé en S3 reprend la même disposition (module plus chaud, points chauds à gauche).
+- S5 : la vignette des fiches est la photo ; cadre sur les points chauds (Défaut #1), puis sur les microfissures
+  (Défaut #2, catégorie 3, « À surveiller ») ; page « rapport aux normes » allongée de 1,8 s.
+- Durée 74,4 s (limite fixée par le client : 1 min 15). Coût FLORA du passage : 3 phrases, 0,039 $.
+
 ## Passage 11 — fiches au format des rapports, icônes Phosphor
 - Fiches défaut sur le modèle des rapports Fly Scan'Air (exemples fournis) : titre « Défaut #1 » en couleur, filet
   vertical à gauche, libellés en gras (Catégorie [pastille], Statut [« À traiter »], Type, ΔT | MaxT), séparateur,

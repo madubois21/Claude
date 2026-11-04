@@ -1,6 +1,6 @@
 # Fly Scan’Air — vidéo motion design « Inspection thermographique par drone »
 
-Vidéo full motion design de 60 s, qui se termine sur le site web et LinkedIn, 16:9 (1920 × 1080, 30 i/s), pensée pour LinkedIn, déclinée en 9:16 et 1:1.
+Vidéo full motion design de 74,4 s, qui se termine sur le site web et LinkedIn, 16:9 (1920 × 1080, 30 i/s), pensée pour LinkedIn, déclinée en 9:16 et 1:1.
 Réalisée avec [HyperFrames](https://hyperframes.heygen.com) : HTML + SVG + GSAP, rendus en MP4 image par image.
 
 ## Livrables
@@ -26,8 +26,8 @@ Voix off en français (10 phrases, voix masculine grave « Umbriel ») ; la musi
 | --- | --- |
 | 1 | « Sur une toiture solaire, certains défauts restent totalement invisibles à l’œil nu. » |
 | 2 | « Pourtant, ils font baisser le rendement, augmentent le risque d’incendie et fragilisent votre garantie. » |
-| 3 | « Notre drone, équipé d’une caméra infrarouge, survole vos panneaux et révèle chaque échauffement. » |
-| 4 | « Points chauds, diodes by-pass défectueuses, boîtes de jonction en surchauffe : chaque anomalie est localisée. » |
+| 3 | « Notre drone, équipé d’une caméra infrarouge, survole vos panneaux et révèle chaque échauffement. La mesure se fait en plein soleil : dès six cents watts par mètre carré, chaque défaut se révèle. Chaque degré de trop coûte un demi pour cent de rendement : dix degrés, c’est déjà cinq pour cent de perte. » |
+| 4 | « Points chauds, cellules échauffées, microfissures : chaque anomalie est localisée. » |
 | 5 | « Vous recevez ensuite un rapport détaillé : chaque défaut y est décrit et qualifié, classé par niveau de gravité, avec l’action à mener. Un rapport aux normes, utile aussi auprès de votre assureur. » |
 | 6 | « Bientôt, retrouvez vos rapports et planifiez vos prochaines inspections sur notre plateforme en ligne. » |
 | 7 | « Fly Scan’Air. Révélez l’invisible. Faites contrôler votre installation : rendez-vous sur notre site. » |
@@ -38,11 +38,11 @@ Voix off en français (10 phrases, voix masculine grave « Umbriel ») ; la musi
 | --- | --- | --- | --- |
 | 1 — Le problème invisible | `compositions/s1.html` | 0 – 7,2 s | bâtiment tracé, point chaud, « Certaines anomalies sont invisibles à l’œil nu. » |
 | 2 — Les risques | `compositions/s2.html` | 7,2 – 13,8 s | graphique « Rendement (%) » (installation saine vs avec défauts), icônes incendie + assurance |
-| 3 — Inspection drone | `compositions/s3.html` | 13,8 – 20,4 s | champ de panneaux, drone schématique + HUD, balayage thermique rapide (1,5 s) |
-| 4 — Détection | `compositions/s4.html` | 20,4 – 27,6 s | zoom sur le module thermique (48 cellules) : point chaud (cellule fissurée), sous-chaîne échauffée (diode by-pass), boîte de jonction ; désignés par des lignes de rappel |
-| 5 — Rapport | `compositions/s5.html` | 27,6 – 43,2 s | trois pages : analyse détaillée (vignette thermique avec cadre de détection et plan de localisation dans la page ; à côté, fiches « Défaut #1 » et « Défaut #2 » au format des rapports Fly Scan’Air : catégorie, statut, type, ΔT / MaxT, origine, action, note) ; résultats et gravité (+ histogramme production) ; couverture « Rapport d’inspection thermique » avec tampon « Conforme IEC TS 62446-3 » et checklist |
-| 6 — Plateforme en ligne | `compositions/s6.html` | 43,2 – 49,8 s | le rapport rejoint la plateforme : plan thermique, rapports, planning des inspections à venir — « Bientôt disponible » |
-| 7 — Fin | `compositions/s7.html` | 49,8 – 60 s | logo, slogan, message, puis site web (capture animée) + LinkedIn (linkedin.com/company/fly-scan-air) + coordonnées, tenus à l’écran jusqu’à la fin (≈ 4,8 s) |
+| 3 — Inspection drone | `compositions/s3.html` | 13,8 – 33 s | champ de panneaux, drone + HUD, survol lent ; « Le saviez-vous ? » : ≈ 600 W/m² d’ensoleillement, −0,5 % de rendement par degré (note technique, § 3.2 et 2.1) |
+| 4 — Détection | `compositions/s4.html` | 33 – 40,2 s | zoom sur le module : la vraie photo thermique Fly Scan’Air (`assets/images/thermo-panneau.jpg`) ; points chauds, cellules échauffées, microfissures désignés par des lignes de rappel |
+| 5 — Rapport | `compositions/s5.html` | 40,2 – 57,6 s | trois pages : analyse détaillée (vignette thermique avec cadre de détection et plan de localisation dans la page ; à côté, fiches « Défaut #1 » et « Défaut #2 » au format des rapports Fly Scan’Air : catégorie, statut, type, ΔT / MaxT, origine, action, note) ; résultats et gravité (+ histogramme production) ; couverture « Rapport d’inspection thermique » avec tampon « Conforme IEC TS 62446-3 » et checklist |
+| 6 — Plateforme en ligne | `compositions/s6.html` | 57,6 – 64,2 s | le rapport rejoint la plateforme : plan thermique, rapports, planning des inspections à venir — « Bientôt disponible » |
+| 7 — Fin | `compositions/s7.html` | 64,2 – 74,4 s | logo, slogan, message, puis site web (capture animée) + LinkedIn (linkedin.com/company/fly-scan-air) + coordonnées, tenus à l’écran jusqu’à la fin (≈ 4,8 s) |
 
 Charte : fond blanc, traits noirs fins, accent `#FF5700`, typographie Comfortaa (textes et logotype).
 Vocabulaire technique des anomalies repris de la note technique Fly Scan’Air (norme IEC TS 62446-3).

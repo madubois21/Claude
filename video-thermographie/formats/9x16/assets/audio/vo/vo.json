@@ -127,6 +127,37 @@
   "text": "Chaque degré de trop coûte un demi pour cent de rendement : dix degrés, c'est déjà cinq pour cent de perte."
  },
  {
+  "id": "04",
+  "file": "assets/audio/vo/vo_04.wav",
+  "start": 33.25,
+  "dur": 5.72,
+  "tempo": 1.0,
+  "raw": 6.48,
+  "speech": [
+   [
+    33.29,
+    34.06
+   ],
+   [
+    34.32,
+    35.58
+   ],
+   [
+    35.84,
+    36.87
+   ],
+   [
+    37.13,
+    38.01
+   ],
+   [
+    38.13,
+    38.87
+   ]
+  ],
+  "text": "Points chauds, cellules échauffées, microfissures : chaque anomalie est localisée."
+ },
+ {
   "id": "05",
   "file": "assets/audio/vo/vo_05.wav",
   "start": 42.6,

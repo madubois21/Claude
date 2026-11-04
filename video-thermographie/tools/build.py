@@ -1166,7 +1166,7 @@ def build_s4():
       tl.fromTo(title, {{ opacity: 0 }}, {{ opacity: 1, duration: 0.2 }}, 0.75);
       tl.fromTo(title, {{ color: "#D4D4D8" }}, {{ color: "#111111", duration: 0.25, stagger: 0.08 }}, 0.95);
       // 3. chaque défaut est désigné : point sur l'anomalie, ligne de rappel, étiquette (calé sur la voix off)
-      [[0.35, 0], [1.05, 1], [2.4, 2]].forEach(([t, i]) => {{
+      [[0.2, 0], [1.05, 1], [2.55, 2]].forEach(([t, i]) => {{  // « Points chauds », « cellules échauffées », « microfissures »
         tl.fromTo($("#s4-pin" + i), {{ opacity: 0, scale: 0, transformOrigin: "50% 50%" }}, {{ opacity: 1, scale: 1, duration: 0.3, ease: "back.out(2)" }}, t + 0.1);
         draw(t + 0.25, $("#s4-ld" + i), 0.35, "power2.out");
         fadeIn(t + 0.58, $("#s4-dot" + i), 0.1);
@@ -1892,9 +1892,9 @@ SFX = [
     ("sfx-drone", "whoosh-short.mp3", 13.8 + 0.72, 0.5),
     ("sfx-scan", "whoosh-cinematic.mp3", 13.8 + 3.95, 0.3),
     ("sfx-zoom", "whoosh-high.mp3", 13.8 + S3_DUR - 0.05, 0.45),
-    ("sfx-tick1", "key-press.mp3", 33.0 + 0.95, 0.5),
+    ("sfx-tick1", "key-press.mp3", 33.0 + 0.8, 0.5),
     ("sfx-tick2", "key-press.mp3", 33.0 + 1.65, 0.45),
-    ("sfx-tick3", "key-press.mp3", 33.0 + 3.0, 0.5),
+    ("sfx-tick3", "key-press.mp3", 33.0 + 3.15, 0.5),
     ("sfx-carry", "whoosh-low.mp3", 33.0 + 6.8, 0.35),
     ("sfx-box1", "key-press.mp3", 40.2 + 1.5, 0.3),
     ("sfx-box2", "key-press.mp3", 40.2 + 5.72, 0.3),

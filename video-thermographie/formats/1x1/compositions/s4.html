@@ -116,7 +116,7 @@
       tl.fromTo(title, { opacity: 0 }, { opacity: 1, duration: 0.2 }, 0.75);
       tl.fromTo(title, { color: "#D4D4D8" }, { color: "#111111", duration: 0.25, stagger: 0.08 }, 0.95);
       // 3. chaque défaut est désigné : point sur l'anomalie, ligne de rappel, étiquette (calé sur la voix off)
-      [[0.35, 0], [1.05, 1], [2.4, 2]].forEach(([t, i]) => {
+      [[0.2, 0], [1.05, 1], [2.55, 2]].forEach(([t, i]) => {  // « Points chauds », « cellules échauffées », « microfissures »
         tl.fromTo($("#s4-pin" + i), { opacity: 0, scale: 0, transformOrigin: "50% 50%" }, { opacity: 1, scale: 1, duration: 0.3, ease: "back.out(2)" }, t + 0.1);
         draw(t + 0.25, $("#s4-ld" + i), 0.35, "power2.out");
         fadeIn(t + 0.58, $("#s4-dot" + i), 0.1);
