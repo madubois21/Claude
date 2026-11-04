@@ -27,8 +27,8 @@ BASE = "https://media.flora.ai/node-inputs/2026/11/3/px78199r2h4zbzqw7mjp0659jx8
 SR = 48000
 
 # (id, run FLORA, début absolu (s), pause interne max (s), tempo, texte)
-# Placement calé sur l'image : S1 0–7,2 · S2 7,2–13,8 · S3 13,8–20,4 · S4 20,4–27,6 · S5 27,6–40,2 ·
-# S6 40,2–46,8 · S7 46,8–55,0 (la voix se termine avant la sortie en boucle, 54,0 s).
+# Placement calé sur l'image : S1 0–7,2 · S2 7,2–13,8 · S3 13,8–20,4 · S4 20,4–27,6 · S5 27,6–43,2 ·
+# S6 43,2–49,8 · S7 49,8–58,0 (la voix se termine avant la sortie en boucle, 57,0 s).
 LINES = [
     ("01", "m170bcwv0qx4nt99xpssgpz26d8hhbf6", 0.90, 0.30, 1.00,
      "Sur une toiture solaire, certains défauts restent totalement invisibles à l'œil nu."),
@@ -38,21 +38,21 @@ LINES = [
      "Notre drone, équipé d'une caméra infrarouge, survole vos panneaux et révèle chaque échauffement."),
     ("04", "m17e57pvwm0ppxntect1mewzf18hghmv", 20.65, 0.24, 1.03,
      "Points chauds, diodes by-pass défectueuses, boîtes de jonction en surchauffe : chaque anomalie est localisée."),
-    ("05", "m178gqwz34r99kc08kxs3zhfw58hhs86", 27.80, 0.24, 1.04,
+    ("05", "m178gqwz34r99kc08kxs3zhfw58hhs86", 30.00, 0.24, 1.04,
      "Vous recevez ensuite un rapport détaillé : chaque défaut y est décrit et qualifié,"),
-    ("06", "m170f6ptnpv9z50g3qawwjke2h8hg17x", 33.10, 0.24, 1.04,
+    ("06", "m170f6ptnpv9z50g3qawwjke2h8hg17x", 35.95, 0.24, 1.04,
      "classé par niveau de gravité, avec l'action à mener."),
-    ("07", "m179b0j2z3xd0b1gqx84jdhe458hhav1", 36.45, 0.24, 1.04,
+    ("07", "m179b0j2z3xd0b1gqx84jdhe458hhav1", 39.45, 0.24, 1.04,
      "Un rapport aux normes, utile aussi auprès de votre assureur."),
-    ("08", "m176pmnebw024ntrcy79s25pe98hgcw9", 40.45, 0.30, 1.00,
+    ("08", "m176pmnebw024ntrcy79s25pe98hgcw9", 43.45, 0.30, 1.00,
      "Bientôt, retrouvez vos rapports et planifiez vos prochaines inspections sur notre plateforme en ligne."),
-    ("09", "m175rswf9b4qmwa8wx9ert80n18hg994", 46.95, 0.26, 1.00,
+    ("09", "m175rswf9b4qmwa8wx9ert80n18hg994", 49.95, 0.26, 1.00,
      "Fly Scan'Air. Révélez l'invisible."),
-    ("10", "m170jg4gxm1hh6f9ybp699ze158hh6ha", 50.20, 0.30, 1.02,
+    ("10", "m170jg4gxm1hh6f9ybp699ze158hh6ha", 53.20, 0.30, 1.02,
      "Faites contrôler votre installation : rendez-vous sur notre site."),
 ]
 GAP = 0.15  # silence minimal entre deux phrases
-END = 54.0  # la sortie en boucle commence ici
+END = 57.0  # la sortie en boucle commence ici
 
 
 def ff(*args, capture=False):

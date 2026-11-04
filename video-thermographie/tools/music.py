@@ -14,7 +14,7 @@ import numpy as np
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SR = 48000
-TOTAL = 55.0
+TOTAL = 58.0
 BEAT = 0.6
 N = int(TOTAL * SR)
 rng = np.random.default_rng(20261102)
@@ -69,15 +69,17 @@ CHORDS = [
     (22.8, 25.2, 41, [57, 60, 65, 69]),  # F
     (25.2, 27.6, 43, [55, 60, 62, 67]),  # Gsus4
     (27.6, 30.0, 48, [55, 60, 64, 67, 72]),  # C           S5 rapport : défaut n°1
-    (30.0, 31.8, 47, [55, 59, 62, 67, 71]),  # G/B
-    (31.8, 33.6, 45, [57, 60, 64, 69, 72]),  # Am          résultats
-    (33.6, 36.0, 41, [57, 60, 65, 69, 72]),  # F
-    (36.0, 38.4, 48, [55, 60, 64, 67, 72]),  # C           couverture, norme
-    (38.4, 40.2, 43, [55, 59, 62, 67, 71]),  # G
-    (40.2, 42.6, 48, [55, 60, 64, 67, 72]),  # C           S6 plateforme
-    (42.6, 44.4, 41, [57, 60, 65, 69, 72]),  # F
-    (44.4, 46.8, 43, [55, 59, 62, 67, 71]),  # G
-    (46.8, 55.0, 36, [55, 59, 64, 67, 74]),  # Cmaj9        S7 logo, site, LinkedIn
+    (30.0, 32.4, 47, [55, 59, 62, 67, 71]),  # G/B
+    (32.4, 34.2, 45, [57, 60, 64, 69, 72]),  # Am          défaut n°2
+    (34.2, 36.0, 41, [57, 60, 65, 69, 72]),  # F
+    (36.0, 37.8, 38, [57, 60, 62, 65, 72]),  # Dm9         résultats
+    (37.8, 39.6, 41, [57, 60, 65, 69, 72]),  # F
+    (39.6, 42.0, 48, [55, 60, 64, 67, 72]),  # C           couverture, norme
+    (42.0, 43.2, 43, [55, 59, 62, 67, 71]),  # G
+    (43.2, 45.6, 48, [55, 60, 64, 67, 72]),  # C           S6 plateforme
+    (45.6, 47.4, 41, [57, 60, 65, 69, 72]),  # F
+    (47.4, 49.8, 43, [55, 59, 62, 67, 71]),  # G
+    (49.8, 58.0, 36, [55, 59, 64, 67, 74]),  # Cmaj9        S7 logo, site, LinkedIn
 ]
 
 
@@ -106,7 +108,7 @@ for start, end, bass, notes in CHORDS:
     # S1: every 2 beats, S2-S6: 8ths (pulsation), S7: one long note
     if start < 7.2:
         step = BEAT * 2
-    elif start < 46.8:
+    elif start < 49.8:
         step = BEAT / 2
     else:
         step = None
@@ -137,7 +139,7 @@ def pluck(freq, dur=0.5):
 SIX = BEAT / 4
 step_i = 0
 for start, end, bass, notes in CHORDS:
-    if start < 13.8 or start >= 46.8:
+    if start < 13.8 or start >= 49.8:
         continue
     tones = sorted(notes[:4])
     octave = 12 if start >= 27.6 else 0
@@ -162,7 +164,7 @@ def hat(dur=0.08):
 
 
 t0 = 13.8 + BEAT / 2
-while t0 < 46.8:
+while t0 < 49.8:
     add(hat(), t0, 0.2, 0.028)
     t0 += BEAT
 
@@ -179,7 +181,7 @@ for i in range(n):
     acc = a[i] * acc + (1 - a[i]) * noise[i]
     y[i] = acc
 swell = y * (t / t[-1]) ** 2 * env_adsr(n, 0.01, 0.12)
-add(swell, 45.0, 0, 0.55)
+add(swell, 48.0, 0, 0.55)
 
 # ------------------------------------------------------------------ reverb
 def reverb(x, seconds=2.6, mix=0.24, seed=1):
@@ -255,15 +257,15 @@ for b in range(beats):
     in_bar = b % 4
     if 2.4 <= t0 < 7.2 and in_bar in (0, 2):  # intro : battement discret
         dadd(K, t0, 0, 0.32)
-    elif 7.2 <= t0 < 46.8:  # S2 -> S6 : pulsation à la noire
+    elif 7.2 <= t0 < 49.8:  # S2 -> S6 : pulsation à la noire
         dadd(K, t0, 0, 0.42)
-    elif abs(t0 - 46.8) < 1e-6:  # dernier temps fort sur le logo
+    elif abs(t0 - 49.8) < 1e-6:  # dernier temps fort sur le logo
         dadd(K, t0, 0, 0.42)
-    if 13.8 <= t0 < 46.8 and in_bar in (1, 3):  # clap discret sur 2 et 4
+    if 13.8 <= t0 < 49.8 and in_bar in (1, 3):  # clap discret sur 2 et 4
         dadd(C, t0, 0.1, 0.16)
 for k in range(int(TOTAL / (BEAT / 4))):  # charleston : croches, doubles-croches fantômes
     t0 = k * BEAT / 4
-    if not (7.2 <= t0 < 46.8):
+    if not (7.2 <= t0 < 49.8):
         continue
     if k % 2 == 1:
         dadd(tick(), t0, 0.3, 0.05 if k % 4 == 2 else 0.035)
@@ -274,7 +276,7 @@ pump = np.ones(N)
 tt = np.arange(N) / SR
 for b in range(beats):
     t0 = b * BEAT
-    if 7.2 <= t0 < 46.8:
+    if 7.2 <= t0 < 49.8:
         i0 = int(t0 * SR)
         i1 = min(N, i0 + int(BEAT * SR))
         pump[i0:i1] *= 1 - 0.22 * np.exp(-(tt[i0:i1] - t0) / 0.12)

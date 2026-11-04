@@ -2,6 +2,9 @@
 
 Source : `Cahier_des_charges.pdf` (structure en 6 scènes, textes S1 et S2 imposés).
 Choix validés avec le client : pas de voix off ; musique originale composée ; 16:9 seul pour ce premier passage.
+Passage 8 : 58 s (rapport +3 s : fiches défaut n°1 et n°2, plan de localisation) ; anomalies au rendu thermique réaliste
+(module de 8 x 6 cellules, sous-chaîne, cellule fissurée, boîte de jonction) désignées par des lignes de rappel, sans cercles ;
+icônes S2 en trait de 6 px ; lettres du logo vectorisées depuis le logo fourni.
 Passage 7 : voix off française ajoutée (FLORA, Gemini 3.1 Flash TTS, voix « Umbriel »), musique plus rythmée (batterie légère) ;
 cercles de S4, pages 2 et 3 de S5 et message final de S7 recalés sur la voix.
 Passage 5 : 54 s ; rapport en trois pages (défaut, résultats, couverture normée) ; planning des inspections.

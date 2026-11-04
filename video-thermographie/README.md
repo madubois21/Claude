@@ -1,6 +1,6 @@
 # Fly Scan’Air — vidéo motion design « Inspection thermographique par drone »
 
-Vidéo full motion design de 55 s, en boucle sans coupure, 16:9 (1920 × 1080, 30 i/s), pensée pour LinkedIn, déclinée en 9:16 et 1:1.
+Vidéo full motion design de 58 s, en boucle sans coupure, 16:9 (1920 × 1080, 30 i/s), pensée pour LinkedIn, déclinée en 9:16 et 1:1.
 Réalisée avec [HyperFrames](https://hyperframes.heygen.com) : HTML + SVG + GSAP, rendus en MP4 image par image.
 
 ## Livrables
@@ -11,7 +11,7 @@ Réalisée avec [HyperFrames](https://hyperframes.heygen.com) : HTML + SVG + GSA
 | Déclinaison verticale 9:16 | `renders/FlyScanAir_thermographie_9x16.mp4` (1080 × 1920) |
 | Déclinaison carrée 1:1 | `renders/FlyScanAir_thermographie_1x1.mp4` (1080 × 1080) |
 | Projet source | `index.html` + `compositions/s1.html` … `s7.html` (16:9) ; `formats/9x16/` et `formats/1x1/` (projets autonomes des déclinaisons) |
-| Assets graphiques | tout est vectoriel dans les scènes ; logo redessiné en SVG dans `compositions/s6.html` ; police Comfortaa `assets/fonts/` |
+| Assets graphiques | tout est vectoriel dans les scènes ; logo : lettres vectorisées depuis le logo fourni (`assets/images/logo-flyscanair.png` → `assets/logo-letters.json`, par `tools/logo_trace.py`), serpentin et billes remesurés sur la même image ; police Comfortaa `assets/fonts/` |
 | Voix off (FLORA, Gemini 3.1 Flash TTS, voix « Umbriel », fr-FR) | `assets/audio/vo/raw_01.wav` … `raw_10.wav` (fichiers FLORA d’origine), `vo_01.wav` … `vo_10.wav` (nettoyés et placés par `tools/voiceover.py`) |
 | Musique (originale, libre de droits) | `assets/audio/music.wav` (générée par `tools/music.py`) |
 | Effets sonores | `assets/audio/sfx/` (voir `CREDITS.md`) |
@@ -38,10 +38,10 @@ remonte dans les silences. Les textes à l’écran portent toujours le message 
 | 1 — Le problème invisible | `compositions/s1.html` | 0 – 7,2 s | bâtiment tracé, point chaud, « Certaines anomalies sont invisibles à l’œil nu. » |
 | 2 — Les risques | `compositions/s2.html` | 7,2 – 13,8 s | graphique « Rendement (%) » (installation saine vs avec défauts), icônes incendie + assurance |
 | 3 — Inspection drone | `compositions/s3.html` | 13,8 – 20,4 s | champ de panneaux, drone schématique + HUD, balayage thermique rapide (1,5 s) |
-| 4 — Détection | `compositions/s4.html` | 20,4 – 27,6 s | zoom sur le module : point chaud (hot-spot), diode by-pass défectueuse, boîte de jonction |
-| 5 — Rapport | `compositions/s5.html` | 27,6 – 40,2 s | trois pages : analyse détaillée du défaut n°1 ; résultats et gravité (+ histogramme production) ; couverture « Rapport d’inspection thermique » avec tampon « Conforme IEC TS 62446-3 » et checklist |
-| 6 — Plateforme en ligne | `compositions/s6.html` | 40,2 – 46,8 s | le rapport rejoint la plateforme : plan thermique, rapports, planning des inspections à venir — « Bientôt disponible » |
-| 7 — Fin | `compositions/s7.html` | 46,8 – 55 s | logo, slogan, message, puis site web (capture animée) + LinkedIn (linkedin.com/company/fly-scan-air) + coordonnées ; sortie qui rejoint la première image (boucle) |
+| 4 — Détection | `compositions/s4.html` | 20,4 – 27,6 s | zoom sur le module thermique (48 cellules) : point chaud (cellule fissurée), sous-chaîne échauffée (diode by-pass), boîte de jonction ; désignés par des lignes de rappel |
+| 5 — Rapport | `compositions/s5.html` | 27,6 – 43,2 s | trois pages : analyse détaillée (fiches défaut n°1 et n°2, vignette thermique avec cadre de détection, plan de localisation du module) ; résultats et gravité (+ histogramme production) ; couverture « Rapport d’inspection thermique » avec tampon « Conforme IEC TS 62446-3 » et checklist |
+| 6 — Plateforme en ligne | `compositions/s6.html` | 43,2 – 49,8 s | le rapport rejoint la plateforme : plan thermique, rapports, planning des inspections à venir — « Bientôt disponible » |
+| 7 — Fin | `compositions/s7.html` | 49,8 – 58 s | logo, slogan, message, puis site web (capture animée) + LinkedIn (linkedin.com/company/fly-scan-air) + coordonnées ; sortie qui rejoint la première image (boucle) |
 
 Charte : fond blanc, traits noirs fins, accent `#FF5700`, typographie Comfortaa (textes et logotype).
 Vocabulaire technique des anomalies repris de la note technique Fly Scan’Air (norme IEC TS 62446-3).
@@ -69,6 +69,9 @@ La géométrie (perspective du toit, champ de panneaux, raccords de zoom au pixe
 `tools/build.py`, qui écrit `index.html` et `compositions/*.html`. **Relancer `python3 tools/build.py`
 écrase les HTML** : soit vous modifiez le script puis le relancez, soit vous retouchez directement les HTML
 (dans Studio ou à la main) et vous ne relancez plus le script.
+
+`python3 tools/logo_trace.py` revectorise les lettres du logo à partir de `assets/images/logo-flyscanair.png`
+(nécessite `pip install potracer`) ; le résultat, `assets/logo-letters.json`, est lu par `tools/build.py`.
 
 `python3 tools/music.py` régénère la musique (synthèse déterministe, 100 BPM, la mineur → do majeur ; nappes,
 basse en croches, grosse caisse à la noire, clap discret sur 2 et 4, charleston en croches).

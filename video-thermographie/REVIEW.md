@@ -1,5 +1,23 @@
 # REVIEW
 
+## Passage 8 — icônes, anomalies, rapport, logo
+- S2 : icônes incendie et assurance en trait de 6 px (coche 7 px), accordées à la graisse de Comfortaa.
+- Anomalies (S3, S4, vignette du rapport) au rendu thermique réaliste, inspiré des vignettes du rapport type :
+  modules de 8 x 6 cellules, chaque cellule à sa propre température ; point chaud = cellule fissurée avec trois
+  points chauds diffus ; diode by-pass = sous-chaîne (deux rangées, un tiers du module) uniformément plus chaude ;
+  boîte de jonction au bord court du module. Couleurs Fly Scan'Air conservées (pêche → #FF5700).
+- S4 : plus de cercles autour des défauts ; un point sur l'anomalie, une ligne de rappel et l'étiquette, dans l'ordre
+  de la voix off.
+- S5 : 12,6 → 15,6 s (vidéo 55 → 58 s). Page « Analyse détaillée » sous forme de fiches comme le rapport type :
+  défaut n°1 (point chaud, cellule fissurée, ΔT 11,2 °C, MaxT 58 °C, Cat. 4, contrôle électrique) puis défaut n°2
+  (diode by-pass, échauffement linéaire, ΔT 7,8 °C, MaxT 54 °C, Cat. 5, remplacer la diode) ; le cadre de détection
+  orange glisse d'un défaut à l'autre sur la vignette ; plan de localisation du champ (rangée B, module 5).
+  Valeurs illustratives, aucune donnée du rapport type ni mention du logiciel d'origine. Pages 2 et 3 inchangées,
+  décalées de 2,9 s ; voix, bruitages et musique recalés (S6 et S7 + 3 s).
+- Logo : lettres vectorisées directement depuis le logo fourni (potrace) au lieu de Comfortaa épaissie ; serpentin,
+  billes et position de la bille sur le « i » remesurés sur la même image (boucles espacées de 68,6 px au lieu de 70).
+- Tampon de conformité sur fond blanc plein (contraste 3,2:1).
+
 ## Passage 7b — correctif du tracé des panneaux (9:16 et 1:1)
 - Défaut signalé : en scène 3, le contour de chaque panneau ne se traçait pas en entier (haut du bord gauche manquant),
   puis se complétait d'un coup à 1,6 s, après l'arrivée du drone.

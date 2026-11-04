@@ -110,18 +110,18 @@
  {
   "id": "05",
   "file": "assets/audio/vo/vo_05.wav",
-  "start": 27.8,
+  "start": 30.0,
   "dur": 5.118,
   "tempo": 1.04,
   "raw": 6.16,
   "speech": [
    [
-    27.838,
-    30.137
+    30.038,
+    32.337
    ],
    [
-    30.367,
-    32.81
+    32.567,
+    35.01
    ]
   ],
   "text": "Vous recevez ensuite un rapport détaillé : chaque défaut y est décrit et qualifié,"
@@ -129,18 +129,18 @@
  {
   "id": "06",
   "file": "assets/audio/vo/vo_06.wav",
-  "start": 33.1,
+  "start": 35.95,
   "dur": 3.17,
   "tempo": 1.04,
   "raw": 3.92,
   "speech": [
    [
-    33.138,
-    34.86
+    35.988,
+    37.71
    ],
    [
-    35.09,
-    36.167
+    37.94,
+    39.017
    ]
   ],
   "text": "classé par niveau de gravité, avec l'action à mener."
@@ -148,18 +148,18 @@
  {
   "id": "07",
   "file": "assets/audio/vo/vo_07.wav",
-  "start": 36.45,
+  "start": 39.45,
   "dur": 3.178,
   "tempo": 1.04,
   "raw": 3.92,
   "speech": [
    [
-    36.488,
-    37.556
+    39.488,
+    40.556
    ],
    [
-    37.787,
-    39.527
+    40.787,
+    42.527
    ]
   ],
   "text": "Un rapport aux normes, utile aussi auprès de votre assureur."
@@ -167,18 +167,18 @@
  {
   "id": "08",
   "file": "assets/audio/vo/vo_08.wav",
-  "start": 40.45,
+  "start": 43.45,
   "dur": 5.82,
   "tempo": 1.0,
   "raw": 6.4,
   "speech": [
    [
-    40.49,
-    41.15
+    43.49,
+    44.15
    ],
    [
-    41.34,
-    46.17
+    44.34,
+    49.17
    ]
   ],
   "text": "Bientôt, retrouvez vos rapports et planifiez vos prochaines inspections sur notre plateforme en ligne."
@@ -186,18 +186,18 @@
  {
   "id": "09",
   "file": "assets/audio/vo/vo_09.wav",
-  "start": 46.95,
+  "start": 49.95,
   "dur": 3.09,
   "tempo": 1.0,
   "raw": 3.76,
   "speech": [
    [
-    46.99,
-    48.2
+    49.99,
+    51.2
    ],
    [
-    48.46,
-    49.94
+    51.46,
+    52.94
    ]
   ],
   "text": "Fly Scan'Air. Révélez l'invisible."
@@ -205,22 +205,22 @@
  {
   "id": "10",
   "file": "assets/audio/vo/vo_10.wav",
-  "start": 50.2,
+  "start": 53.2,
   "dur": 3.346,
   "tempo": 1.02,
   "raw": 4.08,
   "speech": [
    [
-    50.239,
-    51.935
+    53.239,
+    54.935
    ],
    [
-    52.229,
-    53.288
+    55.229,
+    56.288
    ],
    [
-    53.406,
-    53.445
+    56.406,
+    56.445
    ]
   ],
   "text": "Faites contrôler votre installation : rendez-vous sur notre site."

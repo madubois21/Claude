@@ -48,8 +48,8 @@ LAYOUTS = {
         s3_cam=(-35, 832, -245.9, 1000), s3_hud=(556, 597), s3_title=(108, 330, 58),
         handoff=(220, 641, 640),
         s4_settle=(60, 560, 960), s4_title=(108, 330, 56), s4_title_text="Chaque anomalie est|détectée et localisée.",
-        s4_rows=(1380, 1490, 1600), s4_order=(2, 1, 0), s4_fs=(34, 28),
-        s4_lab=(("r", 1020, 480), ("c", 0, 480), ("c", 0, 460)),
+        s4_rows=(1380, 1490, 1600), s4_order=(2, 0, 1), s4_fs=(34, 28), s4_band_col=0.8,
+        s4_lab=(("r", 1020, 480), ("l", 332, 520), ("l", 108, 560)),
         s5_title=(108, 300, 64), s5_doc=(0.8, 124, 423.2), s5_chart=(0.8, -556, 975.6), s5_stamp=36, s5_pfs=35,
         s5_fs=dict(item=35, head=36, tick=36, label=38, cat=36, catlh=44),
     ),
@@ -60,8 +60,8 @@ LAYOUTS = {
         s3_cam=(-35, 832, 87.4, 1000), s3_hud=(556, 236), s3_title=(108, 108, 52),
         handoff=(270, 380, 540),
         s4_settle=(204, 170, 672), s4_title=(108, 90, 40), s4_title_text="Chaque anomalie est détectée et localisée.",
-        s4_rows=(750, 825, 900), s4_order=(2, 1, 0), s4_fs=(30, 28),
-        s4_lab=(("r", 1000, 420), ("l", 108, 460), ("c", 0, 380)),
+        s4_rows=(750, 825, 900), s4_order=(2, 0, 1), s4_fs=(30, 28), s4_band_col=0.8,
+        s4_lab=(("r", 1000, 420), ("l", 385, 480), ("l", 108, 560)),
         s5_title=(108, 150, 52), s5_doc=(0.7, -90, 232.8), s5_chart=(0.58, -10, 175.6), s5_stamp=40, s5_pfs=40,
         s5_fs=dict(item=49, head=40, tick=49, label=49, cat=49, catlh=58),
     ),
@@ -224,16 +224,16 @@ PW, PH = 210, 160  # panel
 GX, GY = 12, 28  # gaps
 COLS, ROWS = 7, 3
 FX0, FY0 = 230, 412  # field origin
-CC, CR = 6, 4  # cells per panel
+CC, CR = 8, 6  # cellules par module (cellules presque carrées, 26 x 27)
 HERO = (1, 4)  # (row, col) zoomed panel
 
-# anomalies in panel-local coords at S3 scale (signatures de la note technique IEC TS 62446-3)
+# anomalies par module, en cellules (colonne, ligne) — signatures thermiques de la note technique (IEC TS 62446-3)
 ANOM = {
-    (0, 1): [("spot", 87.5, 60)],
-    (1, 4): [("spot", 122.5, 100), ("band", 35, 0), ("jbox", 175, 12)],  # panneau zoomé en S4
-    (2, 2): [("module", 0, 0)],  # module fonctionnant à vide : échauffement uniforme
-    (2, 5): [("cell", 35, 80), ("cell", 35, 120)],
-    (0, 6): [("spot", 157.5, 20)],
+    (0, 1): [("spot", 3, 2)],  # point chaud ponctuel
+    (1, 4): [("crack", 2, 4), ("band", 0), ("jbox",)],  # module zoomé en S4 : cellule fissurée, sous-chaîne, boîte de jonction
+    (2, 2): [("module",)],  # module fonctionnant à vide : échauffement uniforme
+    (2, 5): [("cell", 1, 2), ("cell", 1, 3)],  # cellules isolées plus chaudes
+    (0, 6): [("spot", 6, 0)],
 }
 
 
@@ -271,39 +271,95 @@ def busbars(x, y, w, h):
     return "".join(d)
 
 
+CWU, CHU = PW / CC, PH / CR  # taille d'une cellule (échelle S3)
+
+
+def anom_center(kind, *a):
+    """Point d'ancrage d'une anomalie dans le repère du module (échelle S3)."""
+    if kind in ("spot", "cell"):
+        return (a[0] + 0.5) * CWU, (a[1] + 0.5) * CHU
+    if kind == "crack":
+        return (a[0] + 0.5) * CWU, (a[1] + 0.52) * CHU
+    if kind == "band":  # sur la sous-chaîne, à l'abscisse choisie par format
+        return (L["s4_band_col"] if L else 5.5) * CWU, (a[0] + 1) * CHU
+    if kind == "jbox":
+        return PW - 0.62 * CWU, PH / 2
+    return PW / 2, PH / 2
+
+
+def anom_anchor(kind, *a):
+    """Départ de la ligne de rappel : bord droit (16:9, lignes horizontales) ou bas (déclinaisons, lignes verticales)."""
+    if kind == "crack":
+        i, j = a
+        return ((i + 0.5) * CWU, (j + 1) * CHU) if L else ((i + 1) * CWU, (j + 0.52) * CHU)
+    if kind == "jbox":
+        return (PW - 0.62 * CWU, PH / 2 + 0.48 * CHU) if L else (PW - 0.36 * CWU, PH / 2)
+    return anom_center(kind, *a)
+
+
+def hval(*k):
+    """Valeur pseudo-aléatoire déterministe dans [0, 1[ (variation d'une cellule à l'autre)."""
+    h = 2166136261
+    for v in k:
+        h = ((h ^ (v & 0xFFFFFFFF)) * 16777619) & 0xFFFFFFFF
+    return (h % 10007) / 10007
+
+
+def cell_tint(r, c, ox, oy, s):
+    """Thermogramme : chaque cellule a sa propre température, à peine différente de ses voisines."""
+    cw, ch = CWU * s, CHU * s
+    return "".join(
+        f'<rect x="{n(ox + i * cw)}" y="{n(oy + j * ch)}" width="{n(cw)}" height="{n(ch)}" fill="{ACC}" '
+        f'fill-opacity="{0.015 + 0.055 * hval(r, c, i, j):.3f}"/>'
+        for j in range(CR) for i in range(CC)
+    )
+
+
 def anomalies_svg(r, c, ox, oy, s, prefix, hero_ids=False):
-    """Thermal anomalies of panel (r,c) drawn at origin (ox,oy) and scale s."""
+    """Anomalies thermiques du module (r, c), dessinées à l'origine (ox, oy) et à l'échelle s."""
+    cw, ch = CWU * s, CHU * s
+
+    def cellrect(i, j, op):
+        return (f'<rect x="{n(ox + i * cw)}" y="{n(oy + j * ch)}" width="{n(cw)}" height="{n(ch)}" '
+                f'fill="{ACC}" fill-opacity="{op:.3f}"/>')
+
     out = []
-    for i, (kind, ax, ay) in enumerate(ANOM.get((r, c), [])):
+    for k, (kind, *a) in enumerate(ANOM.get((r, c), [])):
+        ax, ay = anom_center(kind, *a)
         x, y = ox + ax * s, oy + ay * s
-        idattr = f' id="{prefix}-a{i}"' if hero_ids else ""
-        if kind == "spot":  # point chaud ponctuel (cellule fissurée)
+        idattr = f' id="{prefix}-a{k}"' if hero_ids else ""
+        g = f'<g{idattr} class="{prefix}-anom" data-x="{n(x)}">'
+        if kind == "spot":  # point chaud : la cellule chauffe, cœur carré très chaud, diffusion autour
+            i, j = a
+            out.append(g + cellrect(i, j, 0.3)
+                       + f'<circle cx="{n(x)}" cy="{n(y)}" r="{n(0.8 * cw)}" fill="url(#{prefix}-hot)" fill-opacity="0.7"/>'
+                       + f'<rect x="{n(x - 0.17 * cw)}" y="{n(y - 0.17 * cw)}" width="{n(0.34 * cw)}" height="{n(0.34 * cw)}" '
+                       f'rx="{n(0.07 * cw)}" fill="{ACC}"/></g>')
+        elif kind == "crack":  # cellule fissurée : points chauds alignés sur la fissure
+            i, j = a
+            x0, y0 = ox + i * cw, oy + j * ch
+            spots = [(0.3, 0.28, 0.26), (0.53, 0.55, 0.36), (0.72, 0.8, 0.22)]
             out.append(
-                f'<g{idattr} class="{prefix}-anom" data-x="{n(x)}">'
-                f'<circle cx="{n(x)}" cy="{n(y)}" r="{n(22 * s)}" fill="url(#{prefix}-hot)"/>'
-                f'<circle cx="{n(x)}" cy="{n(y)}" r="{n(5 * s)}" fill="{ACC}"/></g>'
-            )
+                g + cellrect(i, j, 0.34)
+                + "".join(f'<circle cx="{n(x0 + u * cw)}" cy="{n(y0 + v * ch)}" r="{n(rr * cw)}" fill="url(#{prefix}-hot)"/>'
+                          for u, v, rr in spots)
+                + "".join(f'<circle cx="{n(x0 + u * cw)}" cy="{n(y0 + v * ch)}" r="{n(rr * 0.22 * cw)}" fill="{ACC}"/>'
+                          for u, v, rr in spots)
+                + "</g>")
+        elif kind == "band":  # sous-chaîne court-circuitée par sa diode by-pass : un tiers du module plus chaud
+            j0 = a[0]
+            out.append(g + "".join(cellrect(i, j, 0.22 + 0.08 * hval(r, c, i, j, 7)) for j in (j0, j0 + 1) for i in range(CC))
+                       + "</g>")
+        elif kind == "jbox":  # boîte de jonction en surchauffe, au dos, vue à travers le module
+            out.append(g + f'<ellipse cx="{n(x)}" cy="{n(y)}" rx="{n(0.6 * cw)}" ry="{n(1.0 * ch)}" fill="url(#{prefix}-hot)" fill-opacity="0.8"/>'
+                       + f'<rect x="{n(x - 0.18 * cw)}" y="{n(y - 0.38 * ch)}" width="{n(0.36 * cw)}" height="{n(0.76 * ch)}" '
+                       f'rx="{n(0.12 * cw)}" fill="{ACC}" fill-opacity="0.85"/></g>')
         elif kind == "cell":  # cellule isolée plus chaude
-            out.append(
-                f'<rect{idattr} class="{prefix}-anom" data-x="{n(x)}" x="{n(x)}" y="{n(y)}" width="{n(35 * s)}" '
-                f'height="{n(40 * s)}" fill="url(#{prefix}-warm)"/>'
-            )
-        elif kind == "band":  # échauffement linéaire d'une chaîne (diode by-pass)
-            out.append(
-                f'<rect{idattr} class="{prefix}-anom" data-x="{n(x)}" x="{n(x)}" y="{n(oy + 3 * s)}" width="{n(35 * s)}" '
-                f'height="{n(154 * s)}" fill="url(#{prefix}-band)"/>'
-            )
-        elif kind == "jbox":  # boîte de jonction en surchauffe
-            out.append(
-                f'<g{idattr} class="{prefix}-anom" data-x="{n(x)}">'
-                f'<ellipse cx="{n(x)}" cy="{n(y)}" rx="{n(17 * s)}" ry="{n(10 * s)}" fill="url(#{prefix}-hot)"/>'
-                f'<rect x="{n(x - 9 * s)}" y="{n(y - 4 * s)}" width="{n(18 * s)}" height="{n(8 * s)}" rx="{n(2 * s)}" fill="{ACC}"/></g>'
-            )
-        elif kind == "module":  # module fonctionnant à vide
-            out.append(
-                f'<rect{idattr} class="{prefix}-anom" data-x="{n(ox)}" x="{n(ox)}" y="{n(oy)}" width="{n(PW * s)}" '
-                f'height="{n(PH * s)}" fill="{ACC}" fill-opacity="0.2"/>'
-            )
+            i, j = a
+            out.append(g + cellrect(i, j, 0.42) + "</g>")
+        elif kind == "module":  # module à vide : tout le module chauffe
+            out.append(g + "".join(cellrect(i, j, 0.13 + 0.06 * hval(r, c, i, j, 3)) for j in range(CR) for i in range(CC))
+                       + "</g>")
     return "".join(out)
 
 
@@ -330,11 +386,7 @@ def th_fill(r, c):
 
 # hero panel in S4 world (used by S4 and S5 so the hand-off is exact)
 S4PW, S4PH = PW * K, PH * K  # 960 x 731.43
-MARKS = [  # zones entourées en S4 : (forme, cx, cy, demi-largeur, demi-hauteur) dans le monde S4
-    ("circle", S4X + 122.5 * K, S4Y + 100 * K, 110, 110),  # point chaud (hot-spot)
-    ("capsule", S4X + 52.5 * K, S4Y + 80 * K, 105, 372),  # diode by-pass : chaîne échauffée
-    ("circle", S4X + 175 * K, S4Y + 12 * K, 70, 70),  # boîte de jonction
-]
+HERO_ANCH = [(S4X + ax * K, S4Y + ay * K) for kind, *a in ANOM[HERO] for ax, ay in [anom_anchor(kind, *a)]]  # monde S4
 S4_LABELS = [  # texte principal | précision technique (note technique, § 3.2 et 3.7)
     "Point chaud (hot-spot)|cellule fissurée",
     "Diode by-pass défectueuse|échauffement linéaire",
@@ -348,9 +400,10 @@ def hero_panel_svg(prefix, with_ids=True):
     return (
         f'<g{pid("panel")}>'
         f'<rect x="{n(x)}" y="{n(y)}" width="{n(w)}" height="{n(h)}" fill="{th_fill(*HERO)}"/>'
-        f'<path{pid("bus")} d="{busbars(x, y, w, h)}" stroke="#FFDCCB" stroke-width="1" fill="none"/>'
-        f'<path d="{cell_lines(x, y, w, h)}" stroke="{TH_CELL}" stroke-width="1" fill="none"/>'
+        + cell_tint(*HERO, x, y, K)
+        + f'<path{pid("bus")} d="{busbars(x, y, w, h)}" stroke="#FFDCCB" stroke-width="1" fill="none"/>'
         + anomalies_svg(*HERO, x, y, K, prefix, hero_ids=with_ids)
+        + f'<path d="{cell_lines(x, y, w, h)}" stroke="{TH_CELL}" stroke-width="1" fill="none"/>'
         + f'<rect{pid("inner")} x="{n(x + 14)}" y="{n(y + 14)}" width="{n(w - 28)}" height="{n(h - 28)}" '
         f'fill="none" stroke="{INK}" stroke-width="1.2"/>'
         f'<rect x="{n(x)}" y="{n(y)}" width="{n(w)}" height="{n(h)}" fill="none" stroke="{INK}" stroke-width="2"/>'
@@ -358,21 +411,14 @@ def hero_panel_svg(prefix, with_ids=True):
     )
 
 
-def marks_svg(prefix, drawable):
-    cls = ' class="d"' if drawable else ""
-    out = []
-    for i, (shape, cx, cy, hw, hh) in enumerate(MARKS):
-        if shape == "circle":
-            out.append(
-                f'<circle id="{prefix}-c{i}"{cls} pathLength="1" cx="{n(cx)}" cy="{n(cy)}" r="{hw}" '
-                f'fill="none" stroke="{ACC}" stroke-width="3" transform="rotate(-90 {n(cx)} {n(cy)})"/>'
-            )
-        else:
-            out.append(
-                f'<rect id="{prefix}-c{i}"{cls} pathLength="1" x="{n(cx - hw)}" y="{n(cy - hh)}" width="{2 * hw}" '
-                f'height="{2 * hh}" rx="{hw}" fill="none" stroke="{ACC}" stroke-width="3"/>'
-            )
-    return "".join(out)
+def cell_box(i0, j0, i1, j1, m):
+    """Cadre de détection (monde S4) autour des cellules i0..i1 x j0..j1, marge m en cellules."""
+    cw, ch = CWU * K, CHU * K
+    return (S4X + (i0 - m) * cw, S4Y + (j0 - m) * ch, (i1 - i0 + 1 + 2 * m) * cw, (j1 - j0 + 1 + 2 * m) * ch)
+
+
+BOX1 = cell_box(2, 4, 2, 4, 0.3)  # défaut n°1 : la cellule fissurée
+BOX2 = cell_box(0, 0, CC - 1, 1, -0.14)  # défaut n°2 : la sous-chaîne (deux rangées)
 
 
 # viewBoxes for the zoom hand-offs (rectangles à l'écran du panneau défectueux)
@@ -425,22 +471,30 @@ P6 = {  # plateforme en ligne
 LOGO_S = P7["s"]
 LOGO_X = (W - 1270 * LOGO_S) / 2
 LOGO_Y = P7["y"]
-BALL_L = (30, 218)
-BALL_R = (1087.5, 170)  # = le point du « ı » (Comfortaa 700, 174 px, mesuré)
+# Mesures prises sur le logo fourni (assets/images/logo-flyscanair.png, même repère) :
+# billes, axes des 9 verticales du serpentin, haut et bas des boucles, cadre de droite.
+BALL_L = (29, 225.5)
+BALL_R = (1102.5, 165.5)  # = le point du « i » : la bille est centrée sur la tige (x 1089–1117)
+BALL_RAD = 13
+COIL_XS = [126.5, 194.5, 263.5, 332, 401, 469, 537.5, 606, 675]
+COIL_TOP, COIL_BOT = 39.5, 410.5  # axe du trait au sommet / au creux des boucles
+LOGO_LETTERS = json.load(open(os.path.join(ROOT, "assets", "logo-letters.json"), encoding="utf-8"))["d"]  # tools/logo_trace.py
 
 
 def logo_coil_path():
-    d = [f"M{BALL_L[0]} {BALL_L[1]}", "H95", "Q125 218 125 248", "V375"]
-    xs = [125, 195, 265, 335, 405, 475, 545, 615, 685]
+    xs = COIL_XS
+    d = [f"M{BALL_L[0]} {BALL_L[1]}", "H86", f"Q{xs[0]} {BALL_L[1]} {xs[0]} 266"]
     for i in range(len(xs) - 1):
         a, b = xs[i], xs[i + 1]
-        if i % 2 == 0:  # bottom U-turn, then go up
-            d.append(f"A35 35 0 0 0 {b} 375")
-            d.append("V75")
-        else:  # top U-turn, then go down
-            d.append(f"A35 35 0 0 1 {b} 75")
-            d.append("V375" if i < len(xs) - 2 else "V290")
-    d += ["Q685 335 730 335", "H1200", "Q1245 335 1245 290", "V215", "Q1245 170 1200 170", f"H{BALL_R[0]}"]
+        r = (b - a) / 2
+        if i % 2 == 0:  # creux de boucle, puis remontée
+            d.append(f"V{n(COIL_BOT - r)}")
+            d.append(f"A{n(r)} {n(r)} 0 0 0 {n(b)} {n(COIL_BOT - r)}")
+        else:  # sommet de boucle, puis descente
+            d.append(f"V{n(COIL_TOP + r)}")
+            d.append(f"A{n(r)} {n(r)} 0 0 1 {n(b)} {n(COIL_TOP + r)}")
+    d += ["V290", f"Q{xs[-1]} 340 725 340", "H1200", "Q1248 340 1248 292", "V214",
+          f"Q1248 {BALL_R[1]} 1200 {BALL_R[1]}", f"H{BALL_R[0]}"]
     return " ".join(d)
 
 
@@ -659,13 +713,13 @@ def build_s2():
         <polyline id="s2-ya" class="d" pathLength="1" points="{S2_X0 - 9},{ax_y1 + 12} {S2_X0},{ax_y1} {S2_X0 + 9},{ax_y1 + 12}"/>
         <path id="s2-saine" class="d" pathLength="1" d="{p_saine}" stroke="#A1A1AA" stroke-width="4"/>
         <path id="s2-defaut" class="d" pathLength="1" d="{p_defaut}" stroke="{ACC}" stroke-width="4.5"/>
-        <g transform="translate({FX} {IY})">
+        <g transform="translate({FX} {IY})" stroke-width="6">
           <path id="s2-flame" class="d" pathLength="1" d="{flame_o}"/>
           <path id="s2-flamei" d="{flame_i}" fill="{ACC}" stroke="none"/>
         </g>
-        <g transform="translate({SX} {IY})">
+        <g transform="translate({SX} {IY})" stroke-width="6">
           <path id="s2-shield" class="d" pathLength="1" d="{shield}"/>
-          <path id="s2-check" class="d" pathLength="1" d="{check}" stroke-width="3"/>
+          <path id="s2-check" class="d" pathLength="1" d="{check}" stroke-width="7"/>
         </g>
       </g>
       <circle id="s2-end0" cx="{n(gs[0])}" cy="{n(gs[1])}" r="9" fill="#FFFFFF" stroke="#A1A1AA" stroke-width="3.5"/>
@@ -720,13 +774,13 @@ def build_s2():
     <div id="s2-lab-s1" class="label" style="left: {n(xend + 22)}px; top: {n(gd[1] - 24)}px; color: #111111">Avec défauts</div>"""
         icons = f"""    <svg class="world" viewBox="0 0 {SW} {SH}" width="{SW}" height="{SH}">
       <g fill="none" stroke="{INK}" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-        <g transform="translate({FX} {IY})">
+        <g transform="translate({FX} {IY})" stroke-width="6">
           <path id="s2-flame" class="d" pathLength="1" d="{flame_o}"/>
           <path id="s2-flamei" d="{flame_i}" fill="{ACC}" stroke="none"/>
         </g>
-        <g transform="translate({SX} {IY})">
+        <g transform="translate({SX} {IY})" stroke-width="6">
           <path id="s2-shield" class="d" pathLength="1" d="{shield}"/>
-          <path id="s2-check" class="d" pathLength="1" d="{check}" stroke-width="3"/>
+          <path id="s2-check" class="d" pathLength="1" d="{check}" stroke-width="7"/>
         </g>
       </g>
     </svg>
@@ -845,12 +899,14 @@ def build_s3():
             )
             thermal.append(
                 f'<rect x="{x}" y="{y}" width="{PW}" height="{PH}" fill="{th_fill(r, c)}"/>'
-                f'<path d="{cell_lines(x, y, PW, PH)}" stroke="{TH_CELL}" stroke-width="1" fill="none"/>'
+                + cell_tint(r, c, x, y, 1)
                 + anomalies_svg(r, c, x, y, 1, "s3")
+                + f'<path d="{cell_lines(x, y, PW, PH)}" stroke="{TH_CELL}" stroke-width="1" fill="none"/>'
                 + f'<rect x="{x}" y="{y}" width="{PW}" height="{PH}" fill="none" stroke="{INK}" stroke-width="2"/>'
             )
-            for kind, ax, ay in ANOM.get((r, c), []):
-                if kind == "spot":
+            for kind, *a in ANOM.get((r, c), []):
+                if kind in ("spot", "crack"):
+                    ax, ay = anom_center(kind, *a)
                     anom_xs.append((x + ax, y + ay))
     rings = "".join(
         f'<circle class="s3-ring" data-x="{n(x)}" cx="{n(x)}" cy="{n(y)}" r="16" fill="none" stroke="{ACC}" stroke-width="2"/>'
@@ -968,11 +1024,10 @@ def s4_callouts():
     mlh = round(L["s4_fs"][0] * 1.22)
     leaders, dots, labels = [None] * 3, [None] * 3, [None] * 3
     for row, i, (align, xr, wbox) in zip(L["s4_rows"], L["s4_order"], L["s4_lab"]):
-        _, cx, cy, hw, hh = MARKS[i]
+        cx, cy = HERO_ANCH[i]
         scx = (cx - vx) * k
-        wy0 = cy + hh
         wy1 = (row - mlh / 2 - 8) / k + vy
-        leaders[i] = f'<polyline id="s4-ld{i}" class="d" pathLength="1" points="{n(cx)},{n(wy0)} {n(cx)},{n(wy1)}" fill="none" stroke="{INK}" stroke-width="1.5"/>'
+        leaders[i] = f'<polyline id="s4-ld{i}" class="d" pathLength="1" points="{n(cx)},{n(cy)} {n(cx)},{n(wy1)}" fill="none" stroke="{INK}" stroke-width="1.5"/>'
         dots[i] = f'<circle id="s4-dot{i}" cx="{n(cx)}" cy="{n(wy1)}" r="{n(5 / k)}" fill="{INK}"/>'
         left, ta = {"c": (scx - wbox / 2, "center"), "r": (xr - wbox, "right"), "l": (xr, "left")}[align]
         labels[i] = lab4(i, left, row - mlh / 2, f"; width: {wbox}px; text-align: {ta}")
@@ -993,30 +1048,29 @@ def build_s4():
             x, y = to_s4(x3, y3)
             neigh.append(
                 f'<rect x="{n(x)}" y="{n(y)}" width="{n(S4PW)}" height="{n(S4PH)}" fill="{th_fill(r, c)}"/>'
-                f'<path d="{cell_lines(x, y, S4PW, S4PH)}" stroke="{TH_CELL}" stroke-width="1" fill="none"/>'
+                + cell_tint(r, c, x, y, K)
                 + anomalies_svg(r, c, x, y, K, "s4")
+                + f'<path d="{cell_lines(x, y, S4PW, S4PH)}" stroke="{TH_CELL}" stroke-width="1" fill="none"/>'
                 + f'<rect x="{n(x)}" y="{n(y)}" width="{n(S4PW)}" height="{n(S4PH)}" fill="none" stroke="{INK}" stroke-width="2"/>'
             )
-    # 16:9 : étiquettes à droite, traits horizontaux (y choisis pour ne croiser aucune zone)
-    label_y = [687, 450, 285]
+    # 16:9 : lignes de rappel horizontales, du défaut jusqu'à l'étiquette à droite
     leaders, dots, labels = [], [], []
-    for i, ((shape, cx, cy, hw, hh), ly) in enumerate(zip(MARKS, label_y)):
-        sx = cx + (math.sqrt(max(hw * hw - (ly - cy) ** 2, 0)) if shape == "circle" else hw)
-        leaders.append(f'<polyline id="s4-ld{i}" class="d" pathLength="1" points="{n(sx)},{n(ly)} 1160,{n(ly)}" fill="none" stroke="{INK}" stroke-width="1.5"/>')
-        dots.append(f'<circle id="s4-dot{i}" cx="1160" cy="{n(ly)}" r="5" fill="{INK}"/>')
-        labels.append(lab4(i, 1182, ly - 22))
+    for i, (ax, ay) in enumerate(HERO_ANCH):
+        leaders.append(f'<polyline id="s4-ld{i}" class="d" pathLength="1" points="{n(ax)},{n(ay)} 1160,{n(ay)}" fill="none" stroke="{INK}" stroke-width="1.5"/>')
+        dots.append(f'<circle id="s4-dot{i}" cx="1160" cy="{n(ay)}" r="5" fill="{INK}"/>')
+        labels.append(lab4(i, 1182, ay - 22))
     if L:
         leaders, dots, labels = s4_callouts()
-    hx, hy = MARKS[0][1], MARKS[0][2]
+    kz = W / S4_SETTLE_VB[2]  # échelle écran du monde S4, panneau posé
+    pins = [f'<circle id="s4-pin{i}" cx="{n(ax)}" cy="{n(ay)}" r="{n(8 / kz)}" fill="{INK}" stroke="#FFFFFF" stroke-width="3"/>'
+            for i, (ax, ay) in enumerate(HERO_ANCH)]
     s4t = L["s4_title_text"] if L else "Chaque anomalie est détectée et localisée."
     fm, fd = L["s4_fs"] if L else (36, 28)
     body = f"""    <svg id="s4-svg" class="world zoom" data-dash="{dash_k(S4_SETTLE_VB)}" viewBox="{vb(S4_START_VB)}" width="{W}" height="{H}"{CANVAS}>
       <defs>{thermal_defs("s4")}</defs>
       <g id="s4-neigh">{"".join(neigh)}</g>
       {hero_panel_svg("s4")}
-      <circle id="s4-ring" cx="{n(hx)}" cy="{n(hy)}" r="34" fill="none" stroke="{ACC}" stroke-width="2.5"/>
-      <g id="s4-marks">{marks_svg("s4", True)}</g>
-      <g id="s4-leaders">{"".join(leaders)}{"".join(dots)}</g>
+      <g id="s4-leaders">{"".join(leaders)}{"".join(dots)}{"".join(pins)}</g>
     </svg>
     {"".join(labels)}
     <div id="s4-title" class="title" style="{tstyle(L and L["s4_title"], "left: 120px; top: 86px; font-size: 56px")}">Chaque anomalie est détectée et localisée.</div>"""
@@ -1024,7 +1078,7 @@ def build_s4():
     #root .lab4 {{ position: absolute; font-family: "Comfortaa", sans-serif; white-space: nowrap; }}
     #root .lab4 .m {{ display: block; font-weight: 700; font-size: {fm}px; line-height: {round(fm * 1.22)}px; color: #111111; }}
     #root .lab4 .dt {{ display: block; font-weight: 600; font-size: {fd}px; line-height: {round(fd * 1.3)}px; color: #6B6B70; }}
-    #root #s4-bus, #root #s4-inner, #root #s4-ring {{ opacity: 0; }}
+    #root #s4-bus, #root #s4-inner {{ opacity: 0; }}
     #root #s4-leaders circle {{ opacity: 0; }}"""
     js = f"""
       const title = words($("#s4-title"), txt("s4-title", "{s4t}"));
@@ -1044,18 +1098,13 @@ def build_s4():
       // 2. titre : du gris à l'encre, mot à mot
       tl.fromTo(title, {{ opacity: 0 }}, {{ opacity: 1, duration: 0.2 }}, 0.75);
       tl.fromTo(title, {{ color: "#D4D4D8" }}, {{ color: "#111111", duration: 0.25, stagger: 0.08 }}, 0.95);
-      // 3. points chauds pulsants
-      [1.0, 2.0, 3.0, 4.0, 5.0].forEach((t) => {{
-        tl.fromTo($("#s4-ring"), {{ opacity: 0.85, scale: 1, transformOrigin: "50% 50%" }}, {{ opacity: 0, scale: 3.2, duration: 1.0, ease: "power2.out", immediateRender: false }}, t);
-      }});
-      // 4. les défauts sont entourés automatiquement
-      [[0.8, 0], [1.55, 1], [3.3, 2]].forEach(([t, i]) => {{  // calé sur la voix off
-        draw(t, $("#s4-c" + i), 0.6, "power2.inOut");
-        draw(t + 0.4, $("#s4-ld" + i), 0.3, "power2.out");
-        fadeIn(t + 0.65, $("#s4-dot" + i), 0.1);
+      // 3. chaque défaut est désigné : point sur l'anomalie, ligne de rappel, étiquette (calé sur la voix off)
+      [[0.8, 0], [1.55, 1], [3.3, 2]].forEach(([t, i]) => {{
+        tl.fromTo($("#s4-pin" + i), {{ opacity: 0, scale: 0, transformOrigin: "50% 50%" }}, {{ opacity: 1, scale: 1, duration: 0.3, ease: "back.out(2)" }}, t + 0.1);
+        draw(t + 0.25, $("#s4-ld" + i), 0.35, "power2.out");
+        fadeIn(t + 0.58, $("#s4-dot" + i), 0.1);
         blurIn(t + 0.62, $("#s4-l" + (i + 1)), 0.18);
       }});
-      solid(4.0, $$("#s4-marks > *"));
       // 5. sortie : la vignette part dans le rapport
       blurOut(6.15, [...title, $("#s4-l1"), $("#s4-l2"), $("#s4-l3")], 0.18, 0.02);
       undraw(6.15, $$("#s4-leaders polyline"), 0.2, "power3.in");
@@ -1108,11 +1157,24 @@ def mini_logo(x, y, sc, prefix):
         '<stop offset="0.6" stop-color="#E8842A"/><stop offset="1" stop-color="#DC382D"/></linearGradient></defs>'
         f'<g transform="translate({n(x)} {n(y)}) scale({sc})">'
         f'<path d="{logo_coil_path()}" fill="none" stroke="#6D6C74" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>'
-        f'<text x="140" y="292" font-family="Comfortaa" font-weight="700" font-size="174" fill="url(#{prefix}-word)" '
-        f'stroke="url(#{prefix}-word)" stroke-width="10" stroke-linejoin="round" paint-order="stroke">Fly Scan’Aır</text>'
-        f'<circle cx="{BALL_L[0]}" cy="{BALL_L[1]}" r="12" fill="#D8352A"/><circle cx="{BALL_R[0]}" cy="{BALL_R[1]}" r="12" fill="#D8352A"/>'
+        f'<path d="{LOGO_LETTERS}" fill="url(#{prefix}-word)"/>'
+        f'<circle cx="{BALL_L[0]}" cy="{BALL_L[1]}" r="{BALL_RAD}" fill="#D8352A"/><circle cx="{BALL_R[0]}" cy="{BALL_R[1]}" r="{BALL_RAD}" fill="#D8352A"/>'
         "</g>"
     )
+
+
+def s5_card(k, pfs, rows):
+    """Fiche d'un défaut (page « Analyse détaillée ») : numéro, type, origine, mesures, action."""
+    sp = pfs * 1.45
+    y0 = 655 - pfs * 1.05
+    ys = [y0, y0 + sp * 1.25, y0 + sp * 2.25, y0 + sp * 3.25, y0 + sp * 4.25]
+    out = []
+    for i, (txt_, y) in enumerate(zip(rows, ys)):
+        cls = " b" if i == 0 else (" grey" if i == 2 else "")
+        size = f"; font-size: {pfs + 4}px" if i == 0 else ""
+        html = txt_.replace("→", '<span class="acc">→</span>')
+        out.append(f'<div class="pgt s5-f{k}{cls}" style="left: 260px; top: {y:.0f}px{size}">{html}</div>')
+    return "\n      ".join(out)
 
 
 def build_s5():
@@ -1124,20 +1186,20 @@ def build_s5():
     rule = '<line class="d s5-rule" pathLength="1" x1="260" y1="178" x2="780" y2="178" stroke="#111111" stroke-width="1.5"/>'
     # ---- page 1 : analyse détaillée (la vignette du panneau arrive de la scène 4)
     p1 = f"""      <div id="s5-p1" class="s5-page">
-      <svg class="world" viewBox="0 0 {SW} {SH}" width="{SW}" height="{SH}">{rule}{foot}
-        <g id="s5-badge"><rect x="640" y="{655 - pfs}" width="140" height="{pfs + 20}" rx="8" fill="#FF8A4C"/>
-        <text class="pg b" x="710" y="{655 + 2}" text-anchor="middle" font-size="{pfs}">Cat. 4</text></g>
+      <svg class="world" viewBox="0 0 {SW} {SH}" width="{SW}" height="{SH}">{rule}
+        <g id="s5-badge1"><rect x="640" y="{655 - pfs}" width="140" height="{pfs + 20}" rx="8" fill="#FF8A4C"/>
+        <text class="pg b" x="710" y="{655 + 2}" text-anchor="middle" font-size="{pfs}" fill="#FFFFFF">Cat. 4</text></g>
+        <g id="s5-badge2"><rect x="640" y="{655 - pfs}" width="140" height="{pfs + 20}" rx="8" fill="{ACC}"/>
+        <text class="pg b" x="710" y="{655 + 2}" text-anchor="middle" font-size="{pfs}" fill="#FFFFFF">Cat. 5</text></g>
       </svg>
       <svg id="s5-thumb" class="world zoom" viewBox="{vb(THUMB_LOCAL_VB)}" width="{SW}" height="{SH}">
         <defs>{thermal_defs("s5")}</defs>
         {hero_panel_svg("s5", with_ids=False)}
-        <g id="s5-marks">{marks_svg("s5", False)}</g>
+        <rect id="s5-bbox" x="{n(BOX1[0])}" y="{n(BOX1[1])}" width="{n(BOX1[2])}" height="{n(BOX1[3])}" rx="6" fill="none" stroke="{ACC}" stroke-width="3"/>
       </svg>
       <div class="dochead" style="left: 260px; top: 128px">Analyse détaillée</div>
-      <div class="pgt b s5-f" style="left: 260px; top: {655 - pfs * 1.05:.0f}px; font-size: {pfs + 4}px">Défaut n°1</div>
-      <div class="pgt s5-f" style="left: 260px; top: {715 - pfs:.0f}px">Point chaud (hot-spot)</div>
-      <div class="pgt s5-f" style="left: 260px; top: {770 - pfs:.0f}px">ΔT 11,2 °C · MaxT 58 °C</div>
-      <div class="pgt s5-f" style="left: 260px; top: {825 - pfs:.0f}px"><span class="acc">→</span> Contrôle électrique</div>
+      {s5_card(1, pfs, ["Défaut n°1", "Point chaud (hot-spot)", "cellule fissurée", "ΔT 11,2 °C · MaxT 58 °C", "→ Contrôle électrique"])}
+      {s5_card(2, pfs, ["Défaut n°2", "Diode by-pass", "échauffement linéaire", "ΔT 7,8 °C · MaxT 54 °C", "→ Remplacer la diode"])}
       </div>"""
     # ---- page 2 : résultats + gravité
     cards, swatches, bars = [], [], []
@@ -1168,7 +1230,7 @@ def build_s5():
     sw_, sh_ = sf * 10.4, sf * 3.6
     stamp = (
         f'<g transform="translate(520 548) rotate(-7)"><g id="s5-stamp">'
-        f'<rect x="{n(-sw_ / 2)}" y="{n(-sh_ / 2)}" width="{n(sw_)}" height="{n(sh_)}" rx="10" fill="#FFFFFF" fill-opacity="0.92" stroke="{ACC}" stroke-width="3"/>'
+        f'<rect x="{n(-sw_ / 2)}" y="{n(-sh_ / 2)}" width="{n(sw_)}" height="{n(sh_)}" rx="10" fill="#FFFFFF" stroke="{ACC}" stroke-width="3"/>'
         f'<rect x="{n(-sw_ / 2 + 7)}" y="{n(-sh_ / 2 + 7)}" width="{n(sw_ - 14)}" height="{n(sh_ - 14)}" rx="6" fill="none" stroke="{ACC}" stroke-width="1.5"/>'
         f'<text class="stamp" x="0" y="{n(-sf * 0.25)}" text-anchor="middle" font-size="{sf}" letter-spacing="3">CONFORME</text>'
         f'<text class="stamp" x="0" y="{n(sf * 1.05)}" text-anchor="middle" font-size="{sf}">IEC TS 62446-3</text>'
@@ -1216,6 +1278,30 @@ def build_s5():
             f'fill="{col}" data-top="{n(S5_AY - h)}" data-h="{n(h + 12)}"/>'
         )
         cats.append(f'<div id="s5-cat{i}" class="cat" style="left: {cx - 170}px; top: {S5_AY + 18}px">{name.replace("|", "<br />")}</div>')
+    # plan de localisation (page 1) : champ de 7 x 3 modules, module concerné en orange
+    impacted = set(ANOM)
+    bfs = L["s5_fs"]["tick"] if L else 28  # repère du module, lisible dans chaque format
+    mw, mh, gx_, gy_, px0, py0 = 96, 66, 10, 14, 1050, 452
+    plan = []
+    for r_ in range(ROWS):
+        for c_ in range(COLS):
+            x_, y_ = px0 + c_ * (mw + gx_), py0 + r_ * (mh + gy_)
+            if (r_, c_) == HERO:
+                continue
+            fill = "#FFD2BC" if (r_, c_) in impacted else PANEL
+            plan.append(f'<rect class="s5-pm" x="{x_}" y="{y_}" width="{mw}" height="{mh}" rx="4" fill="{fill}" stroke="{INK}" stroke-width="1.5"/>')
+    hx_, hy_ = px0 + HERO[1] * (mw + gx_), py0 + HERO[0] * (mh + gy_)
+    plan_hero = (f'<g id="s5-ph"><rect x="{hx_}" y="{hy_}" width="{mw}" height="{mh}" rx="4" fill="{ACC}" stroke="{INK}" stroke-width="1.5"/>'
+                 f'<text class="pg b" x="{hx_ + mw / 2}" y="{hy_ + mh / 2 + 10}" text-anchor="middle" font-size="{bfs}" fill="#FFFFFF">B5</text></g>')
+    plan_ticks = "".join(f'<text x="{px0 - 18}" y="{py0 + r_ * (mh + gy_) + mh / 2 + 10}" text-anchor="end">{"ABC"[r_]}</text>' for r_ in range(ROWS))
+    plan_ticks += "".join(f'<text x="{px0 + c_ * (mw + gx_) + mw / 2}" y="{py0 - 16}" text-anchor="middle">{c_ + 1}</text>' for c_ in range(COLS))
+    tfs, lfs = (L["s5_fs"]["tick"], L["s5_fs"]["label"]) if L else (28, 32)
+    plan_lab_y = py0 - 16 - tfs * 0.8 - 14 - lfs * 1.2  # au-dessus des numéros de colonnes, quelle que soit la taille du texte
+    plan_part = f"""    <div id="s5-plan-lab" class="label" style="left: 1010px; top: {plan_lab_y:.0f}px">Localisation</div>
+    <svg id="s5-plan" class="world" viewBox="0 0 {SW} {SH}" width="{SW}" height="{SH}">
+      <g class="tick" id="s5-pticks">{plan_ticks}</g>{"".join(plan)}{plan_hero}
+    </svg>
+    <div id="s5-plan-cap" class="label" style="left: 1050px; top: {py0 + 3 * (mh + gy_) + 6}px; color: #111111">Rangée B · module 5</div>"""
     items = ["Anomalies localisées", "Priorités d’intervention", "Recommandations", "Justificatif assurance"]
     crow = [440, 520, 600, 680]
     cboxes = "".join(f'<rect class="d s5-box" pathLength="1" x="1010" y="{y - 17}" width="34" height="34" rx="4" fill="none" stroke="{INK}" stroke-width="2"/>' for y in crow)
@@ -1238,7 +1324,8 @@ def build_s5():
     <div id="s5-lab-y" class="label" style="left: 1010px; top: 318px">Production (kWh/an)</div>
     {"".join(cats)}
     <svg id="s5-check" class="world" viewBox="0 0 {SW} {SH}" width="{SW}" height="{SH}">{cboxes}{cchecks}</svg>
-    {ctexts}"""
+    {ctexts}
+{plan_part}"""
     tst = tstyle(L and L["s5_title"], "left: 960px; top: 150px")
     titles = "\n".join(f'    <div id="s5-t{i}" class="title" style="{tst}">{t}</div>' for i, t in (
         (1, "Chaque défaut est<br />localisé et qualifié."),
@@ -1264,7 +1351,7 @@ def build_s5():
     #root .tick text {{ font-family: "Comfortaa", sans-serif; font-weight: 600; font-size: 28px; fill: #6B6B70; }}
     #root .stamp {{ font-family: "Comfortaa", sans-serif; font-weight: 700; fill: #FF5700; }}
     #root .cat {{ position: absolute; width: 340px; text-align: center; font-family: "Comfortaa", sans-serif; font-weight: 600; font-size: 28px; line-height: 36px; color: #111111; }}
-    #root #s5-grid, #root #s5-yt, #root #s5-stamp, #root .s5-foot, #root #s5-hotc, #root #s5-mlogo, #root .s5-sw, #root #s5-badge {{ opacity: 0; }}"""
+    #root #s5-grid, #root #s5-yt, #root #s5-stamp, #root .s5-foot, #root #s5-hotc, #root #s5-mlogo, #root .s5-sw, #root #s5-badge1, #root #s5-badge2, #root #s5-bbox, #root #s5-plan-lab, #root #s5-plan-cap, #root #s5-pticks, #root .s5-pm, #root #s5-ph {{ opacity: 0; }}"""
     if L:
         fs = L["s5_fs"]
         css += f"""
@@ -1294,61 +1381,78 @@ def build_s5():
       blurIn(0.55, P1.querySelector(".dochead"), 0.2);
       draw(0.65, P1.querySelector(".s5-rule"), 0.45, "power2.out");
       blurIn(0.9, t1, 0.15, 0.067);
-      blurIn(2.8, $$("#s5-p1 .s5-f"), 0.18, 0.2); // voix : « chaque défaut y est décrit… »
-      tl.fromTo($("#s5-badge"), { opacity: 0, scale: 0.6, transformOrigin: "50% 50%" }, { opacity: 1, scale: 1, duration: 0.3, ease: "back.out(1.8)" }, 4.45); // « …et qualifié »
-      fadeIn(1.7, $$("#s5-p1 .s5-foot"), 0.3, 0.1);
+      //   défaut n°1 : le cadre de détection se pose sur la cellule fissurée, la fiche se remplit
+      const bbox = $("#s5-bbox");
+      tl.fromTo(bbox, { opacity: 0, scale: 1.35, transformOrigin: "50% 50%" }, { opacity: 1, scale: 1, duration: 0.35, ease: "back.out(1.6)" }, 1.45);
+      blurIn(1.7, $$("#s5-p1 .s5-f1"), 0.18, 0.3);
+      tl.fromTo($("#s5-badge1"), { opacity: 0, scale: 0.6, transformOrigin: "50% 50%" }, { opacity: 1, scale: 1, duration: 0.3, ease: "back.out(1.8)" }, 1.85);
+      //   plan de localisation : le champ se dessine, le module concerné s'allume
+      blurIn(2.6, $("#s5-plan-lab"), 0.18);
+      fadeIn(2.7, $("#s5-pticks"), 0.3);
+      fadeIn(2.75, $$(".s5-pm"), 0.25, 0.02);
+      tl.fromTo($("#s5-ph"), { opacity: 0, scale: 0.5, transformOrigin: "50% 50%" }, { opacity: 1, scale: 1, duration: 0.35, ease: "back.out(2)" }, 3.45);
+      blurIn(3.7, $("#s5-plan-cap"), 0.18);
+      //   défaut n°2 (voix : « chaque défaut y est décrit… ») : le cadre glisse sur la sous-chaîne
+      blurOut(5.15, $$("#s5-p1 .s5-f1"), 0.16, 0.02);
+      fadeOut(5.15, $("#s5-badge1"), 0.15);
+      tl.to(bbox, { attr: { x: __B2X__, y: __B2Y__, width: __B2W__, height: __B2H__ }, duration: 0.55, ease: "power2.inOut" }, 5.2);
+      blurIn(5.5, $$("#s5-p1 .s5-f2"), 0.18, 0.12);
+      tl.fromTo($("#s5-ph"), { scale: 1 }, { scale: 1.12, duration: 0.22, ease: "power2.out", yoyo: true, repeat: 1, immediateRender: false }, 5.3);
+      tl.fromTo($("#s5-badge2"), { opacity: 0, scale: 0.6, transformOrigin: "50% 50%" }, { opacity: 1, scale: 1, duration: 0.3, ease: "back.out(1.8)" }, 6.85); // « …et qualifié »
       // PAGE 2 — résultats et gravité
-      blurOut(5.15, t1, 0.16, 0.02);
-      pageOut(5.15, P1);
-      pageIn(5.35, P2);
-      draw(5.4, P2.querySelector(".s5-rule"), 0.4, "power2.out");
-      blurIn(5.45, t2, 0.15, 0.067);
-      draw(5.55, $$(".s5-card"), 0.4, "power2.out", 0.1);
+      blurOut(8.05, t1, 0.16, 0.02);
+      blurOut(8.0, [$("#s5-plan-lab"), $("#s5-plan"), $("#s5-plan-cap")], 0.2, 0.02);
+      pageOut(8.05, P1);
+      pageIn(8.25, P2);
+      draw(8.3, P2.querySelector(".s5-rule"), 0.4, "power2.out");
+      blurIn(8.35, t2, 0.15, 0.067);
+      draw(8.45, $$(".s5-card"), 0.4, "power2.out", 0.1);
       [["#s5-n0", 7], ["#s5-n1", 5]].forEach(([id, v], i) => {
         const el = $(id), o = { v: 0 };
-        tl.fromTo(o, { v: 0 }, { v, duration: 0.6, ease: "power2.out", onUpdate: () => { el.textContent = Math.round(o.v); } }, 5.7 + i * 0.12);
+        tl.fromTo(o, { v: 0 }, { v, duration: 0.6, ease: "power2.out", onUpdate: () => { el.textContent = Math.round(o.v); } }, 8.6 + i * 0.12);
       });
-      blurIn(5.65, [$("#s5-n0"), $("#s5-n1"), $("#s5-n2"), ...$$(".s5-cardl")], 0.2, 0.06);
-      blurIn(6.15, $("#s5-sub"), 0.18);
-      fadeIn(6.25, $$(".s5-sw"), 0.25, 0.1);
-      blurIn(6.3, $$(".s5-cl"), 0.18, 0.1);
+      blurIn(8.55, [$("#s5-n0"), $("#s5-n1"), $("#s5-n2"), ...$$(".s5-cardl")], 0.2, 0.06);
+      blurIn(9.05, $("#s5-sub"), 0.18);
+      fadeIn(9.15, $$(".s5-sw"), 0.25, 0.1);
+      blurIn(9.2, $$(".s5-cl"), 0.18, 0.1);
       $$(".s5-gbar").forEach((b, i) => {
-        tl.fromTo(b, { attr: { width: 0 } }, { attr: { width: parseFloat(b.getAttribute("data-w")) }, duration: 0.5, ease: "power3.out" }, 6.45 + i * 0.1);
+        tl.fromTo(b, { attr: { width: 0 } }, { attr: { width: parseFloat(b.getAttribute("data-w")) }, duration: 0.5, ease: "power3.out" }, 9.35 + i * 0.1);
       });
-      fadeIn(6.75, $$("#s5-p2 .s5-foot"), 0.3, 0.1);
+      fadeIn(9.65, $$("#s5-p2 .s5-foot"), 0.3, 0.1);
       //   graphique de production (fourni par le client)
-      draw(5.85, [$("#s5-ay"), $("#s5-ax")], 0.55, "power3.out", 0.08);
-      draw(6.25, [$("#s5-aya"), $("#s5-axa")], 0.22, "power2.out", 0.05);
-      fadeIn(6.1, [$("#s5-grid"), $("#s5-yt")], 0.4, 0.08);
-      blurIn(6.15, $("#s5-lab-y"), 0.18);
+      draw(8.75, [$("#s5-ay"), $("#s5-ax")], 0.55, "power3.out", 0.08);
+      draw(9.15, [$("#s5-aya"), $("#s5-axa")], 0.22, "power2.out", 0.05);
+      fadeIn(9.0, [$("#s5-grid"), $("#s5-yt")], 0.4, 0.08);
+      blurIn(9.05, $("#s5-lab-y"), 0.18);
       [0, 1].forEach((i) => {
         const b = $("#s5-bar" + i);
         const top = parseFloat(b.getAttribute("data-top")), h = parseFloat(b.getAttribute("data-h"));
-        tl.fromTo(b, { attr: { y: __AY__, height: 0 } }, { attr: { y: top, height: h }, duration: 0.75, ease: "power3.out" }, 6.5 + i * 0.3);
-        blurIn(6.75 + i * 0.3, $("#s5-cat" + i), 0.18);
+        tl.fromTo(b, { attr: { y: __AY__, height: 0 } }, { attr: { y: top, height: h }, duration: 0.75, ease: "power3.out" }, 9.4 + i * 0.3);
+        blurIn(9.65 + i * 0.3, $("#s5-cat" + i), 0.18);
       });
       // PAGE 3 — couverture du rapport, conforme à la norme
-      blurOut(8.7, t2, 0.16, 0.02);
-      blurOut(8.7, [$("#s5-chart"), $("#s5-lab-y"), $("#s5-cat0"), $("#s5-cat1")], 0.2, 0.02);
-      pageOut(8.7, P2);
-      pageIn(8.9, P3);
-      blurIn(9.0, t3, 0.15, 0.067);
-      draw(9.0, $("#s5-acc"), 0.4, "power2.out");
-      blurIn(9.05, $("#s5-ct"), 0.2);
-      blurIn(9.25, $("#s5-cs"), 0.2);
-      draw(9.1, $$(".s5-ill"), 0.4, "power2.out", 0.05);
-      fadeIn(9.5, $("#s5-hotc"), 0.3);
-      fadeIn(9.6, $("#s5-mlogo"), 0.35);
-      tl.fromTo($("#s5-stamp"), { opacity: 0, scale: 1.45, transformOrigin: "50% 50%" }, { opacity: 1, scale: 1, duration: 0.32, ease: "back.out(1.8)" }, 9.9);
+      blurOut(11.6, t2, 0.16, 0.02);
+      blurOut(11.6, [$("#s5-chart"), $("#s5-lab-y"), $("#s5-cat0"), $("#s5-cat1")], 0.2, 0.02);
+      pageOut(11.6, P2);
+      pageIn(11.8, P3);
+      blurIn(11.9, t3, 0.15, 0.067);
+      draw(11.9, $("#s5-acc"), 0.4, "power2.out");
+      blurIn(11.95, $("#s5-ct"), 0.2);
+      blurIn(12.15, $("#s5-cs"), 0.2);
+      draw(12.0, $$(".s5-ill"), 0.4, "power2.out", 0.05);
+      fadeIn(12.4, $("#s5-hotc"), 0.3);
+      fadeIn(12.5, $("#s5-mlogo"), 0.35);
+      tl.fromTo($("#s5-stamp"), { opacity: 0, scale: 1.45, transformOrigin: "50% 50%" }, { opacity: 1, scale: 1, duration: 0.32, ease: "back.out(1.8)" }, 12.8);
       //   ce que contient le rapport
-      draw(10.1, $$(".s5-box"), 0.3, "power2.out", 0.1);
-      blurIn(10.2, [$("#s5-i0"), $("#s5-i1"), $("#s5-i2"), $("#s5-i3")], 0.18, 0.15);
-      [10.5, 10.75, 11.0, 11.25].forEach((t, i) => draw(t, $("#s5-k" + i), 0.22, "power2.out"));
+      draw(13.0, $$(".s5-box"), 0.3, "power2.out", 0.1);
+      blurIn(13.1, [$("#s5-i0"), $("#s5-i1"), $("#s5-i2"), $("#s5-i3")], 0.18, 0.15);
+      [13.4, 13.65, 13.9, 14.15].forEach((t, i) => draw(t, $("#s5-k" + i), 0.22, "power2.out"));
       // 4. sortie : le rapport file dans la plateforme
-      blurOut(11.75, [...t3, $("#s5-i0"), $("#s5-i1"), $("#s5-i2"), $("#s5-i3")], 0.2, 0.015);
-      blurOut(11.8, [$("#s5-check")], 0.2, 0);
-      fadeOut(11.83, [$("#s5-ct"), $("#s5-cs"), $("#s5-stamp"), $("#s5-mlogo")], 0.1);
-      tl.to($("#s5-docw"), { x: __CX__, y: __CY__, scale: __CS__, transformOrigin: "__OX__px __OY__px", duration: 0.48, ease: "power2.inOut" }, 11.85);"""
+      blurOut(14.75, [...t3, $("#s5-i0"), $("#s5-i1"), $("#s5-i2"), $("#s5-i3")], 0.2, 0.015);
+      blurOut(14.8, [$("#s5-check")], 0.2, 0);
+      fadeOut(14.83, [$("#s5-ct"), $("#s5-cs"), $("#s5-stamp"), $("#s5-mlogo")], 0.1);
+      tl.to($("#s5-docw"), { x: __CX__, y: __CY__, scale: __CS__, transformOrigin: "__OX__px __OY__px", duration: 0.48, ease: "power2.inOut" }, 14.85);"""
+    js = (js.replace("__B2X__", n(BOX2[0])).replace("__B2Y__", n(BOX2[1])).replace("__B2W__", n(BOX2[2])).replace("__B2H__", n(BOX2[3])))
     js = (js.replace("__AY__", str(S5_AY)).replace("__CX__", n(carry["x"])).replace("__CY__", n(carry["y"]))
           .replace("__CS__", f'{carry["scale"]:.5f}').replace("__OX__", n(dcx)).replace("__OY__", n(dcy)))
     write_scene(
@@ -1562,11 +1666,11 @@ def build_s7():
       <g id="s7-logo" transform="translate({n(LOGO_X)} {LOGO_Y}) scale({LOGO_S})">
         <path id="s7-coil" class="d" pathLength="1" d="{logo_coil_path()}" fill="none" stroke="#6D6C74" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
         <g clip-path="url(#s7-clip)">
-          <text id="s7-word" x="140" y="292" font-family="Comfortaa" font-weight="700" font-size="174" fill="url(#s7-wordgrad)" stroke="url(#s7-wordgrad)" stroke-width="10" stroke-linejoin="round" paint-order="stroke">Fly Scan’Aır</text>
+          <path id="s7-word" d="{LOGO_LETTERS}" fill="url(#s7-wordgrad)"/>
         </g>
         <line id="s7-lscan" x1="0" y1="118" x2="0" y2="336" stroke="{ACC}" stroke-width="4"/>
-        <circle id="s7-ballr" cx="{BALL_R[0]}" cy="{BALL_R[1]}" r="12" fill="url(#s7-ball)"/>
-        <circle id="s7-balll" cx="{BALL_L[0]}" cy="{BALL_L[1]}" r="12" fill="url(#s7-ball)"/>
+        <circle id="s7-ballr" cx="{BALL_R[0]}" cy="{BALL_R[1]}" r="{BALL_RAD}" fill="url(#s7-ball)"/>
+        <circle id="s7-balll" cx="{BALL_L[0]}" cy="{BALL_L[1]}" r="{BALL_RAD}" fill="url(#s7-ball)"/>
       </g>
       <circle id="s7-dot" cx="{n(bx)}" cy="{n(by)}" r="{n(dot_r)}" fill="{ACC}"/>
     </svg>
@@ -1676,9 +1780,9 @@ def build_s7():
 # --------------------------------------------------------------------------
 # index.html
 # --------------------------------------------------------------------------
-SCENES = [("s1", 0, 7.2), ("s2", 7.2, 6.6), ("s3", 13.8, 6.6), ("s4", 20.4, 7.2), ("s5", 27.6, 12.6),
-          ("s6", 40.2, 6.6), ("s7", 46.8, 8.2)]
-TOTAL = 55.0
+SCENES = [("s1", 0, 7.2), ("s2", 7.2, 6.6), ("s3", 13.8, 6.6), ("s4", 20.4, 7.2), ("s5", 27.6, 15.6),
+          ("s6", 43.2, 6.6), ("s7", 49.8, 8.2)]
+TOTAL = 58.0
 
 # (id, file, hit time in the film, volume): the file's measured peak lands one frame after its picture
 SFX = [
@@ -1689,17 +1793,20 @@ SFX = [
     ("sfx-tick2", "key-press.mp3", 20.4 + 2.15, 0.45),
     ("sfx-tick3", "key-press.mp3", 20.4 + 3.9, 0.5),
     ("sfx-carry", "whoosh-low.mp3", 20.4 + 6.8, 0.35),
-    ("sfx-page2", "whoosh-high.mp3", 27.6 + 5.3, 0.18),
-    ("sfx-page3", "whoosh-high.mp3", 27.6 + 8.85, 0.18),
-    ("sfx-stamp", "pop.mp3", 27.6 + 9.98, 0.45),
-    ("sfx-check1", "click-soft.mp3", 27.6 + 10.62, 0.6),
-    ("sfx-check2", "click-soft.mp3", 27.6 + 10.87, 0.55),
-    ("sfx-check3", "click-soft.mp3", 27.6 + 11.12, 0.6),
-    ("sfx-check4", "click-soft.mp3", 27.6 + 11.37, 0.55),
-    ("sfx-doc", "whoosh-short.mp3", 27.6 + 12.09, 0.3),
-    ("sfx-logo", "impact-bass-1.mp3", 46.8 + 1.55, 0.22),
-    ("sfx-top", "whoosh-low.mp3", 46.8 + 4.13, 0.22),
-    ("sfx-type", "typing.mp3", 46.8 + 4.42, 0.35),
+    ("sfx-box1", "key-press.mp3", 27.6 + 1.5, 0.3),
+    ("sfx-box2", "key-press.mp3", 27.6 + 5.72, 0.3),
+    ("sfx-plan", "pop.mp3", 27.6 + 3.55, 0.25),
+    ("sfx-page2", "whoosh-high.mp3", 27.6 + 8.2, 0.18),
+    ("sfx-page3", "whoosh-high.mp3", 27.6 + 11.75, 0.18),
+    ("sfx-stamp", "pop.mp3", 27.6 + 12.88, 0.45),
+    ("sfx-check1", "click-soft.mp3", 27.6 + 13.52, 0.6),
+    ("sfx-check2", "click-soft.mp3", 27.6 + 13.77, 0.55),
+    ("sfx-check3", "click-soft.mp3", 27.6 + 14.02, 0.6),
+    ("sfx-check4", "click-soft.mp3", 27.6 + 14.27, 0.55),
+    ("sfx-doc", "whoosh-short.mp3", 27.6 + 15.09, 0.3),
+    ("sfx-logo", "impact-bass-1.mp3", 49.8 + 1.55, 0.22),
+    ("sfx-top", "whoosh-low.mp3", 49.8 + 4.13, 0.22),
+    ("sfx-type", "typing.mp3", 49.8 + 4.42, 0.35),
 ]
 
 
