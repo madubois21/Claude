@@ -1162,6 +1162,7 @@ def build_s4():
       fadeOut(0.2, $("#s4-neigh"), 0.6, 0, "power1.inOut");
       fadeIn(0.55, [$("#s4-inner"), $("#s4-bus")], 0.6);
       tl.fromTo($("#s4-photo"), {{ opacity: 0 }}, {{ opacity: 1, duration: 0.6, ease: "power1.inOut" }}, 0.3);  // la vraie image thermique
+      fadeOut(0.9, $("#s4-panel"), 0.1);  // le panneau dessiné (et ses halos) s'efface sous la photo
       // 2. titre : du gris à l'encre, mot à mot
       tl.fromTo(title, {{ opacity: 0 }}, {{ opacity: 1, duration: 0.2 }}, 0.75);
       tl.fromTo(title, {{ color: "#D4D4D8" }}, {{ color: "#111111", duration: 0.25, stagger: 0.08 }}, 0.95);
@@ -1336,7 +1337,6 @@ def build_s5():
       <svg class="world" viewBox="0 0 {SW} {SH}" width="{SW}" height="{SH}">{rule}</svg>
       <svg id="s5-thumb" class="world zoom" viewBox="{vb(THUMB_LOCAL_VB)}" width="{SW}" height="{SH}">
         <defs>{thermal_defs("s5")}</defs>
-        {hero_panel_svg("s5", with_ids=False)}
         {photo_svg("s5")}
         <rect id="s5-bbox" x="{n(BOX1[0])}" y="{n(BOX1[1])}" width="{n(BOX1[2])}" height="{n(BOX1[3])}" rx="6" fill="none" stroke="{ACC}" stroke-width="3"/>
       </svg>

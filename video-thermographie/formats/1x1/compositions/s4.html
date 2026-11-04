@@ -112,6 +112,7 @@
       fadeOut(0.2, $("#s4-neigh"), 0.6, 0, "power1.inOut");
       fadeIn(0.55, [$("#s4-inner"), $("#s4-bus")], 0.6);
       tl.fromTo($("#s4-photo"), { opacity: 0 }, { opacity: 1, duration: 0.6, ease: "power1.inOut" }, 0.3);  // la vraie image thermique
+      fadeOut(0.9, $("#s4-panel"), 0.1);  // le panneau dessiné (et ses halos) s'efface sous la photo
       // 2. titre : du gris à l'encre, mot à mot
       tl.fromTo(title, { opacity: 0 }, { opacity: 1, duration: 0.2 }, 0.75);
       tl.fromTo(title, { color: "#D4D4D8" }, { color: "#111111", duration: 0.25, stagger: 0.08 }, 0.95);
