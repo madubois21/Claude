@@ -9,6 +9,8 @@
   ΔT et MaxT dans deux cases (libellé gris, valeur en gras), action dans un encadré pêche bordé d'orange.
   Vignette légèrement réduite et centrée (500 / 420 / 360 px selon le format) pour laisser respirer la fiche.
 - Musique : 0,85 (−1,4 dB) sur toute la vidéo, 0,28 (−11 dB au lieu de −8 dB) sous la voix.
+- Rendus (trois formats) : 60,0 s ; −16,3 LUFS intégré, crête vraie −2,6 dBTP ; musique seule −1,4 dB (mesuré entre
+  deux phrases). `hyperframes check` : 0 erreur, 0 avertissement sur les trois formats.
 
 ## Passage 9 — musique dynamique, fin sur le site et LinkedIn
 - Musique entièrement recomposée (`tools/music.py`) : électro-pop entraînante, 100 BPM (toutes les coupes tombent sur un
