@@ -9,6 +9,7 @@
 - Retour à « défaut » partout (titre « Chaque défaut est localisé et qualifié. », « défauts détectés », etc.).
 - S2 : icônes Phosphor (licence MIT) « fire » et « shield-check », graisse regular ; intérieur de la flamme et coche en
   orange ; la flamme monte, le bouclier apparaît, la coche se trace.
+- Rendus (trois formats) : 60,0 s ; −16,3 LUFS intégré, crête vraie −2,6 dBTP ; images clés relues.
 
 ## Passage 10 — fiches anomalie, niveau de la musique
 - « Défaut » devient « Anomalie » sur les fiches et dans le rapport (titre « Chaque anomalie est localisée et qualifiée. »,
