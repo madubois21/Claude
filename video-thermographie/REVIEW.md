@@ -11,6 +11,8 @@
 - S5 : la vignette des fiches est la photo ; cadre sur les points chauds (Défaut #1), puis sur les microfissures
   (Défaut #2, catégorie 3, « À surveiller ») ; page « rapport aux normes » allongée de 1,8 s.
 - Durée 74,4 s (limite fixée par le client : 1 min 15). Coût FLORA du passage : 3 phrases, 0,039 $.
+- Rendus (trois formats) : 74,4 s ; −16,3 LUFS intégré, crête vraie −2,8 dBTP ; `hyperframes check` : 0 erreur,
+  0 avertissement ; images clés relues (photo nette, sans halo du panneau dessiné).
 
 ## Passage 11 — fiches au format des rapports, icônes Phosphor
 - Fiches défaut sur le modèle des rapports Fly Scan'Air (exemples fournis) : titre « Défaut #1 » en couleur, filet
