@@ -685,19 +685,17 @@ PH_S = 0.9  # 256 -> 230 px
 
 
 def s2_icons(FX, SX, IY):
-    """Incendie (flamme Phosphor, intérieur orange) et assurance (bouclier Phosphor, coche orange)."""
+    """Incendie (flamme Phosphor) et assurance (bouclier Phosphor) : tracé orange, intérieur transparent."""
     fx, fy = FX - 128 * PH_S, IY - 125 * PH_S
     sx, sy = SX - 128 * PH_S, IY - 140 * PH_S
     return (
         f'<g transform="translate({n(fx)} {n(fy)}) scale({PH_S})" stroke="none">'
         '<clipPath id="s2-fclip"><rect id="s2-fclipr" x="0" y="256" width="256" height="0"/></clipPath>'
         '<g clip-path="url(#s2-fclip)">'
-        f'<path id="s2-flamei" d="{PH_FIRE_BG}" fill="{ACC}" fill-opacity="0.3"/>'
-        f'<path id="s2-flame" d="{PH_FIRE}" fill="{INK}"/>'
+        f'<path id="s2-flame" d="{PH_FIRE}" fill="{ACC}"/>'
         f'<path id="s2-flamec" d="{PH_FIRE_CURL}" fill="{ACC}"/></g></g>'
         f'<g transform="translate({n(sx)} {n(sy)}) scale({PH_S})" stroke="none"><g id="s2-shieldg">'
-        f'<path d="{PH_SHIELD_BG}" fill="{ACC}" fill-opacity="0.1"/>'
-        f'<path id="s2-shield" d="{PH_SHIELD}" fill="{INK}"/>'
+        f'<path id="s2-shield" d="{PH_SHIELD}" fill="{ACC}"/>'
         '<clipPath id="s2-cclip"><rect id="s2-cclipr" x="78" y="90" width="0" height="84"/></clipPath>'
         f'<path id="s2-check" d="{PH_CHECK}" fill="{ACC}" clip-path="url(#s2-cclip)"/></g></g>'
     )
@@ -909,6 +907,13 @@ def drone_svg():
         </g>"""
 
 
+S3_DUR = 18.0  # survol : drone, caméra, puis deux repères pédagogiques (note technique Fly Scan'Air, § 2.1 et 3.2)
+S3_FACTS = [  # (début, fin, chiffre, légende) — en temps local de la scène 3, calés sur les phrases 11 et 12 de la voix
+    (6.55, 11.55, "≈ 600 W/m²", "d’ensoleillement suffisent<br />pour révéler chaque défaut."),
+    (11.75, 17.15, "−0,5 % par degré", "de rendement perdu :<br />+10 °C, c’est déjà −5 %."),
+]
+
+
 def build_s3():
     normal, thermal = [], []
     anom_xs = []
@@ -967,21 +972,27 @@ def build_s3():
       <div id="s3-tag" class="tag">Caméra infrarouge</div>
       <div id="s3-scale" class="scale"><span>Froid</span><i></i><span>Chaud</span></div>
     </div>
-    <div id="s3-title" class="title" style="{tstyle(L and L["s3_title"], "left: 140px; top: 120px")}">Le scan infrarouge révèle<br />chaque échauffement.</div>"""
+    <div id="s3-title" class="title" style="{tstyle(L and L["s3_title"], "left: 140px; top: 120px")}">Le scan infrarouge révèle<br />chaque échauffement.</div>
+    {"".join(f'<div id="s3-f{i}" class="fact" style="{tstyle(L and L["s3_title"], "left: 140px; top: 120px; font-size: 64px")}"><div class="fk">Le saviez-vous ?</div><div class="ff">{fig}</div><div class="fc">{cap}</div></div>' for i, (_, _, fig, cap) in enumerate(S3_FACTS))}"""
     css = """
     #root #s3-hud { position: absolute; left: 480px; top: 306px; display: flex; align-items: center; gap: 36px; }
     #root .tag { font-family: "Comfortaa", sans-serif; font-weight: 600; font-size: 30px; line-height: 1; padding: 10px 16px; background: #FFFFFF; border: 1.5px solid #111111; color: #111111; white-space: nowrap; }
     #root .scale { display: flex; align-items: center; gap: 14px; font-family: "Comfortaa", sans-serif; font-weight: 600; font-size: 30px; color: #6B6B70; }
     #root .scale i { display: block; width: 200px; height: 12px; background: linear-gradient(90deg, #E4E4E7 0%, #FFD2BC 55%, #FF5700 100%); }
     #root #s3-tag, #root #s3-scale, #root #s3-leaddot, #root #s3-scan, #root .s3-ring { opacity: 0; }
-    #root .s3-pfill, #root .s3-cells { opacity: 0; }"""
+    #root .s3-pfill, #root .s3-cells { opacity: 0; }
+    #root .fact { position: absolute; font-family: "Comfortaa", sans-serif; white-space: nowrap; }
+    #root .fact .fk { font-weight: 700; font-size: 28px; line-height: 1; color: #FF5700; margin-bottom: 0.25em; }
+    #root .fact .ff { font-weight: 700; font-size: 1em; line-height: 1.12; letter-spacing: -0.01em; color: #111111; }
+    #root .fact .fc { font-weight: 600; font-size: 0.56em; line-height: 1.3; color: #111111; margin-top: 0.12em; }
+    #root .fact > div { opacity: 0; }"""
     if L:
         css += f"""
     #root #s3-hud {{ left: {L["s3_hud"][0]}px; top: {L["s3_hud"][1]}px; flex-direction: column; align-items: flex-start; gap: 12px; }}"""
     js = f"""
       const title = words($("#s3-title"), txt("s3-title", "Le scan infrarouge révèle|chaque *échauffement*."));
       const HOVER = {HOVER_X}, END = {SCAN_END_X}, Y = {DRONE_Y};
-      const T0 = 3.2, TD = 1.5; // balayage rapide
+      const T0 = 3.2, TD = 13.0; // survol lent : le temps d'expliquer
       // 1. le champ de panneaux se dessine (vue de dessus)
       draw(0.1, $$(".s3-pline"), 0.5, "power2.inOut", 0.03);
       fadeIn(0.3, $$(".s3-pfill"), 0.4, 0.03);
@@ -989,7 +1000,7 @@ def build_s3():
       solid(1.6, $$(".s3-pline"));
       // 2. le drone entre ; les rotors tournent en continu
       tl.fromTo($("#s3-drone"), {{ x: -260, y: Y }}, {{ x: HOVER, y: Y, duration: 0.85, ease: "expo.out" }}, 0.7);
-      tl.fromTo($$(".s3-blade"), {{ rotation: 0, transformOrigin: "50% 50%" }}, {{ rotation: 360 * 13, duration: 6.6, ease: "none" }}, 0);
+      tl.fromTo($$(".s3-blade"), {{ rotation: 0, transformOrigin: "50% 50%" }}, {{ rotation: 360 * 35, duration: {S3_DUR}, ease: "none" }}, 0);
       // 3. HUD technique : ligne de rappel + données
       fadeIn(1.6, $("#s3-leaddot"), 0.15);
       draw(1.65, $("#s3-leader"), 0.35, "power2.out");
@@ -1014,8 +1025,10 @@ def build_s3():
       // 5. sortie : le drone quitte le cadre, puis zoom traversant
       fadeOut(T0 + TD - 0.05, $("#s3-scan"), 0.2);
       tl.to($("#s3-drone"), {{ x: 2250, duration: 0.45, ease: "power3.in" }}, T0 + TD);
-      blurOut(5.6, title, 0.16, 0.02);
-      tl.to($("#s3-svg"), {{ attr: {{ viewBox: "{vb(S3_END_VB)}" }}, duration: 0.62, ease: "power3.in" }}, 5.98);"""
+      blurOut(6.35, title, 0.16, 0.02);
+      // 4 bis. « Le saviez-vous ? » : deux repères de la note technique, pendant que la voix les explique
+      {"".join(f'blurIn({a}, $$("#s3-f{i} > div"), 0.2, 0.12); blurOut({b}, $$("#s3-f{i} > div"), 0.16, 0.03);' + chr(10) + "      " for i, (a, b, _, _) in enumerate(S3_FACTS))}
+      tl.to($("#s3-svg"), {{ attr: {{ viewBox: "{vb(S3_END_VB)}" }}, duration: 0.62, ease: "power3.in" }}, {n(S3_DUR - 0.62)});"""
     if L:
         marker = '      tl.fromTo($("#s3-cliprect"),'
         cam = (f'      tl.fromTo($("#s3-svg"), {{ attr: {{ viewBox: "{vb(S3_VB0)}" }} }}, '
@@ -1525,12 +1538,12 @@ def build_s5():
       //   ce que contient le rapport
       draw(13.0, $$(".s5-box"), 0.3, "power2.out", 0.1);
       blurIn(13.1, [$("#s5-i0"), $("#s5-i1"), $("#s5-i2"), $("#s5-i3")], 0.18, 0.15);
-      [13.4, 13.65, 13.9, 14.15].forEach((t, i) => draw(t, $("#s5-k" + i), 0.22, "power2.out"));
+      [13.6, 14.2, 14.8, 15.4].forEach((t, i) => draw(t, $("#s5-k" + i), 0.22, "power2.out"));
       // 4. sortie : le rapport file dans la plateforme
-      blurOut(14.75, [...t3, $("#s5-i0"), $("#s5-i1"), $("#s5-i2"), $("#s5-i3")], 0.2, 0.015);
-      blurOut(14.8, [$("#s5-check")], 0.2, 0);
-      fadeOut(14.83, [$("#s5-ct"), $("#s5-cs"), $("#s5-stamp"), $("#s5-mlogo")], 0.1);
-      tl.to($("#s5-docw"), { x: __CX__, y: __CY__, scale: __CS__, transformOrigin: "__OX__px __OY__px", duration: 0.48, ease: "power2.inOut" }, 14.85);"""
+      blurOut(16.55, [...t3, $("#s5-i0"), $("#s5-i1"), $("#s5-i2"), $("#s5-i3")], 0.2, 0.015);
+      blurOut(16.6, [$("#s5-check")], 0.2, 0);
+      fadeOut(16.63, [$("#s5-ct"), $("#s5-cs"), $("#s5-stamp"), $("#s5-mlogo")], 0.1);
+      tl.to($("#s5-docw"), { x: __CX__, y: __CY__, scale: __CS__, transformOrigin: "__OX__px __OY__px", duration: 0.48, ease: "power2.inOut" }, 16.65);"""
     js = (js.replace("__B2X__", n(BOX2[0])).replace("__B2Y__", n(BOX2[1])).replace("__B2W__", n(BOX2[2])).replace("__B2H__", n(BOX2[3])))
     js = (js.replace("__AY__", str(S5_AY)).replace("__CX__", n(carry["x"])).replace("__CY__", n(carry["y"]))
           .replace("__CS__", f'{carry["scale"]:.5f}').replace("__OX__", n(dcx)).replace("__OY__", n(dcy)))
@@ -1838,33 +1851,33 @@ def build_s7():
 # --------------------------------------------------------------------------
 # index.html
 # --------------------------------------------------------------------------
-SCENES = [("s1", 0, 7.2), ("s2", 7.2, 6.6), ("s3", 13.8, 6.6), ("s4", 20.4, 7.2), ("s5", 27.6, 15.6),
-          ("s6", 43.2, 6.6), ("s7", 49.8, S7_DUR)]
-TOTAL = 60.0
+SCENES = [("s1", 0, 7.2), ("s2", 7.2, 6.6), ("s3", 13.8, S3_DUR), ("s4", 31.8, 7.2), ("s5", 39.0, 17.4),
+          ("s6", 56.4, 6.6), ("s7", 63.0, S7_DUR)]
+TOTAL = 73.2
 
 # (id, file, hit time in the film, volume): the file's measured peak lands one frame after its picture
 SFX = [
     ("sfx-drone", "whoosh-short.mp3", 13.8 + 0.72, 0.5),
     ("sfx-scan", "whoosh-cinematic.mp3", 13.8 + 3.95, 0.3),
-    ("sfx-zoom", "whoosh-high.mp3", 13.8 + 6.55, 0.45),
-    ("sfx-tick1", "key-press.mp3", 20.4 + 1.4, 0.5),
-    ("sfx-tick2", "key-press.mp3", 20.4 + 2.15, 0.45),
-    ("sfx-tick3", "key-press.mp3", 20.4 + 3.9, 0.5),
-    ("sfx-carry", "whoosh-low.mp3", 20.4 + 6.8, 0.35),
-    ("sfx-box1", "key-press.mp3", 27.6 + 1.5, 0.3),
-    ("sfx-box2", "key-press.mp3", 27.6 + 5.72, 0.3),
-    ("sfx-plan", "pop.mp3", 27.6 + 3.55, 0.25),
-    ("sfx-page2", "whoosh-high.mp3", 27.6 + 8.2, 0.18),
-    ("sfx-page3", "whoosh-high.mp3", 27.6 + 11.75, 0.18),
-    ("sfx-stamp", "pop.mp3", 27.6 + 12.88, 0.45),
-    ("sfx-check1", "click-soft.mp3", 27.6 + 13.52, 0.6),
-    ("sfx-check2", "click-soft.mp3", 27.6 + 13.77, 0.55),
-    ("sfx-check3", "click-soft.mp3", 27.6 + 14.02, 0.6),
-    ("sfx-check4", "click-soft.mp3", 27.6 + 14.27, 0.55),
-    ("sfx-doc", "whoosh-short.mp3", 27.6 + 15.09, 0.3),
-    ("sfx-logo", "impact-bass-1.mp3", 49.8 + 1.55, 0.22),
-    ("sfx-top", "whoosh-low.mp3", 49.8 + 4.13, 0.22),
-    ("sfx-type", "typing.mp3", 49.8 + 4.42, 0.35),
+    ("sfx-zoom", "whoosh-high.mp3", 13.8 + S3_DUR - 0.05, 0.45),
+    ("sfx-tick1", "key-press.mp3", 31.8 + 1.4, 0.5),
+    ("sfx-tick2", "key-press.mp3", 31.8 + 2.15, 0.45),
+    ("sfx-tick3", "key-press.mp3", 31.8 + 3.9, 0.5),
+    ("sfx-carry", "whoosh-low.mp3", 31.8 + 6.8, 0.35),
+    ("sfx-box1", "key-press.mp3", 39.0 + 1.5, 0.3),
+    ("sfx-box2", "key-press.mp3", 39.0 + 5.72, 0.3),
+    ("sfx-plan", "pop.mp3", 39.0 + 3.55, 0.25),
+    ("sfx-page2", "whoosh-high.mp3", 39.0 + 8.2, 0.18),
+    ("sfx-page3", "whoosh-high.mp3", 39.0 + 11.75, 0.18),
+    ("sfx-stamp", "pop.mp3", 39.0 + 12.88, 0.45),
+    ("sfx-check1", "click-soft.mp3", 39.0 + 13.72, 0.6),
+    ("sfx-check2", "click-soft.mp3", 39.0 + 14.32, 0.55),
+    ("sfx-check3", "click-soft.mp3", 39.0 + 14.92, 0.6),
+    ("sfx-check4", "click-soft.mp3", 39.0 + 15.52, 0.55),
+    ("sfx-doc", "whoosh-short.mp3", 39.0 + 16.89, 0.3),
+    ("sfx-logo", "impact-bass-1.mp3", 63.0 + 1.55, 0.22),
+    ("sfx-top", "whoosh-low.mp3", 63.0 + 4.13, 0.22),
+    ("sfx-type", "typing.mp3", 63.0 + 4.42, 0.35),
 ]
 
 

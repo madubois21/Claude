@@ -27,8 +27,9 @@ BASE = "https://media.flora.ai/node-inputs/2026/11/3/px78199r2h4zbzqw7mjp0659jx8
 SR = 48000
 
 # (id, run FLORA, début absolu (s), pause interne max (s), tempo, texte)
-# Placement calé sur l'image : S1 0–7,2 · S2 7,2–13,8 · S3 13,8–20,4 · S4 20,4–27,6 · S5 27,6–43,2 ·
-# S6 43,2–49,8 · S7 49,8–60,0 (fin sur le site web et LinkedIn).
+# Placement calé sur l'image : S1 0–7,2 · S2 7,2–13,8 · S3 13,8–31,8 (survol + « Le saviez-vous ? ») · S4 31,8–39,0 ·
+# S5 39,0–56,4 · S6 56,4–63,0 · S7 63,0–73,2 (fin sur le site web et LinkedIn).
+# Phrases 11 et 12 : repères pédagogiques de la note technique Fly Scan'Air (§ 3.2 : ≈ 600 W/m² ; § 2.1 : 0,5 % par degré).
 LINES = [
     ("01", "m170bcwv0qx4nt99xpssgpz26d8hhbf6", 0.90, 0.30, 1.00,
      "Sur une toiture solaire, certains défauts restent totalement invisibles à l'œil nu."),
@@ -36,23 +37,27 @@ LINES = [
      "Pourtant, ils font baisser le rendement, augmentent le risque d'incendie et fragilisent votre garantie."),
     ("03", "m1701etqdmbs0cs3s05v0syex18hgww5", 14.20, 0.30, 1.00,
      "Notre drone, équipé d'une caméra infrarouge, survole vos panneaux et révèle chaque échauffement."),
-    ("04", "m17e57pvwm0ppxntect1mewzf18hghmv", 20.65, 0.24, 1.03,
+    ("11", "m176zqkkr1pa3q98st5heagk558hkg4a", 20.45, 0.30, 1.00,
+     "La mesure se fait en plein soleil : dès six cents watts par mètre carré, chaque défaut se révèle."),
+    ("12", "m17748jn99k90hy2nwp7c6edws8hk9rj", 25.65, 0.30, 1.00,
+     "Chaque degré de trop coûte un demi pour cent de rendement : dix degrés, c'est déjà cinq pour cent de perte."),
+    ("04", "m17e57pvwm0ppxntect1mewzf18hghmv", 32.05, 0.24, 1.03,
      "Points chauds, diodes by-pass défectueuses, boîtes de jonction en surchauffe : chaque anomalie est localisée."),
-    ("05", "m178gqwz34r99kc08kxs3zhfw58hhs86", 30.00, 0.24, 1.04,
+    ("05", "m178gqwz34r99kc08kxs3zhfw58hhs86", 41.40, 0.24, 1.04,
      "Vous recevez ensuite un rapport détaillé : chaque défaut y est décrit et qualifié,"),
-    ("06", "m170f6ptnpv9z50g3qawwjke2h8hg17x", 35.95, 0.24, 1.04,
+    ("06", "m170f6ptnpv9z50g3qawwjke2h8hg17x", 47.35, 0.24, 1.04,
      "classé par niveau de gravité, avec l'action à mener."),
-    ("07", "m179b0j2z3xd0b1gqx84jdhe458hhav1", 39.45, 0.24, 1.04,
+    ("07", "m179b0j2z3xd0b1gqx84jdhe458hhav1", 50.85, 0.24, 1.04,
      "Un rapport aux normes, utile aussi auprès de votre assureur."),
-    ("08", "m176pmnebw024ntrcy79s25pe98hgcw9", 43.45, 0.30, 1.00,
+    ("08", "m176pmnebw024ntrcy79s25pe98hgcw9", 56.65, 0.30, 1.00,
      "Bientôt, retrouvez vos rapports et planifiez vos prochaines inspections sur notre plateforme en ligne."),
-    ("09", "m175rswf9b4qmwa8wx9ert80n18hg994", 49.95, 0.26, 1.00,
+    ("09", "m175rswf9b4qmwa8wx9ert80n18hg994", 63.15, 0.26, 1.00,
      "Fly Scan'Air. Révélez l'invisible."),
-    ("10", "m170jg4gxm1hh6f9ybp699ze158hh6ha", 53.20, 0.30, 1.02,
+    ("10", "m170jg4gxm1hh6f9ybp699ze158hh6ha", 66.40, 0.30, 1.02,
      "Faites contrôler votre installation : rendez-vous sur notre site."),
 ]
 GAP = 0.15  # silence minimal entre deux phrases
-END = 59.0  # la voix doit être terminée avant la dernière seconde
+END = 72.2  # la voix doit être terminée avant la dernière seconde
 
 
 def ff(*args, capture=False):
@@ -147,6 +152,10 @@ def main():
     placed, prev_end, ok = [], 0.0, True
     for vid, run, start, max_pause, tempo, text in LINES:
         raw = os.path.join(VO_DIR, f"raw_{vid}.wav")
+        if not download and not os.path.exists(raw):
+            print(f"vo_{vid}: raw_{vid}.wav absent (à déposer depuis FLORA, run_{run}) : phrase ignorée")
+            ok = False
+            continue
         if download:
             urllib.request.urlretrieve(f"{BASE}/gen-{run}-0.wav", raw)
         x = read_pcm(raw)

@@ -17,6 +17,11 @@
     #root .scale i { display: block; width: 200px; height: 12px; background: linear-gradient(90deg, #E4E4E7 0%, #FFD2BC 55%, #FF5700 100%); }
     #root #s3-tag, #root #s3-scale, #root #s3-leaddot, #root #s3-scan, #root .s3-ring { opacity: 0; }
     #root .s3-pfill, #root .s3-cells { opacity: 0; }
+    #root .fact { position: absolute; font-family: "Comfortaa", sans-serif; white-space: nowrap; }
+    #root .fact .fk { font-weight: 700; font-size: 28px; line-height: 1; color: #FF5700; margin-bottom: 0.25em; }
+    #root .fact .ff { font-weight: 700; font-size: 1em; line-height: 1.12; letter-spacing: -0.01em; color: #111111; }
+    #root .fact .fc { font-weight: 600; font-size: 0.56em; line-height: 1.3; color: #111111; margin-top: 0.12em; }
+    #root .fact > div { opacity: 0; }
     #root #s3-hud { left: 556px; top: 236px; flex-direction: column; align-items: flex-start; gap: 12px; }
   </style>
   <div
@@ -58,6 +63,7 @@
       <div id="s3-scale" class="scale"><span>Froid</span><i></i><span>Chaud</span></div>
     </div>
     <div id="s3-title" class="title" style="left: 108px; top: 108px; font-size: 52px">Le scan infrarouge révèle<br />chaque échauffement.</div>
+    <div id="s3-f0" class="fact" style="left: 108px; top: 108px; font-size: 52px"><div class="fk">Le saviez-vous ?</div><div class="ff">≈ 600 W/m²</div><div class="fc">d’ensoleillement suffisent<br />pour révéler chaque défaut.</div></div><div id="s3-f1" class="fact" style="left: 108px; top: 108px; font-size: 52px"><div class="fk">Le saviez-vous ?</div><div class="ff">−0,5 % par degré</div><div class="fc">de rendement perdu :<br />+10 °C, c’est déjà −5 %.</div></div>
   </div>
   <script>
     (function () {
@@ -124,7 +130,7 @@
 
       const title = words($("#s3-title"), txt("s3-title", "Le scan infrarouge révèle|chaque *échauffement*."));
       const HOVER = 215, END = 1790, Y = 680;
-      const T0 = 3.2, TD = 1.5; // balayage rapide
+      const T0 = 3.2, TD = 13.0; // survol lent : le temps d'expliquer
       // 1. le champ de panneaux se dessine (vue de dessus)
       draw(0.1, $$(".s3-pline"), 0.5, "power2.inOut", 0.03);
       fadeIn(0.3, $$(".s3-pfill"), 0.4, 0.03);
@@ -132,7 +138,7 @@
       solid(1.6, $$(".s3-pline"));
       // 2. le drone entre ; les rotors tournent en continu
       tl.fromTo($("#s3-drone"), { x: -260, y: Y }, { x: HOVER, y: Y, duration: 0.85, ease: "expo.out" }, 0.7);
-      tl.fromTo($$(".s3-blade"), { rotation: 0, transformOrigin: "50% 50%" }, { rotation: 360 * 13, duration: 6.6, ease: "none" }, 0);
+      tl.fromTo($$(".s3-blade"), { rotation: 0, transformOrigin: "50% 50%" }, { rotation: 360 * 35, duration: 18.0, ease: "none" }, 0);
       // 3. HUD technique : ligne de rappel + données
       fadeIn(1.6, $("#s3-leaddot"), 0.15);
       draw(1.65, $("#s3-leader"), 0.35, "power2.out");
@@ -158,8 +164,12 @@
       // 5. sortie : le drone quitte le cadre, puis zoom traversant
       fadeOut(T0 + TD - 0.05, $("#s3-scan"), 0.2);
       tl.to($("#s3-drone"), { x: 2250, duration: 0.45, ease: "power3.in" }, T0 + TD);
-      blurOut(5.6, title, 0.16, 0.02);
-      tl.to($("#s3-svg"), { attr: { viewBox: "1013 452.22 420 420" }, duration: 0.62, ease: "power3.in" }, 5.98);
+      blurOut(6.35, title, 0.16, 0.02);
+      // 4 bis. « Le saviez-vous ? » : deux repères de la note technique, pendant que la voix les explique
+      blurIn(6.55, $$("#s3-f0 > div"), 0.2, 0.12); blurOut(11.55, $$("#s3-f0 > div"), 0.16, 0.03);
+      blurIn(11.75, $$("#s3-f1 > div"), 0.2, 0.12); blurOut(17.15, $$("#s3-f1 > div"), 0.16, 0.03);
+      
+      tl.to($("#s3-svg"), { attr: { viewBox: "1013 452.22 420 420" }, duration: 0.62, ease: "power3.in" }, 17.38);
       window.__timelines["s3"] = tl;
     })();
   </script>

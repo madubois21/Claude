@@ -290,12 +290,12 @@
       //   ce que contient le rapport
       draw(13.0, $$(".s5-box"), 0.3, "power2.out", 0.1);
       blurIn(13.1, [$("#s5-i0"), $("#s5-i1"), $("#s5-i2"), $("#s5-i3")], 0.18, 0.15);
-      [13.4, 13.65, 13.9, 14.15].forEach((t, i) => draw(t, $("#s5-k" + i), 0.22, "power2.out"));
+      [13.6, 14.2, 14.8, 15.4].forEach((t, i) => draw(t, $("#s5-k" + i), 0.22, "power2.out"));
       // 4. sortie : le rapport file dans la plateforme
-      blurOut(14.75, [...t3, $("#s5-i0"), $("#s5-i1"), $("#s5-i2"), $("#s5-i3")], 0.2, 0.015);
-      blurOut(14.8, [$("#s5-check")], 0.2, 0);
-      fadeOut(14.83, [$("#s5-ct"), $("#s5-cs"), $("#s5-stamp"), $("#s5-mlogo")], 0.1);
-      tl.to($("#s5-docw"), { x: 144.1, y: 29.5, scale: 0.04410, transformOrigin: "520px 520px", duration: 0.48, ease: "power2.inOut" }, 14.85);
+      blurOut(16.55, [...t3, $("#s5-i0"), $("#s5-i1"), $("#s5-i2"), $("#s5-i3")], 0.2, 0.015);
+      blurOut(16.6, [$("#s5-check")], 0.2, 0);
+      fadeOut(16.63, [$("#s5-ct"), $("#s5-cs"), $("#s5-stamp"), $("#s5-mlogo")], 0.1);
+      tl.to($("#s5-docw"), { x: 144.1, y: 29.5, scale: 0.04410, transformOrigin: "520px 520px", duration: 0.48, ease: "power2.inOut" }, 16.65);
       window.__timelines["s5"] = tl;
     })();
   </script>

@@ -79,30 +79,30 @@
  {
   "id": "04",
   "file": "assets/audio/vo/vo_04.wav",
-  "start": 20.65,
+  "start": 32.05,
   "dur": 6.475,
   "tempo": 1.03,
   "raw": 7.6,
   "speech": [
    [
-    20.689,
-    21.349
+    32.089,
+    32.749
    ],
    [
-    21.582,
-    23.436
+    32.982,
+    34.836
    ],
    [
-    23.669,
-    25.33
+    35.069,
+    36.73
    ],
    [
-    25.563,
-    26.32
+    36.963,
+    37.72
    ],
    [
-    26.436,
-    27.019
+    37.836,
+    38.419
    ]
   ],
   "text": "Points chauds, diodes by-pass défectueuses, boîtes de jonction en surchauffe : chaque anomalie est localisée."
@@ -110,18 +110,18 @@
  {
   "id": "05",
   "file": "assets/audio/vo/vo_05.wav",
-  "start": 30.0,
+  "start": 41.4,
   "dur": 5.118,
   "tempo": 1.04,
   "raw": 6.16,
   "speech": [
    [
-    30.038,
-    32.337
+    41.438,
+    43.737
    ],
    [
-    32.567,
-    35.01
+    43.967,
+    46.41
    ]
   ],
   "text": "Vous recevez ensuite un rapport détaillé : chaque défaut y est décrit et qualifié,"
@@ -129,18 +129,18 @@
  {
   "id": "06",
   "file": "assets/audio/vo/vo_06.wav",
-  "start": 35.95,
+  "start": 47.35,
   "dur": 3.17,
   "tempo": 1.04,
   "raw": 3.92,
   "speech": [
    [
-    35.988,
-    37.71
+    47.388,
+    49.11
    ],
    [
-    37.94,
-    39.017
+    49.34,
+    50.417
    ]
   ],
   "text": "classé par niveau de gravité, avec l'action à mener."
@@ -148,18 +148,18 @@
  {
   "id": "07",
   "file": "assets/audio/vo/vo_07.wav",
-  "start": 39.45,
+  "start": 50.85,
   "dur": 3.178,
   "tempo": 1.04,
   "raw": 3.92,
   "speech": [
    [
-    39.488,
-    40.556
+    50.888,
+    51.956
    ],
    [
-    40.787,
-    42.527
+    52.187,
+    53.927
    ]
   ],
   "text": "Un rapport aux normes, utile aussi auprès de votre assureur."
@@ -167,18 +167,18 @@
  {
   "id": "08",
   "file": "assets/audio/vo/vo_08.wav",
-  "start": 43.45,
+  "start": 56.65,
   "dur": 5.82,
   "tempo": 1.0,
   "raw": 6.4,
   "speech": [
    [
-    43.49,
-    44.15
+    56.69,
+    57.35
    ],
    [
-    44.34,
-    49.17
+    57.54,
+    62.37
    ]
   ],
   "text": "Bientôt, retrouvez vos rapports et planifiez vos prochaines inspections sur notre plateforme en ligne."
@@ -186,18 +186,18 @@
  {
   "id": "09",
   "file": "assets/audio/vo/vo_09.wav",
-  "start": 49.95,
+  "start": 63.15,
   "dur": 3.09,
   "tempo": 1.0,
   "raw": 3.76,
   "speech": [
    [
-    49.99,
-    51.2
+    63.19,
+    64.4
    ],
    [
-    51.46,
-    52.94
+    64.66,
+    66.14
    ]
   ],
   "text": "Fly Scan'Air. Révélez l'invisible."
@@ -205,22 +205,22 @@
  {
   "id": "10",
   "file": "assets/audio/vo/vo_10.wav",
-  "start": 53.2,
+  "start": 66.4,
   "dur": 3.346,
   "tempo": 1.02,
   "raw": 4.08,
   "speech": [
    [
-    53.239,
-    54.935
+    66.439,
+    68.135
    ],
    [
-    55.229,
-    56.288
+    68.429,
+    69.488
    ],
    [
-    56.406,
-    56.445
+    69.606,
+    69.645
    ]
   ],
   "text": "Faites contrôler votre installation : rendez-vous sur notre site."
