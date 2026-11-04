@@ -13,6 +13,8 @@
   dernière image ; scène 7 allongée à 10,2 s, vidéo de 60 s.
 - Contraste : « Cat. 4 » (et le 4 de la légende de gravité) en noir sur l'orange clair.
 - Cellules thermiques regroupées par nuance (6 tracés par module au lieu de 48 rectangles) : page plus légère, même image.
+- Rendus (trois formats) : 60,0 s, 30 i/s ; −15,9 LUFS intégré, crête vraie −2,4 dBTP ; carton final affiché de 55 s
+  à la dernière image. Musique mesurée, **pas écoutée**.
 
 ## Passage 8 — icônes, anomalies, rapport, logo
 - S2 : icônes incendie et assurance en trait de 6 px (coche 7 px), accordées à la graisse de Comfortaa.
