@@ -2,7 +2,12 @@
 
 Source : `Cahier_des_charges.pdf` (structure en 6 scènes, textes S1 et S2 imposés).
 Choix validés avec le client : pas de voix off ; musique originale composée ; 16:9 seul pour ce premier passage.
-Passage 12 : 74,4 s (max. 1 min 15) ; survol pédagogique (600 W/m², 0,5 %/°C) ; vraie photo thermique en S4 et dans le rapport.
+Passage 13 : retour à la base du passage 11 (sans photo réelle), 74,4 s, 9 scènes : titre d'ouverture ; installation au centre
+avec six pictogrammes en orbite (remplace le graphique de rendement), raccord exact vers le survol ; « Comment détecter ces
+anomalies ? » ; lien « Accéder à votre installation » sur le rapport, puis plateforme en ligne (liste, vues IR/RVB, carte ;
+aucun nom ni logo de logiciel) ; « Retrouvez-nous sur… » (recherche du site puis de LinkedIn, bruit de clavier) ; logo final
+(serpentin + bruit de drone, nom, remontée, slogan, coordonnées). Voix 01–07 seulement.
+Passage 12 (abandonné au passage 13) : survol pédagogique (600 W/m², 0,5 %/°C) ; vraie photo thermique en S4 et dans le rapport.
 Passage 9 : nouvelle musique électro-pop dynamique ; plus de bouclage : la vidéo (60 s) s'arrête sur le site web et LinkedIn.
 Passage 8 : 58 s (rapport +3 s : fiches défaut n°1 et n°2, plan de localisation) ; anomalies au rendu thermique réaliste
 (module de 8 x 6 cellules, sous-chaîne, cellule fissurée, boîte de jonction) désignées par des lignes de rappel, sans cercles ;
@@ -19,8 +24,9 @@ contact www.flyscanair.com · 06 22 80 57 69 · contact@flyscanair.com ; plus de
 ```text
 GOAL:    le spectateur comprend qu'un défaut invisible coûte cher et qu'un survol thermique par drone le révèle ; il retient « faire contrôler son installation ».
 OUTPUT:  HyperFrames, 1920 x 1080, 30 fps, MP4 H.264 (version LinkedIn).
-TIME:    74,4 s x 30 = 2232 images, fin tenue sur le site web et LinkedIn (passage 12 ; détail des coupes dans README.md). Musique 100 BPM : 1 temps = 0,6 s = 18 images, 1 mesure = 2,4 s.
-         Coupes : S1 0–7,2 · S2 7,2–13,2 · S3 13,2–21,0 · S4 21,0–27,6 · S5 27,6–34,2 · S6 34,2–40,8.
+TIME:    74,4 s x 30 = 2232 images, fin tenue sur le logo, le slogan et les coordonnées (passage 13). Musique 100 BPM : 1 temps = 0,6 s = 18 images, 1 mesure = 2,4 s.
+         Coupes : S0 0–3,6 · S1 3,6–10,8 · S2 10,8–17,4 · S3 17,4–24,0 · S4 24,0–31,2 · S5 31,2–46,8 · S6 46,8–55,8 · S7 55,8–66,0 · S8 66,0–74,4.
+         (Le détail SHOTS ci-dessous décrit la conception d'origine ; le déroulé actuel est dans README.md.)
 LOOK:    fond #FFFFFF plat + trame de points Ø2 px #E4E4E7 au pas de 48 px (papier technique, aucun dégradé).
          Encre #111111 : traits de structure 2,5 px, détails 1,5 px, cellules 1 px #D4D4D8, fond de panneau #F3F3F4.
          Accent #FF5700 réservé à la chaleur et à l'action : points chauds, ligne de scan, cercles de détection,

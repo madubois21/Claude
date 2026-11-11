@@ -33,3 +33,9 @@ All files are distributed under the [Pixabay Content License](https://pixabay.co
 - Redistribution as part of derivative works (such as videos rendered with HyperFrames)
 
 without any attribution requirement.
+
+## Sons synthétisés pour la vidéo Fly Scan’Air
+
+- `typing-18.wav`, `typing-12.wav` : frappe au clavier calée sur l’affichage des lettres (une touche toutes les 75 ms),
+  construite à partir de `key-press.mp3` (hauteur et force variées d’une touche à l’autre) par `tools/sfx.py`.
+- `drone-buzz.wav` : bourdonnement de drone quadrirotor entièrement synthétisé (numpy) par `tools/sfx.py`.

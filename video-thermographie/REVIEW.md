@@ -1,5 +1,37 @@
 # REVIEW
 
+## Passage 13 — titre, pictogrammes en orbite, plateforme en ligne, recherche, logo final
+- Retour à la base du passage 11 : aucune photo réelle (la photo thermique est retirée du projet) ; voix 04 d'origine.
+- S0 (nouvelle) : titre centré « Le contrôle *thermographique* appliqué aux installations photovoltaïques », sans voix.
+- S1 : inchangée ; la ligne de sol se dé-trace aussi à la sortie.
+- S2 (remplace le graphique de rendement) : le champ 7 x 3 du survol, dessiné au centre, aspect visible (pas encore
+  inspecté, aucune anomalie) ; six pictogrammes Phosphor en contour orange gravitent sur une ellipse pointillée :
+  perte de rendement, échauffement, défaut électrique, risque incendie, garantie, assurance (garantie et assurance
+  séparées, comme dans la note technique, § 2.2 et § 2.4) ; ils s'éloignent, la caméra se rapproche jusqu'au cadre
+  exact du début du survol, la question « Comment détecter ces anomalies ? » s'affiche.
+- S3 : même champ, même cadre, même question au même endroit (raccord sans coupure) ; la question laisse place au
+  titre « Le scan infrarouge révèle chaque échauffement. ».
+- S5 : lien « Accéder à votre installation » sur la couverture du rapport (deux lignes en 9:16 et 1:1 pour rester
+  ≥ 28 px) ; le curseur clique, la fenêtre de la plateforme s'ouvre depuis le lien (rectangle SVG qui finit exactement
+  sur le cadre de la fenêtre de S6).
+- S6 : « Suivez votre installation sur notre plateforme en ligne. » — fenêtre sans nom ni logo de logiciel, couleurs et
+  Comfortaa Fly Scan'Air ; liste des 7 anomalies (valeurs illustratives cohérentes avec le rapport : catégories 5/4/4/3/2/2/1,
+  modules B5, C3, C6, A2, A7), vues IR et RVB du module sélectionné (le défaut ne se voit pas en RVB), carte de
+  l'installation (repères colorés par gravité, module sélectionné cerclé d'orange). Deux clics : point chaud B5, module
+  à vide C3. Les textes de l'interface sont à la taille d'un vrai écran (22–26 px) : `data-layout-ignore` assumé sur
+  l'interface illustrée, le titre porte le message.
+- S7 : « Retrouvez-nous sur… » ; barre de recherche générique (loupe, aucun logo de moteur), frappe de
+  « www.flyscanair.com » (bruit de clavier calé lettre par lettre), Entrée, la barre monte, la capture du site apparaît ;
+  tout sélectionner, effacer, « Fly Scan'Air », Entrée : la page LinkedIn (recadrée sur la page entreprise, ligne
+  « … et 5 autres relations suivent cette page » et sa photo masquées, pas de barre de notifications).
+- S8 : le serpentin se trace avec un bourdonnement de drone (synthétisé, il traverse l'image de gauche à droite), le nom
+  apparaît au centre (balayage), le logo remonte, slogan « Inspections techniques aériennes, *révélez l'invisible*. »
+  (« révélez l'invisible » entièrement en orange) puis téléphone et e-mail ; tenue ≈ 3,5 s jusqu'à la dernière image.
+- Voix : phrases 01 à 07 recalées ; 08 à 10 retirées (pas de voix sur la plateforme, la recherche et le logo).
+- Musique redécoupée pour 74,4 s : intro sur le titre et la maison, groove plus léger pendant la recherche (et musique à
+  0,5 pendant la frappe), courte montée, respiration (nappe seule) pendant le tracé du serpentin, retombée quand le nom
+  apparaît, accord final à 72 s.
+
 ## Passage 12 — icônes au trait orange, survol pédagogique, vraie photo thermique, page normes
 - S2 : icônes Phosphor en contour orange, intérieur transparent.
 - S3 : survol lent (19,2 s) ; deux « Le saviez-vous ? » tirés de la note technique Fly Scan'Air : ≈ 600 W/m²
