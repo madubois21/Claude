@@ -1,0 +1,100 @@
+<template>
+  <!-- Scène 0 — Titre d'ouverture -->
+  <style>
+    @font-face { font-family: "Comfortaa"; src: url("assets/fonts/comfortaa-var.woff2") format("woff2"); font-weight: 300 700; font-style: normal; }
+    #root { position: absolute; inset: 0; overflow: hidden; font-family: "Comfortaa", sans-serif; color: #111111; }
+    #root svg.world { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; overflow: visible; }
+    #root svg.zoom * { vector-effect: non-scaling-stroke; }
+    #root .d { stroke-dasharray: 1 1.2; }
+    #root .title { position: absolute; font-weight: 700; font-size: 64px; line-height: 1.12; letter-spacing: -0.01em; color: #111111; white-space: nowrap; }
+    #root .w { display: inline-block; }
+    #root .acc { color: #FF5700; }
+    #root .label { position: absolute; font-family: "Comfortaa", sans-serif; font-weight: 600; font-size: 32px; line-height: 1.2; color: #6B6B70; white-space: nowrap; }
+
+    #root .s0t { left: 0; width: 1080px; text-align: center; line-height: 1.14; }
+  </style>
+  <div
+    id="root"
+    data-composition-id="s0"
+    data-width="1080"
+    data-height="1080"
+    data-composition-variables="[{&quot;id&quot;: &quot;s0-title&quot;, &quot;type&quot;: &quot;string&quot;, &quot;label&quot;: &quot;Scène 0 — titre (| = retour ligne, *mot* = orange)&quot;, &quot;default&quot;: &quot;Le contrôle|*thermographique* appliqué|aux installations|photovoltaïques&quot;}]"
+  >
+    <div id="s0-title" class="title s0t" style="top: 388.2px; font-size: 60px"></div>
+    <svg class="world" viewBox="0 0 1080 1080" width="1080" height="1080" style="width: 1080px; height: 1080px">
+      <line id="s0-rule" stroke-dashoffset="1.05" class="d" pathLength="1" x1="450" y1="694.8" x2="630" y2="694.8" stroke="#FF5700" stroke-width="6" stroke-linecap="round"/>
+    </svg>
+  </div>
+  <script>
+    (function () {
+      const R = document.querySelector('[data-composition-id="s0"]') || document;
+      const $ = (s) => R.querySelector(s);
+      const $$ = (s) => Array.from(R.querySelectorAll(s));
+      let V = {};
+      try {
+        V = (window.__hyperframes && window.__hyperframes.getVariables && window.__hyperframes.getVariables()) || {};
+      } catch (e) {}
+      const txt = (id, d) => (typeof V[id] === "string" && V[id].trim().length ? V[id] : d);
+      // "a b|c *d*." -> word spans; "|" = line break, *x* = accent colour
+      function words(el, text) {
+        el.textContent = "";
+        const out = [];
+        let inAcc = false;
+        text.split("|").forEach((line, li) => {
+          if (li) el.appendChild(document.createElement("br"));
+          line.trim().split(/\s+/).forEach((w, i) => {
+            if (i) el.appendChild(document.createTextNode(" "));
+            const s = document.createElement("span");
+            s.className = "w";
+            if (w.startsWith("*")) { inAcc = true; w = w.slice(1); }
+            const m = w.match(/^(.*?)\*([^\s*]*)$/);
+            const core = m ? m[1] : w, tail = m ? m[2] : "";
+            if (inAcc) {
+              const a = document.createElement("span");
+              a.className = "acc";
+              a.textContent = core;
+              s.appendChild(a);
+            } else {
+              s.textContent = core;
+            }
+            if (tail) s.appendChild(document.createTextNode(tail));
+            if (m) inAcc = false;
+            el.appendChild(s);
+            out.push(s);
+          });
+        });
+        return out;
+      }
+      const tl = gsap.timeline({ paused: true });
+      // SVG de zoom (non-scaling-stroke) : les tirets sont posés à l'échelle de l'écran, le motif suit donc
+      // l'échelle de l'SVG au moment du tracé (data-dash), sinon la fin du trait n'apparaît qu'au passage en plein.
+      const dk = (el) => { const z = el.closest ? el.closest("svg[data-dash]") : null; return z ? parseFloat(z.getAttribute("data-dash")) : 1; };
+      $$("svg[data-dash] .d").forEach((el) => {
+        const k = dk(el);
+        el.style.strokeDasharray = k + " " + 1.2 * k;
+        el.setAttribute("stroke-dashoffset", 1.05 * k);
+      });
+      const draw = (t, els, d = 0.8, ease = "power2.inOut", stagger = 0) =>
+        tl.fromTo(els, { attr: { "stroke-dashoffset": (i, el) => 1.05 * dk(el) } }, { attr: { "stroke-dashoffset": 0 }, duration: d, ease, stagger }, t);
+      const undraw = (t, els, d = 0.5, ease = "power3.in", stagger = 0) =>
+        tl.to(els, { attr: { "stroke-dashoffset": (i, el) => -1.15 * dk(el) }, duration: d, ease, stagger }, t);
+      const solid = (t, els) => tl.set(els, { strokeDasharray: "none" }, t);
+      const blurIn = (t, els, d = 0.15, stagger = 0.067, px = 6) =>
+        tl.fromTo(els, { opacity: 0, filter: "blur(" + px + "px)" }, { opacity: 1, filter: "blur(0px)", duration: d, ease: "power2.out", stagger }, t);
+      const blurOut = (t, els, d = 0.18, stagger = 0.03, px = 8) =>
+        tl.to(els, { opacity: 0, filter: "blur(" + px + "px)", duration: d, ease: "power2.in", stagger }, t);
+      const fadeIn = (t, els, d = 0.4, stagger = 0, ease = "power1.out") =>
+        tl.fromTo(els, { opacity: 0 }, { opacity: 1, duration: d, ease, stagger }, t);
+      const fadeOut = (t, els, d = 0.3, stagger = 0, ease = "power1.in") =>
+        tl.to(els, { opacity: 0, duration: d, ease, stagger }, t);
+
+      const title = words($("#s0-title"), txt("s0-title", "Le contrôle|*thermographique* appliqué|aux installations|photovoltaïques"));
+      blurIn(0.15, title, 0.22, 0.06, 8);
+      draw(0.75, $("#s0-rule"), 0.6, "power2.out");
+      // sortie : le titre se floute, le filet se dé-trace vers la droite
+      blurOut(3.05, title, 0.2, 0.015);
+      undraw(3.05, $("#s0-rule"), 0.35, "power3.in");
+      window.__timelines["s0"] = tl;
+    })();
+  </script>
+</template>
