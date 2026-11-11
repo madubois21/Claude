@@ -13,16 +13,16 @@ Réalisée avec [HyperFrames](https://hyperframes.heygen.com) : HTML + SVG + GSA
 | Déclinaison carrée 1:1 | `renders/FlyScanAir_thermographie_1x1.mp4` (1080 × 1080) |
 | Projet source | `index.html` + `compositions/s0.html` … `s8.html` (16:9) ; `formats/9x16/` et `formats/1x1/` (projets autonomes des déclinaisons) |
 | Assets graphiques | tout est vectoriel dans les scènes (aucune photo de panneau) ; logo : lettres vectorisées depuis le logo fourni (`assets/images/logo-flyscanair.png` → `assets/logo-letters.json`, par `tools/logo_trace.py`), serpentin et billes remesurés sur la même image ; police Comfortaa `assets/fonts/` |
-| Voix off (FLORA, Gemini 3.1 Flash TTS, voix « Umbriel », fr-FR) | `assets/audio/vo/raw_XX.wav` (fichiers FLORA d’origine), `vo_01.wav` … `vo_07.wav` (nettoyés et placés par `tools/voiceover.py`) |
+| Voix off (FLORA, Gemini 3.1 Flash TTS, voix « Umbriel », fr-FR) | `assets/audio/vo/raw_XX.wav` (fichiers FLORA d’origine), `vo_01.wav` … `vo_08.wav` (nettoyés et placés par `tools/voiceover.py`) |
 | Musique (originale, libre de droits) | `assets/audio/music.wav` (générée par `tools/music.py`) |
 | Effets sonores | `assets/audio/sfx/` (voir `CREDITS.md`) ; frappe au clavier (vraies touches découpées dans `typing.mp3`), son de validation des cases et bourdonnement du drone construits par `tools/sfx.py` |
 | Pictogrammes | Phosphor Icons, graisse bold (licence MIT, `assets/images/LICENSE-phosphor.txt`) : tracés dans `assets/icons-phosphor.json` |
 | Captures | site web : `assets/images/site-flyscanair.jpg` ; page LinkedIn : `assets/images/linkedin-flyscanair.jpg` (vraie page avec la barre LinkedIn, pastilles de notification retirées, relation personnelle masquée ; préparée par `tools/linkedin_image.cjs`) |
 | Fiche technique | `SPEC.md` ; note de revue : `REVIEW.md` |
 
-Voix off en français (7 phrases, voix masculine grave « Umbriel ») ; la musique reste un fond : 0,5 (−6 dB) sur toute la
+Voix off en français (8 phrases, voix masculine grave « Umbriel ») ; la musique reste un fond : 0,5 (−6 dB) sur toute la
 vidéo, 0,15 (−16,5 dB) sous la voix, et 0,3 pendant la frappe au clavier.
-Pas de voix sur le titre, la plateforme, la recherche et le logo final (phrases à écrire plus tard).
+Pas de voix sur le titre, la recherche et le logo final.
 Les textes à l’écran portent toujours le message seuls, pour la lecture sans le son sur LinkedIn.
 
 | Scène | Voix off |
@@ -32,6 +32,7 @@ Les textes à l’écran portent toujours le message seuls, pour la lecture sans
 | 3 | « Notre drone, équipé d’une caméra infrarouge, survole vos panneaux et révèle chaque échauffement. » |
 | 4 | « Points chauds, diodes by-pass défectueuses, boîtes de jonction en surchauffe : chaque anomalie est localisée. » |
 | 5 | « Vous recevez ensuite un rapport détaillé : chaque défaut y est décrit et qualifié, classé par niveau de gravité, avec l’action à mener. Un rapport aux normes, utile aussi auprès de votre assureur. » |
+| 6 | « Suivez votre installation sur notre plateforme en ligne. » |
 
 ## Structure
 

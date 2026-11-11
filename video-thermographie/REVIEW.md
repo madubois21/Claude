@@ -1,5 +1,12 @@
 # REVIEW
 
+## Passage 19 — voix off de la plateforme, drone du logo
+- Phrase 08 : « Suivez votre installation sur notre plateforme en ligne. » (FLORA, Gemini 3.1 Flash TTS, voix
+  « Umbriel », fr-FR ; 0,013 $, plus 0,013 $ pour une première version écartée), placée à 48,0 s avec le titre de la
+  scène 6 (48,0 – 50,9 s) ; la musique s'atténue dessous comme pour les autres phrases. L'ancienne phrase 08
+  (« Bientôt… ») est gardée sous `raw_08_bientot.wav`.
+- Bruitage du drone pendant le tracé du serpentin : 0,3 au lieu de 0,22 (+2,7 dB).
+
 ## Passage 18 — capture du site plus nette
 - Nouvelle capture du site fournie, recadrée sur la page web seule (sans onglets, barre d'adresse, favoris, barre de
   défilement ni barre des tâches) : 1989 × 993 px au lieu de 1360 × 649, image plus nette dans le navigateur de la
