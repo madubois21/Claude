@@ -1649,7 +1649,11 @@ def build_s6():
     out.append(f'<text id="s6-empty" class="ui g" x="{n(dx_ + dw / 2)}" y="{n(dy_ + dh / 2)}" font-size="{ui}" text-anchor="middle">Sélectionnez une anomalie</text>')
     defs = [thermal_defs("s6"),
             '<linearGradient id="s6-sheen" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FFFFFF" stop-opacity="0.75"/>'
-            '<stop offset="0.45" stop-color="#FFFFFF" stop-opacity="0"/><stop offset="1" stop-color="#D4D4D8" stop-opacity="0.35"/></linearGradient>']
+            '<stop offset="0.45" stop-color="#FFFFFF" stop-opacity="0"/><stop offset="1" stop-color="#D4D4D8" stop-opacity="0.35"/></linearGradient>',
+            f'<linearGradient id="s6-tgrad" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="{TH_PANEL}"/><stop offset="0.5" stop-color="#FFB48A"/>'
+            f'<stop offset="1" stop-color="{ACC}"/></linearGradient>',
+            f'<linearGradient id="s6-tgradh" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="{TH_PANEL}"/><stop offset="0.5" stop-color="#FFB48A"/>'
+            f'<stop offset="1" stop-color="{ACC}"/></linearGradient>']
     bd = ui * 1.7
     for k, ri in enumerate(S6_PICK):
         typ, (r, c), cat, dt, mxt, ai = S6_ROWS[ri]
@@ -1659,14 +1663,18 @@ def build_s6():
         g.append(f'<g class="s6-badge"><rect x="{n(dx_ + pad)}" y="{n(dy_ + pad)}" width="{n(bd)}" height="{n(bd)}" rx="7" fill="{CAT_COL[cat]}"/>'
                  f'<text class="ui b" x="{n(dx_ + pad + bd / 2)}" y="{n(dy_ + pad + bd / 2 + ui * 0.38)}" font-size="{n(ui * 1.05)}" text-anchor="middle" style="fill: {ink}">{cat}</text></g>')
         tx = dx_ + pad + bd + 14
-        g.append(f'<text class="ui b s6-dt" x="{n(tx)}" y="{n(dy_ + pad + bd / 2 + ui * 0.42)}" font-size="{n(ui * 1.15)}">{typ}</text>')
         info = [f"Rangée {'ABC'[r]} · module {c + 1}", f"ΔT {dt} °C · MaxT {mxt} °C"]
-        if wide:
-            info = ["   ·   ".join(info)]
-        iy = dy_ + pad + bd + ui * 1.45
-        for j, line in enumerate(info):
-            g.append(f'<text class="ui g s6-dt" x="{n(dx_ + pad)}" y="{n(iy + j * ui * 1.3)}" font-size="{n(ui * 0.92)}">{line}</text>')
-        vy = iy + (len(info) - 1) * ui * 1.3 + ui * 0.95
+        if wide:  # type et informations sur la même ligne que la pastille de gravité
+            g.append(f'<text class="ui s6-dt" x="{n(tx)}" y="{n(dy_ + pad + bd / 2 + ui * 0.42)}" font-size="{n(ui * 1.15)}">'
+                     f'<tspan class="b">{typ}</tspan><tspan class="g" dx="{n(ui * 0.9)}" font-size="{n(ui * 0.92)}">'
+                     f'{"   ·   ".join(info)}</tspan></text>')
+            vy = dy_ + pad + bd + 14
+        else:
+            g.append(f'<text class="ui b s6-dt" x="{n(tx)}" y="{n(dy_ + pad + bd / 2 + ui * 0.42)}" font-size="{n(ui * 1.15)}">{typ}</text>')
+            iy = dy_ + pad + bd + ui * 1.45
+            for j, line in enumerate(info):
+                g.append(f'<text class="ui g s6-dt" x="{n(dx_ + pad)}" y="{n(iy + j * ui * 1.3)}" font-size="{n(ui * 0.92)}">{line}</text>')
+            vy = iy + ui * 1.3 + ui * 0.95
         cw = (dw - 3 * pad) / 2
         tabh = ui * 1.45
         ib_y = vy + tabh + 8
@@ -1678,18 +1686,47 @@ def build_s6():
             g.append(f'<g class="s6-tab"><rect x="{n(xc)}" y="{n(vy)}" width="{n(tw)}" height="{n(tabh)}" rx="{n(tabh / 2)}" fill="{INK if dark else "#F3F3F4"}"/>'
                      f'<text class="ui b" x="{n(xc + tw / 2)}" y="{n(vy + tabh / 2 + ui * 0.33)}" font-size="{n(ui * 0.85)}" text-anchor="middle" style="fill: {"#FFFFFF" if dark else INK}">{lab}</text></g>')
             g.append(f'<rect class="s6-ibox" x="{n(xc)}" y="{n(ib_y)}" width="{n(cw)}" height="{n(ib_h)}" rx="8" fill="#FAFAFA" stroke="#E4E4E7" stroke-width="1.5"/>')
-            sc = min((cw - 28) / PW, (ib_h - 28) / PH)
-            px, py = xc + (cw - PW * sc) / 2, ib_y + (ib_h - PH * sc) / 2
+            hbar = cw < 300  # case étroite (1:1) : échelle horizontale sous l'image, sinon verticale à droite
+            bar_w = 64 if (view == "ir" and not hbar) else 0
+            bar_h = 46 if hbar else 0
+            sc = min((cw - 24 - bar_w) / PW, (ib_h - 20 - bar_h) / PH)
+            px, py = xc + (cw - bar_w - PW * sc) / 2, ib_y + (ib_h - bar_h - PH * sc) / 2
+            i0, j0, i1, j1, m = anom_cells(kind, *aa)
+            cwp, chp = CWU * sc, CHU * sc
+            bb = (px + (i0 - m) * cwp, py + (j0 - m) * chp, (i1 - i0 + 1 + 2 * m) * cwp, (j1 - j0 + 1 + 2 * m) * chp)
             if view == "ir":
                 defs.append(f'<clipPath id="s6-irc{k}"><rect id="s6-ircr{k}" x="{n(xc)}" y="{n(ib_y)}" width="0" height="{n(ib_h)}"/></clipPath>')
-                i0, j0, i1, j1, m = anom_cells(kind, *aa)
-                cwp, chp = CWU * sc, CHU * sc
-                bb = (px + (i0 - m) * cwp, py + (j0 - m) * chp, (i1 - i0 + 1 + 2 * m) * cwp, (j1 - j0 + 1 + 2 * m) * chp)
-                g.append(f'<g clip-path="url(#s6-irc{k})">{s6_panel("ir", r, c, px, py, sc)}</g>'
+                # réticule sur le point le plus chaud, avec sa température (comme un logiciel de thermographie)
+                ax_, ay_ = anom_center(kind, *aa)
+                hx, hy = px + ax_ * sc, py + ay_ * sc
+                arm, gap_ = 11, 4
+                xh = "".join(f'<path d="M{n(hx - arm)} {n(hy)}H{n(hx - gap_)}M{n(hx + gap_)} {n(hy)}H{n(hx + arm)}M{n(hx)} {n(hy - arm)}V{n(hy - gap_)}M{n(hx)} {n(hy + gap_)}V{n(hy + arm)}" '
+                             f'stroke="{col}" stroke-width="{wdt}" stroke-linecap="round" fill="none"/>' for col, wdt in (("#FFFFFF", 4.5), (INK, 1.8)))
+                tlab = f'{mxt},0 °C'
+                lx_ = hx + 14 if hx < px + PW * sc * 0.6 else hx - 14
+                anchor = "start" if hx < px + PW * sc * 0.6 else "end"
+                ty_ = hy - 12 if bb[3] > PH * sc * 0.8 else min(hy - 12, bb[1] - 7)  # au-dessus du cadre quand il est petit
+                xh += (f'<text class="ui b" x="{n(lx_)}" y="{n(ty_)}" font-size="{n(ui * 0.8)}" text-anchor="{anchor}" '
+                       f'style="paint-order: stroke; stroke: #FFFFFF; stroke-width: 4px; stroke-linejoin: round">{tlab}</text>')
+                # échelle des températures, à droite de l'image
+                tmin = int(mxt) - round(float(dt.replace(",", "."))) - 2
+                if hbar:
+                    sx0, sx1, sy = xc + 44, xc + cw - 44, py + PH * sc + 24
+                    scale = (f'<g class="s6-tscale"><rect x="{n(sx0)}" y="{n(sy)}" width="{n(sx1 - sx0)}" height="10" rx="5" fill="url(#s6-tgradh)"/>'
+                             f'<text class="ui g" x="{n(sx0 - 8)}" y="{n(sy + 5 + ui * 0.3)}" font-size="{n(ui * 0.7)}" text-anchor="end">{tmin}°</text>'
+                             f'<text class="ui g" x="{n(sx1 + 8)}" y="{n(sy + 5 + ui * 0.3)}" font-size="{n(ui * 0.7)}">{mxt}°</text></g>')
+                else:
+                    sx, sy0, sy1 = xc + cw - 34, ib_y + 34, ib_y + ib_h - 30
+                    scale = (f'<g class="s6-tscale"><rect x="{n(sx)}" y="{n(sy0)}" width="10" height="{n(sy1 - sy0)}" rx="5" fill="url(#s6-tgrad)"/>'
+                             f'<text class="ui g" x="{n(sx + 5)}" y="{n(sy0 - 9)}" font-size="{n(ui * 0.7)}" text-anchor="middle">{mxt}°</text>'
+                             f'<text class="ui g" x="{n(sx + 5)}" y="{n(sy1 + ui * 0.75 + 6)}" font-size="{n(ui * 0.7)}" text-anchor="middle">{tmin}°</text></g>')
+                g.append(f'<g clip-path="url(#s6-irc{k})">{s6_panel("ir", r, c, px, py, sc)}</g>{scale}'
                          f'<line id="s6-irs{k}" x1="{n(xc)}" y1="{n(ib_y)}" x2="{n(xc)}" y2="{n(ib_y + ib_h)}" stroke="{ACC}" stroke-width="3" data-w="{n(cw)}"/>'
-                         f'<rect id="s6-bb{k}" x="{n(bb[0])}" y="{n(bb[1])}" width="{n(bb[2])}" height="{n(bb[3])}" rx="4" fill="none" stroke="{ACC}" stroke-width="2.5"/>')
-            else:
-                g.append(f'<g id="s6-rvb{k}">{s6_panel("rvb", r, c, px, py, sc)}</g>')
+                         f'<rect id="s6-bb{k}" x="{n(bb[0])}" y="{n(bb[1])}" width="{n(bb[2])}" height="{n(bb[3])}" rx="4" fill="none" stroke="{ACC}" stroke-width="2.5"/>'
+                         f'<g id="s6-xh{k}">{xh}</g>')
+            else:  # même cadre, en pointillé : à l'œil nu, rien ne se voit
+                g.append(f'<g id="s6-rvb{k}">{s6_panel("rvb", r, c, px, py, sc)}'
+                         f'<rect x="{n(bb[0])}" y="{n(bb[1])}" width="{n(bb[2])}" height="{n(bb[3])}" rx="4" fill="none" stroke="{INK}" stroke-width="1.8" stroke-dasharray="5 4"/></g>')
         g.append("</g>")
         out.append("".join(g))
     # ---- carte de l'installation (vue du dessus, dessinée)
@@ -1711,22 +1748,24 @@ def build_s6():
         for c in range(COLS):
             x, y = M(*panel_xy(r, c))
             w, h = PW * fs_, PH * fs_
-            mods.append(f'<g class="s6-mod"><rect x="{n(x)}" y="{n(y)}" width="{n(w)}" height="{n(h)}" fill="{PANEL}" stroke="{INK}" stroke-width="1.3"/>'
-                        f'<path d="{cell_lines(x, y, w, h)}" stroke="{CELL}" stroke-width="0.8" fill="none"/></g>')
-    mr = max(7.5, 11 * k_)
+            mods.append(f'<g class="s6-mod"><rect x="{n(x)}" y="{n(y)}" width="{n(w)}" height="{n(h)}" fill="{th_fill(r, c)}"/>'
+                        + cell_tint(r, c, x, y, fs_) + anomalies_svg(r, c, x, y, fs_, "s6")
+                        + f'<path d="{cell_lines(x, y, w, h)}" stroke="{TH_CELL}" stroke-width="0.8" fill="none"/>'
+                        f'<rect x="{n(x)}" y="{n(y)}" width="{n(w)}" height="{n(h)}" fill="none" stroke="{INK}" stroke-width="1.3"/></g>')
+    frame_col = {5: ACC, 4: "#FF8A4C", 3: "#E8853F", 2: "#6B6B70", 1: "#A1A1AA"}  # traits lisibles sur le fond thermique
     mks, rings, sel_rects = [], [], []
     for ri, (typ, (r, c), cat, dt, mxt, ai) in enumerate(S6_ROWS):
         kind, *aa = ANOM[(r, c)][ai]
-        px, py = panel_xy(r, c)
-        ax, ay = anom_center(kind, *aa)
-        cx, cy = M(px + ax, py + ay)
-        mks.append(f'<g class="s6-mk"><circle cx="{n(cx)}" cy="{n(cy)}" r="{n(mr + 2.5)}" fill="#FFFFFF"/>'
-                   f'<circle cx="{n(cx)}" cy="{n(cy)}" r="{n(mr)}" fill="{CAT_COL[cat]}" stroke="{INK}" stroke-width="1.5"/></g>')
+        i0, j0, i1, j1, m = anom_cells(kind, *aa)
+        x0, y0 = M(*panel_xy(r, c))
+        cwm, chm = CWU * fs_, CHU * fs_
+        fr = (x0 + (i0 - m) * cwm, y0 + (j0 - m) * chm, (i1 - i0 + 1 + 2 * m) * cwm, (j1 - j0 + 1 + 2 * m) * chm)
+        mks.append(f'<rect class="s6-mk" x="{n(fr[0])}" y="{n(fr[1])}" width="{n(fr[2])}" height="{n(fr[3])}" rx="2" fill="none" '
+                   f'stroke="{frame_col[cat]}" stroke-width="2"/>')
         if ri in S6_PICK:
             k = S6_PICK.index(ri)
-            rings.append(f'<circle id="s6-ring{k}" cx="{n(cx)}" cy="{n(cy)}" r="{n(mr)}" fill="none" stroke="{ACC}" stroke-width="2.5"/>')
-            x, y = M(px, py)
-            sel_rects.append((x - 5, y - 5, PW * fs_ + 10, PH * fs_ + 10))
+            rings.append(f'<rect id="s6-ring{k}" x="{n(fr[0])}" y="{n(fr[1])}" width="{n(fr[2])}" height="{n(fr[3])}" rx="2" fill="none" stroke="{ACC}" stroke-width="2.5"/>')
+            sel_rects.append((fr[0] - 4, fr[1] - 4, fr[2] + 8, fr[3] + 8))
     ctrl_x, ctrl_y, cs_ = mx + mw - 20 - 34 * k_ ** 0.5, my + mh - 20 - 70 * k_ ** 0.5, 34 * k_ ** 0.5
     ctrl = (f'<g id="s6-ctrl"><rect x="{n(ctrl_x)}" y="{n(ctrl_y)}" width="{n(cs_)}" height="{n(2 * cs_)}" rx="6" fill="#FFFFFF" stroke="#C9CBD1" stroke-width="1.5"/>'
             f'<line x1="{n(ctrl_x + 6)}" y1="{n(ctrl_y + cs_)}" x2="{n(ctrl_x + cs_ - 6)}" y2="{n(ctrl_y + cs_)}" stroke="#E4E4E7" stroke-width="1.5"/>'
@@ -1737,6 +1776,13 @@ def build_s6():
             f'<text class="ui g" x="{n(mx + 24 + 90 * k_ + 10)}" y="{n(my + mh - 30 + ui * 0.33)}" font-size="{n(ui * 0.85)}">10 m</text>'
             f'<path d="M{n(mx + mw - 34)} {n(my + 22)}l10 26l-10 -7l-10 7Z" fill="{INK}"/>'
             f'<text class="ui b" x="{n(mx + mw - 34)}" y="{n(my + 22 + 26 + ui * 1.05)}" font-size="{n(ui * 0.85)}" text-anchor="middle">N</text></g>')
+    tg_h = ui * 1.35
+    tg_x, tg_y = mx + 16, my + 16
+    toggle = (f'<g id="s6-layer"><rect x="{n(tg_x)}" y="{n(tg_y)}" width="{n(ui * 5.4)}" height="{n(tg_h)}" rx="{n(tg_h / 2)}" fill="#FFFFFF" stroke="#C9CBD1" stroke-width="1.5"/>'
+              f'<rect x="{n(tg_x + 3)}" y="{n(tg_y + 3)}" width="{n(ui * 2.4)}" height="{n(tg_h - 6)}" rx="{n((tg_h - 6) / 2)}" fill="{INK}"/>'
+              f'<text class="ui b" x="{n(tg_x + 3 + ui * 1.2)}" y="{n(tg_y + tg_h / 2 + ui * 0.3)}" font-size="{n(ui * 0.8)}" text-anchor="middle" style="fill: #FFFFFF">IR</text>'
+              f'<text class="ui b" x="{n(tg_x + ui * 3.95)}" y="{n(tg_y + tg_h / 2 + ui * 0.3)}" font-size="{n(ui * 0.8)}" text-anchor="middle">RVB</text></g>')
+    ctrl = ctrl.replace('<g id="s6-ctrl">', '<g id="s6-ctrl">' + toggle, 1)
     s0r, s1r = sel_rects
     out.append(f'<g clip-path="url(#s6-mapclip)"><rect id="s6-mapbg" x="{n(mx)}" y="{n(my)}" width="{n(mw)}" height="{n(mh)}" fill="#F4F4F5"/>'
                f'<g id="s6-terrain">{"".join(terrain)}</g>{"".join(mods)}'
@@ -1756,7 +1802,7 @@ def build_s6():
     #root .ui .acc {{ fill: #FF5700; }}{CUR_CSS}
     #root #s6-dots, #root #s6-app, #root #s6-btns, #root .s6-pfill, #root .s6-lh, #root .s6-sep, #root .s6-row, #root #s6-sel, #root #s6-empty,
     #root .s6-det, #root #s6-mapbg, #root #s6-terrain, #root .s6-mod, #root .s6-mk, #root #s6-ctrl, #root #s6-msel, #root #s6-ring0, #root #s6-ring1,
-    #root #s6-irs0, #root #s6-irs1, #root #s6-bb0, #root #s6-bb1 {{ opacity: 0; }}"""
+    #root #s6-irs0, #root #s6-irs1, #root #s6-bb0, #root #s6-bb1, #root #s6-xh0, #root #s6-xh1, #root .s6-tscale {{ opacity: 0; }}"""
     cx0, cy0 = s5_cursor_end()
     rys = [lay["rows_y"][i] + rh / 2 + 4 for i in S6_PICK]
     js = f"""
@@ -1787,16 +1833,17 @@ def build_s6():
         tl.set(D, {{ opacity: 1 }}, t);
         tl.fromTo(D.querySelector(".s6-badge"), {{ opacity: 0, scale: 0.6, transformOrigin: "50% 50%" }}, {{ opacity: 1, scale: 1, duration: 0.3, ease: "back.out(1.8)" }}, t);
         blurIn(t + 0.05, Array.from(D.querySelectorAll(".s6-dt")), 0.18, 0.06);
-        fadeIn(t + 0.1, Array.from(D.querySelectorAll(".s6-tab, .s6-ibox")), 0.25, 0.05);
+        fadeIn(t + 0.1, Array.from(D.querySelectorAll(".s6-tab, .s6-ibox, .s6-tscale")), 0.25, 0.05);
         const scan = $("#s6-irs" + k), w = parseFloat(scan.getAttribute("data-w"));
         tl.fromTo($("#s6-ircr" + k), {{ attr: {{ width: 0 }} }}, {{ attr: {{ width: w }}, duration: 0.6, ease: "power1.inOut" }}, t + 0.15);
         tl.fromTo(scan, {{ opacity: 1, x: 0 }}, {{ x: w, duration: 0.6, ease: "power1.inOut" }}, t + 0.15);
         fadeOut(t + 0.75, scan, 0.12);
         fadeIn(t + 0.3, $("#s6-rvb" + k), 0.45);
         tl.fromTo($("#s6-bb" + k), {{ opacity: 0, scale: 1.4, transformOrigin: "50% 50%" }}, {{ opacity: 1, scale: 1, duration: 0.35, ease: "back.out(1.6)" }}, t + 0.8);
+        tl.fromTo($("#s6-xh" + k), {{ opacity: 0, scale: 0.5, transformOrigin: "50% 50%" }}, {{ opacity: 1, scale: 1, duration: 0.3, ease: "back.out(1.8)" }}, t + 0.95);
       }};
       const click = (t) => tl.to(cur, {{ scale: 0.82, duration: 0.07, ease: "power1.in", yoyo: true, repeat: 1 }}, t);
-      const pulse = (k, t) => tl.fromTo($("#s6-ring" + k), {{ opacity: 0.9, scale: 1, transformOrigin: "50% 50%" }}, {{ opacity: 0, scale: 2.8, duration: 0.9, ease: "power2.out", immediateRender: false }}, t);
+      const pulse = (k, t) => tl.fromTo($("#s6-ring" + k), {{ opacity: 0.9, scale: 1, transformOrigin: "50% 50%" }}, {{ opacity: 0, scale: 1.9, duration: 0.9, ease: "power2.out", immediateRender: false }}, t);
       tl.to(cur, {{ x: {n(lay["row_x"])}, y: {n(rys[0])}, duration: 0.6, ease: "power2.inOut" }}, 1.6);
       click(2.25);
       tl.fromTo(sel, {{ opacity: 0, y: {n(S6_PICK[0] * rh)} }}, {{ opacity: 1, y: {n(S6_PICK[0] * rh)}, duration: 0.2 }}, 2.3);
