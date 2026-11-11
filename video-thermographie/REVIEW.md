@@ -3,6 +3,8 @@
 ## Passage 20 — titre du survol
 - S3 : « Le scan infrarouge révèle chaque échauffement. » devient « La caméra infrarouge révèle chaque
   *échauffement*. » (même place, même animation ; 859 px en 9:16 pour 972 px disponibles).
+- Rendus (trois formats) : 74,4 s ; −17,8 LUFS intégré, crête vraie −2,3 dBTP ; `hyperframes check` : 0 erreur,
+  0 avertissement ; titre vérifié dans les trois formats.
 
 ## Passage 19 — voix off de la plateforme, drone du logo
 - Phrase 08 : « Suivez votre installation sur notre plateforme en ligne. » (FLORA, Gemini 3.1 Flash TTS, voix
