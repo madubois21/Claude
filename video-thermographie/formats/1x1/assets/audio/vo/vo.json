@@ -163,5 +163,20 @@
    ]
   ],
   "text": "Un rapport aux normes, utile aussi auprès de votre assureur."
+ },
+ {
+  "id": "08",
+  "file": "assets/audio/vo/vo_08.wav",
+  "start": 48.0,
+  "dur": 2.87,
+  "tempo": 1.0,
+  "raw": 3.4,
+  "speech": [
+   [
+    48.04,
+    50.77
+   ]
+  ],
+  "text": "Suivez votre installation sur notre plateforme en ligne."
  }
 ]
