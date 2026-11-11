@@ -8,6 +8,8 @@
   Emplois, Messagerie, Notifications) au-dessus de la bannière et de la carte de la page ; les pastilles de
   notification (point rouge, « 6 », « 12 ») sont retirées et leurs trois icônes redessinées au même trait ; la ligne
   « … et 5 autres relations suivent cette page » et la photo restent masquées (`tools/linkedin_image.cjs`).
+- Rendus (trois formats) : 74,4 s ; −17,9 LUFS intégré, crête vraie −2,5 dBTP. Phrase 05 dans le mix : −16,0 LUFS
+  pour −16,1 LUFS seule (la musique n'ajoute presque rien sous la voix) ; plateforme sans voix : −21,8 LUFS.
 
 ## Passage 15 — orbite gravitationnelle, fin sans coordonnées, carte sans route, sons plus discrets
 - S2 : les pictogrammes sont « capturés » : chacun arrive de l'extérieur du cadre en spirale, se place sur l'orbite,
