@@ -461,13 +461,13 @@ P2 = {  # installation au centre : échelle du champ, ellipse des pictogrammes (
 P6 = {  # plateforme en ligne : titre (gauche, haut, corps), fenêtre à l'écran (x, y, l, h), volets en coordonnées fenêtre
     "16x9": dict(title=(120, 50, 48), text="Suivez votre installation|sur notre *plateforme en ligne*.",
                  win=(120, 196, 1680, 836), bar=60, ui=22, rh=38,
-                 list=(20, 76, 800, 362), detail=(20, 454, 800, 362), map=(836, 76, 824, 740)),
+                 map=(20, 76, 824, 740), list=(860, 76, 800, 362), detail=(860, 454, 800, 362)),
     "9x16": dict(title=(108, 130, 58), text="Suivez votre|installation sur notre|*plateforme en ligne*.",
                  win=(40, 410, 1000, 1460), bar=64, ui=26, rh=50,
-                 list=(16, 80, 968, 466), map=(16, 562, 968, 500), detail=(16, 1078, 968, 366)),
+                 map=(16, 80, 968, 500), list=(16, 596, 968, 466), detail=(16, 1078, 968, 366)),
     "1x1": dict(title=(60, 40, 40), text="Suivez votre installation|sur notre *plateforme en ligne*.",
                 win=(40, 170, 1000, 880), bar=52, ui=20, rh=33,
-                list=(14, 64, 972, 321), detail=(14, 399, 480, 467), map=(506, 399, 480, 467)),
+                map=(14, 64, 480, 802), list=(506, 64, 480, 321), detail=(506, 399, 480, 467)),
 }[FMT]
 P7 = {  # « Retrouvez-nous sur… » : titre (haut, corps), barre (largeur, hauteur, centre y au départ, centre y après la recherche),
     #   résultats (haut, largeur max, hauteur max de l'image), barre du navigateur, corps du texte tapé
@@ -1070,6 +1070,7 @@ S5_LINK, S5_LINK_FS, S5_LINK_2L = {  # x, y, largeur, hauteur ; corps (≥ 28 px
     "9x16": ((260, 664, 520, 104), 36, True),
     "1x1": ((260, 660, 520, 112), 40, True),
 }[FMT]
+S5_CHECKS = [round(13.3 + i * 0.36, 2) for i in range(4)]  # cases de la checklist (page 3), une toutes les 0,36 s
 S5_LOGO_Y = S5_LINK[1] + S5_LINK[3] + (38 if S5_LINK_2L else 38)  # petit logo de la couverture, sous le lien
 CUR_K = {"16x9": 1.3, "9x16": 1.5, "1x1": 1.25}[FMT]  # taille du curseur
 
@@ -1312,10 +1313,13 @@ def build_s5():
     cchecks = "".join(f'<polyline id="s5-k{i}" class="d" pathLength="1" points="1016,{y + 1} 1025,{y + 10} 1040,{y - 9}" fill="none" stroke="{ACC}" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>' for i, y in enumerate(crow))
     ctexts = "".join(f'<div id="s5-i{i}" class="item" style="left: 1068px; top: {y - 21}px">{t}</div>' for i, (y, t) in enumerate(zip(crow, items)))
     chart_part = f"""    <svg id="s5-chart" class="world" viewBox="0 0 {SW} {SH}" width="{SW}" height="{SH}">
-      <defs><clipPath id="s5-clip"><rect x="{-4000 if L else 0}" y="{-4000 if L else 0}" width="{SW + 8000 if L else SW}" height="{S5_AY + 4000 if L else S5_AY}"/></clipPath></defs>
+      <defs><clipPath id="s5-clip"><rect x="-4000" y="-4000" width="{SW + 8000}" height="{S5_AY + 4000}"/></clipPath></defs>
       <g id="s5-axes">
         <g id="s5-grid" stroke="#E4E4E7" stroke-width="1.5" stroke-dasharray="6 8">{"".join(grid)}</g>
         <g id="s5-yt" class="tick">{"".join(yticks)}</g>
+      </g>
+      <g clip-path="url(#s5-clip)">{"".join(gbars)}</g>
+      <g id="s5-axlines">
         <g fill="none" stroke="{INK}" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
           <line id="s5-ax" class="d" pathLength="1" x1="{S5_AX}" y1="{S5_AY}" x2="1790" y2="{S5_AY}"/>
           <polyline id="s5-axa" class="d" pathLength="1" points="1778,{S5_AY - 9} 1790,{S5_AY} 1778,{S5_AY + 9}"/>
@@ -1323,7 +1327,6 @@ def build_s5():
           <polyline id="s5-aya" class="d" pathLength="1" points="{S5_AX - 9},387 {S5_AX},375 {S5_AX + 9},387"/>
         </g>
       </g>
-      <g clip-path="url(#s5-clip)">{"".join(gbars)}</g>
     </svg>
     <div id="s5-lab-y" class="label" style="left: 1010px; top: 318px">Production (kWh/an)</div>
     {"".join(cats)}
@@ -1461,24 +1464,24 @@ def build_s5():
       //   ce que contient le rapport
       draw(13.0, $$(".s5-box"), 0.3, "power2.out", 0.1);
       blurIn(13.1, [$("#s5-i0"), $("#s5-i1"), $("#s5-i2"), $("#s5-i3")], 0.18, 0.15);
-      [13.4, 13.65, 13.9, 14.15].forEach((t, i) => draw(t, $("#s5-k" + i), 0.22, "power2.out"));
+      S5_CHECKS.forEach((t, i) => draw(t, $("#s5-k" + i), 0.28, "power2.out"));
       //   le rapport contient le lien vers la plateforme en ligne
-      tl.fromTo($("#s5-link"), { opacity: 0, scale: 0.9, transformOrigin: "50% 50%" }, { opacity: 1, scale: 1, duration: 0.35, ease: "back.out(1.6)" }, 13.3);
-      // 4. le curseur clique sur le lien ; la fenêtre de la plateforme s'ouvre depuis le lien
+      tl.fromTo($("#s5-link"), { opacity: 0, scale: 0.9, transformOrigin: "50% 50%" }, { opacity: 1, scale: 1, duration: 0.35, ease: "back.out(1.6)" }, 13.0);
+      // 4. toutes les cases cochées, le curseur arrive et clique sur le lien ; la fenêtre de la plateforme s'ouvre depuis le lien
       const cur = $("#s5-cur");
-      tl.fromTo(cur, { x: __CUX0__, y: __CUY0__, opacity: 0 }, { x: __CUX__, y: __CUY__, opacity: 1, duration: 0.55, ease: "power2.out" }, 13.9);
-      tl.to(cur, { scale: 0.82, duration: 0.07, ease: "power1.in", yoyo: true, repeat: 1 }, 14.5);
-      tl.to($("#s5-link"), { backgroundColor: "#FFD2BC", duration: 0.08, yoyo: true, repeat: 1 }, 14.5);
-      blurOut(14.7, [...t3, $("#s5-i0"), $("#s5-i1"), $("#s5-i2"), $("#s5-i3")], 0.2, 0.015);
-      blurOut(14.72, [$("#s5-check")], 0.2, 0);
-      tl.set($("#s5-open"), { opacity: 1 }, 14.78);
+      tl.fromTo(cur, { x: __CUX0__, y: __CUY0__, opacity: 0 }, { x: __CUX__, y: __CUY__, opacity: 1, duration: 0.45, ease: "power2.out" }, 14.75);
+      tl.to(cur, { scale: 0.82, duration: 0.07, ease: "power1.in", yoyo: true, repeat: 1 }, 15.25);
+      tl.to($("#s5-link"), { backgroundColor: "#FFD2BC", duration: 0.08, yoyo: true, repeat: 1 }, 15.25);
+      blurOut(15.4, [...t3, $("#s5-i0"), $("#s5-i1"), $("#s5-i2"), $("#s5-i3")], 0.2, 0.015);
+      blurOut(15.42, [$("#s5-check")], 0.2, 0);
+      tl.set($("#s5-open"), { opacity: 1 }, 15.48);
       // (le rectangle finit exactement sur le cadre de la fenêtre de la scène 6 : trait de 2,5 px centré, rayon 18 px à l'extérieur)
       tl.fromTo($("#s5-open"), { attr: { x: __LX__, y: __LY__, width: __LW__, height: __LH__, rx: __LR__, fill: "#FFF1E8", stroke: "#FF5700", "stroke-width": 2 } },
-        { attr: { x: __WX__, y: __WY__, width: __WW__, height: __WH__, rx: 16.75, fill: "#FFFFFF", stroke: "#111111", "stroke-width": 2.5 }, duration: 0.62, ease: "power3.inOut", immediateRender: false }, 14.8);
-      tl.to($("#s5-docw"), { opacity: 0, filter: "blur(6px)", duration: 0.3, ease: "power2.in" }, 14.85);"""
+        { attr: { x: __WX__, y: __WY__, width: __WW__, height: __WH__, rx: 16.75, fill: "#FFFFFF", stroke: "#111111", "stroke-width": 2.5 }, duration: 0.6, ease: "power3.inOut", immediateRender: false }, 15.5);
+      tl.to($("#s5-docw"), { opacity: 0, filter: "blur(6px)", duration: 0.3, ease: "power2.in" }, 15.55);"""
     js = (js.replace("__B2X__", n(BOX2[0])).replace("__B2Y__", n(BOX2[1])).replace("__B2W__", n(BOX2[2])).replace("__B2H__", n(BOX2[3])))
     cux, cuy = lx0 + (lx1 - lx0) * 0.66, (ly0 + ly1) / 2 + 4
-    js = js.replace("__AY__", str(S5_AY))
+    js = js.replace("__AY__", str(S5_AY)).replace("S5_CHECKS", str(S5_CHECKS))
     for k, v in dict(CUX0=W + 60, CUY0=cuy + H * 0.25, CUX=cux, CUY=cuy, WX=wx + 1.25, WY=wy + 1.25, WW=ww - 2.5, WH=wh - 2.5,
                      LX=lx0, LY=ly0, LW=lx1 - lx0, LH=ly1 - ly0, LR=(ly1 - ly0) / 2).items():
         js = js.replace(f"__{k}__", n(v))
@@ -1600,11 +1603,13 @@ def build_s6():
         out.append(f'<rect class="s6-pfill" x="{n(x)}" y="{n(y)}" width="{n(w)}" height="{n(h)}" rx="10" fill="#FFFFFF"/>')
         out.append(f'<rect class="d s6-pane" pathLength="1" x="{n(x)}" y="{n(y)}" width="{n(w)}" height="{n(h)}" rx="10" fill="none" stroke="#C9CBD1" stroke-width="1.5"/>')
     # ---- liste des anomalies
-    cols = dict(num=lx + 18, typ=lx + lw * 0.085, mod=lx + lw * 0.56, cat=lx + lw * 0.72, dt=lx + lw - 20)
+    narrow = lw < 700
+    cols = dict(num=lx + (14 if narrow else 18), typ=lx + (50 if narrow else lw * 0.085), mod=lx + lw * 0.56,
+                cat=lx + lw * (0.73 if narrow else 0.72), dt=lx + lw - 20)
     out.append(f'<text class="ui b s6-lh" x="{n(lx + 18)}" y="{n(ly + th * 0.64)}" font-size="{n(ui * 1.1)}">Anomalies '
                f'<tspan class="acc">({len(S6_ROWS)})</tspan></text>')
     hy = ly + th + ch * 0.64
-    for key, lab, anchor in (("num", "N°", "start"), ("typ", "Type", "start"), ("mod", "Module", "start"), ("cat", "Gravité", "start"), ("dt", "ΔT (°C)", "end")):
+    for key, lab, anchor in (("num", "N°", "start"), ("typ", "Type", "start"), ("mod", "Module", "start"), ("cat", "Gravité", "start"), ("dt", "ΔT" if narrow else "ΔT (°C)", "end")):
         out.append(f'<text class="ui g s6-lh" x="{n(cols[key])}" y="{n(hy)}" font-size="{n(ui * 0.88)}" text-anchor="{anchor}">{lab}</text>')
     out.append(f'<g class="s6-sep" stroke="#E4E4E7" stroke-width="1.5"><line x1="{n(lx)}" y1="{n(ly + th)}" x2="{n(lx + lw)}" y2="{n(ly + th)}"/>'
                f'<line x1="{n(lx)}" y1="{n(ly + th + ch)}" x2="{n(lx + lw)}" y2="{n(ly + th + ch)}"/></g>')
@@ -1674,7 +1679,7 @@ def build_s6():
         g.append("</g>")
         out.append("".join(g))
     # ---- carte de l'installation (vue du dessus, dessinée)
-    fs_ = min((mw - 120) / FW_, (mh - 140) / FH_)
+    fs_ = min((mw - (120 if mw >= 600 else 60)) / FW_, (mh - 140) / FH_)
     fx, fy = mx + (mw - FW_ * fs_) / 2, my + (mh - FH_ * fs_) / 2 - 10
     defs.append(f'<clipPath id="s6-mapclip"><rect x="{n(mx + 1.5)}" y="{n(my + 1.5)}" width="{n(mw - 3)}" height="{n(mh - 3)}" rx="9"/></clipPath>')
 
@@ -1690,9 +1695,6 @@ def build_s6():
         f'<line x1="{n(mx)}" y1="{n(road_y)}" x2="{n(mx + mw)}" y2="{n(road_y)}" stroke="#D4D4D8" stroke-width="2" stroke-dasharray="14 12"/>',
         f'<rect x="{n(fx - 26 * k_)}" y="{n(fy - 26 * k_)}" width="{n(FW_ * fs_ + 52 * k_)}" height="{n(FH_ * fs_ + 52 * k_)}" rx="6" fill="#ECECEE" stroke="#D4D4D8" stroke-width="1.5" stroke-dasharray="6 6"/>',
     ]
-    bx_, by_, bw_, bh_ = mx + mw * 0.1, my + mh * 0.06, mw * 0.3, mh * 0.13  # bâtiment voisin
-    terrain.append(f'<rect x="{n(bx_)}" y="{n(by_)}" width="{n(bw_)}" height="{n(bh_)}" fill="#FFFFFF" stroke="#C9CBD1" stroke-width="1.5"/>'
-                   f'<path d="M{n(bx_)} {n(by_ + bh_ / 2)}H{n(bx_ + bw_)}M{n(bx_ + bw_ * 0.25)} {n(by_)}V{n(by_ + bh_)}" stroke="#E4E4E7" stroke-width="1.5"/>')
     stalls = "".join(f'M{n(mx + mw * 0.52 + j * 30 * k_)} {n(road_y + 30 * k_)}v{n(40 * k_)}' for j in range(int(mw * 0.36 / (30 * k_)) + 1))
     terrain.append(f'<path d="{stalls}" stroke="#D4D4D8" stroke-width="1.5"/>')
     for j, (u, v, rr) in enumerate(((0.07, 0.12, 26), (0.15, 0.2, 18), (0.9, 0.1, 22), (0.95, 0.24, 16), (0.06, 0.78, 20), (0.93, 0.8, 24), (0.85, 0.9, 15))):
@@ -1795,17 +1797,17 @@ def build_s6():
       tl.fromTo(ms, {{ opacity: 0, scale: 1.25, transformOrigin: "50% 50%" }}, {{ opacity: 1, scale: 1, duration: 0.35, ease: "back.out(1.6)" }}, 2.32);
       [2.35, 3.35].forEach((t) => pulse(0, t));
       detail(0, 2.4);
-      tl.to(cur, {{ x: {n(lay["row_x"])}, y: {n(rys[1])}, duration: 0.5, ease: "power2.inOut" }}, 4.5);
-      click(5.05);
-      tl.to(sel, {{ y: {n(S6_PICK[1] * rh)}, duration: 0.25, ease: "power2.inOut" }}, 5.1);
-      tl.to(ms, {{ attr: {{ x: MS[1][0], y: MS[1][1], width: MS[1][2], height: MS[1][3] }}, duration: 0.4, ease: "power2.inOut" }}, 5.1);
-      [5.2, 6.2].forEach((t) => pulse(1, t));
-      blurOut(5.1, $("#s6-d0"), 0.18, 0);
-      detail(1, 5.25);
-      tl.to(cur, {{ x: "+=" + {n(70 * CUR_K)}, y: "+=" + {n(90 * CUR_K)}, duration: 0.7, ease: "power2.inOut" }}, 6.4);
+      tl.to(cur, {{ x: {n(lay["row_x"])}, y: {n(rys[1])}, duration: 0.5, ease: "power2.inOut" }}, 4.3);
+      click(4.85);
+      tl.to(sel, {{ y: {n(S6_PICK[1] * rh)}, duration: 0.25, ease: "power2.inOut" }}, 4.9);
+      tl.to(ms, {{ attr: {{ x: MS[1][0], y: MS[1][1], width: MS[1][2], height: MS[1][3] }}, duration: 0.4, ease: "power2.inOut" }}, 4.9);
+      [5.0, 6.0].forEach((t) => pulse(1, t));
+      blurOut(4.9, $("#s6-d0"), 0.18, 0);
+      detail(1, 5.05);
+      tl.to(cur, {{ x: "+=" + {n(70 * CUR_K)}, y: "+=" + {n(90 * CUR_K)}, duration: 0.7, ease: "power2.inOut" }}, 6.1);
       // 3. sortie : tout se floute
-      blurOut(8.3, title, 0.18, 0.02);
-      tl.to([$("#s6-win"), $("#s6-svg"), cur], {{ opacity: 0, filter: "blur(8px)", duration: 0.32, ease: "power2.in" }}, 8.35);"""
+      blurOut(7.7, title, 0.18, 0.02);
+      tl.to([$("#s6-win"), $("#s6-svg"), cur], {{ opacity: 0, filter: "blur(8px)", duration: 0.32, ease: "power2.in" }}, 7.75);"""
     write_scene(
         "s6",
         "Scène 6 — Plateforme en ligne : liste des anomalies, vues IR et RVB, carte de l'installation",
@@ -1821,9 +1823,9 @@ def build_s6():
 # --------------------------------------------------------------------------
 SITE_IMG = (1360, 649)  # capture du site (assets/images/site-flyscanair.jpg)
 LI_IMG = (1192, 754)  # page LinkedIn (assets/images/linkedin-flyscanair.jpg : recadrée, sans données personnelles)
-TYPE_DT = 0.075  # une touche toutes les 75 ms (tools/sfx.py génère le bruit de clavier sur la même cadence)
+TYPE_DT = 0.09  # une touche toutes les 90 ms (tools/sfx.py génère le bruit de clavier sur la même cadence)
 S7_Q = [  # texte tapé, début de la frappe (s, scène), adresse affichée par le navigateur, image, taille
-    ("www.flyscanair.com", 1.0, "flyscanair.com", "assets/images/site-flyscanair.jpg", SITE_IMG),
+    ("www.flyscanair.com", 0.9, "flyscanair.com", "assets/images/site-flyscanair.jpg", SITE_IMG),
     ("Fly Scan'Air", 6.05, "linkedin.com/company/fly-scan-air", "assets/images/linkedin-flyscanair.jpg", LI_IMG),
 ]
 S7_DUR = 10.2
@@ -1892,17 +1894,17 @@ def build_s7():
       }};
       // 2. « www.flyscanair.com », Entrée : la barre monte, le site s'affiche
       type(0, {S7_Q[0][1]});
-      tl.to(bar, {{ y: {n(yc1 - yc0)}, duration: 0.5, ease: "power3.inOut" }}, 2.65);
-      blurOut(2.6, $("#s7-head"), 0.2, 0);
-      result(0, 3.0);
+      tl.to(bar, {{ y: {n(yc1 - yc0)}, duration: 0.5, ease: "power3.inOut" }}, 2.8);
+      blurOut(2.75, $("#s7-head"), 0.2, 0);
+      result(0, 3.1);
       // 3. tout sélectionner, effacer, « Fly Scan'Air », Entrée : la page LinkedIn
       tl.set($("#s7-q0"), {{ backgroundColor: "rgba(255, 87, 0, 0.22)" }}, 5.55);
       tl.set(keys(0), {{ display: "none" }}, 5.8);
       tl.set($("#s7-q0"), {{ backgroundColor: "rgba(255, 87, 0, 0)" }}, 5.8);
       blurOut(5.6, $("#s7-r0"), 0.3, 0);
       type(1, {S7_Q[1][1]});
-      result(1, 7.25);
-      [7.45, 7.95, 8.45, 8.95, 9.45].forEach((t, i) => tl.set(caret, {{ opacity: i % 2 ? 1 : 0 }}, t));
+      result(1, 7.4);
+      [7.6, 8.1, 8.6, 9.1, 9.6].forEach((t, i) => tl.set(caret, {{ opacity: i % 2 ? 1 : 0 }}, t));
       // 4. sortie vers le carton final
       blurOut(9.85, [bar, $("#s7-r1")], 0.3, 0.04);"""
     write_scene(
@@ -2002,8 +2004,8 @@ def build_s8():
 # --------------------------------------------------------------------------
 # index.html
 # --------------------------------------------------------------------------
-SCENES = [("s0", 0, 3.6), ("s1", 3.6, 7.2), ("s2", 10.8, 6.6), ("s3", 17.4, 6.6), ("s4", 24.0, 7.2), ("s5", 31.2, 15.6),
-          ("s6", 46.8, 9.0), ("s7", 55.8, S7_DUR), ("s8", 66.0, S8_DUR)]
+SCENES = [("s0", 0, 3.6), ("s1", 3.6, 7.2), ("s2", 10.8, 6.6), ("s3", 17.4, 6.6), ("s4", 24.0, 7.2), ("s5", 31.2, 16.2),
+          ("s6", 47.4, 8.4), ("s7", 55.8, S7_DUR), ("s8", 66.0, S8_DUR)]
 TOTAL = 74.4
 T_ = {sid: t for sid, t, _ in SCENES}
 
@@ -2024,27 +2026,24 @@ SFX = [
     ("sfx-page2", "whoosh-high.mp3", T_["s5"] + 8.2, 0.18),
     ("sfx-page3", "whoosh-high.mp3", T_["s5"] + 11.75, 0.18),
     ("sfx-stamp", "pop.mp3", T_["s5"] + 12.88, 0.45),
-    ("sfx-check1", "click-soft.mp3", T_["s5"] + 13.52, 0.6),
-    ("sfx-check2", "click-soft.mp3", T_["s5"] + 13.77, 0.55),
-    ("sfx-check3", "click-soft.mp3", T_["s5"] + 14.02, 0.6),
-    ("sfx-check4", "click-soft.mp3", T_["s5"] + 14.27, 0.55),
-    ("sfx-link", "click-soft.mp3", T_["s5"] + 14.5, 0.75),
-    ("sfx-open", "whoosh-short.mp3", T_["s5"] + 15.0, 0.3),
+    *[(f"sfx-check{i + 1}", f"validation-{i + 1}.wav", T_["s5"] + t + 0.1, 0.5) for i, t in enumerate(S5_CHECKS)],
+    ("sfx-link", "click-soft.mp3", T_["s5"] + 15.25, 0.75),
+    ("sfx-open", "whoosh-short.mp3", T_["s5"] + 15.7, 0.3),
     ("sfx-row1", "click-soft.mp3", T_["s6"] + 2.25, 0.75),
-    ("sfx-row2", "click-soft.mp3", T_["s6"] + 5.05, 0.75),
-    ("sfx-type1", "typing-18.wav", T_["s7"] + S7_Q[0][1], 0.55),
-    ("sfx-enter1", "key-press.mp3", T_["s7"] + 2.55, 0.6),
-    ("sfx-res1", "whoosh-short.mp3", T_["s7"] + 3.1, 0.22),
-    ("sfx-del", "key-press.mp3", T_["s7"] + 5.8, 0.45),
-    ("sfx-type2", "typing-12.wav", T_["s7"] + S7_Q[1][1], 0.55),
-    ("sfx-enter2", "key-press.mp3", T_["s7"] + 7.15, 0.6),
-    ("sfx-res2", "whoosh-short.mp3", T_["s7"] + 7.35, 0.22),
+    ("sfx-row2", "click-soft.mp3", T_["s6"] + 4.85, 0.75),
+    ("sfx-type1", "typing-18.wav", T_["s7"] + S7_Q[0][1], 0.75),
+    ("sfx-enter1", "key-enter.wav", T_["s7"] + 2.7, 0.8),
+    ("sfx-res1", "whoosh-short.mp3", T_["s7"] + 3.2, 0.22),
+    ("sfx-del", "key-enter.wav", T_["s7"] + 5.8, 0.6),
+    ("sfx-type2", "typing-12.wav", T_["s7"] + S7_Q[1][1], 0.75),
+    ("sfx-enter2", "key-enter.wav", T_["s7"] + 7.3, 0.8),
+    ("sfx-res2", "whoosh-short.mp3", T_["s7"] + 7.5, 0.22),
     ("sfx-buzz", "drone-buzz.wav", T_["s8"] + 0.05, 0.5),
     ("sfx-logo", "impact-bass-1.mp3", T_["s8"] + 2.45, 0.22),
     ("sfx-lift", "whoosh-low.mp3", T_["s8"] + 3.75, 0.18),
 ]
 # musique un peu plus basse pendant la frappe au clavier (scène 7)
-DUCK_EXTRA = [(T_["s7"] + 0.8, T_["s7"] + 2.9, 0.5), (T_["s7"] + 5.6, T_["s7"] + 7.4, 0.5)]
+DUCK_EXTRA = [(T_["s7"] + 0.7, T_["s7"] + 3.05, 0.5), (T_["s7"] + 5.5, T_["s7"] + 7.65, 0.5)]
 
 
 def build_index(sfx_offsets):

@@ -102,6 +102,9 @@
       <g id="s5-axes">
         <g id="s5-grid" stroke="#E4E4E7" stroke-width="1.5" stroke-dasharray="6 8"><line x1="1060" y1="762" x2="1770" y2="762"/><line x1="1060" y1="674" x2="1770" y2="674"/><line x1="1060" y1="586" x2="1770" y2="586"/><line x1="1060" y1="498" x2="1770" y2="498"/><line x1="1060" y1="410" x2="1770" y2="410"/></g>
         <g id="s5-yt" class="tick"><text x="1040" y="860" text-anchor="end">0</text><text x="1040" y="772" text-anchor="end">5 000</text><text x="1040" y="684" text-anchor="end">10 000</text><text x="1040" y="596" text-anchor="end">15 000</text><text x="1040" y="508" text-anchor="end">20 000</text><text x="1040" y="420" text-anchor="end">25 000</text></g>
+      </g>
+      <g clip-path="url(#s5-clip)"><rect id="s5-bar0" x="1145.0" y="498" width="210" height="364" rx="10" fill="#CDCDD2" data-top="498" data-h="364"/><rect id="s5-bar1" x="1475.0" y="561.36" width="210" height="300.64" rx="10" fill="#FF5700" data-top="561.36" data-h="300.64"/></g>
+      <g id="s5-axlines">
         <g fill="none" stroke="#111111" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
           <line id="s5-ax" stroke-dashoffset="1.05" class="d" pathLength="1" x1="1060" y1="850" x2="1790" y2="850"/>
           <polyline id="s5-axa" stroke-dashoffset="1.05" class="d" pathLength="1" points="1778,841 1790,850 1778,859"/>
@@ -109,7 +112,6 @@
           <polyline id="s5-aya" stroke-dashoffset="1.05" class="d" pathLength="1" points="1051,387 1060,375 1069,387"/>
         </g>
       </g>
-      <g clip-path="url(#s5-clip)"><rect id="s5-bar0" x="1145.0" y="498" width="210" height="364" rx="10" fill="#CDCDD2" data-top="498" data-h="364"/><rect id="s5-bar1" x="1475.0" y="561.36" width="210" height="300.64" rx="10" fill="#FF5700" data-top="561.36" data-h="300.64"/></g>
     </svg>
     <div id="s5-lab-y" class="label" style="left: 1010px; top: 318px">Production (kWh/an)</div>
     <div id="s5-cat0" class="cat" style="left: 1080px; top: 868px">Installation<br />saine</div><div id="s5-cat1" class="cat" style="left: 1410px; top: 868px">Installation<br />avec défauts</div>
@@ -300,21 +302,21 @@
       //   ce que contient le rapport
       draw(13.0, $$(".s5-box"), 0.3, "power2.out", 0.1);
       blurIn(13.1, [$("#s5-i0"), $("#s5-i1"), $("#s5-i2"), $("#s5-i3")], 0.18, 0.15);
-      [13.4, 13.65, 13.9, 14.15].forEach((t, i) => draw(t, $("#s5-k" + i), 0.22, "power2.out"));
+      [13.3, 13.66, 14.02, 14.38].forEach((t, i) => draw(t, $("#s5-k" + i), 0.28, "power2.out"));
       //   le rapport contient le lien vers la plateforme en ligne
-      tl.fromTo($("#s5-link"), { opacity: 0, scale: 0.9, transformOrigin: "50% 50%" }, { opacity: 1, scale: 1, duration: 0.35, ease: "back.out(1.6)" }, 13.3);
-      // 4. le curseur clique sur le lien ; la fenêtre de la plateforme s'ouvre depuis le lien
+      tl.fromTo($("#s5-link"), { opacity: 0, scale: 0.9, transformOrigin: "50% 50%" }, { opacity: 1, scale: 1, duration: 0.35, ease: "back.out(1.6)" }, 13.0);
+      // 4. toutes les cases cochées, le curseur arrive et clique sur le lien ; la fenêtre de la plateforme s'ouvre depuis le lien
       const cur = $("#s5-cur");
-      tl.fromTo(cur, { x: 1140, y: 1480, opacity: 0 }, { x: 606.56, y: 1000, opacity: 1, duration: 0.55, ease: "power2.out" }, 13.9);
-      tl.to(cur, { scale: 0.82, duration: 0.07, ease: "power1.in", yoyo: true, repeat: 1 }, 14.5);
-      tl.to($("#s5-link"), { backgroundColor: "#FFD2BC", duration: 0.08, yoyo: true, repeat: 1 }, 14.5);
-      blurOut(14.7, [...t3, $("#s5-i0"), $("#s5-i1"), $("#s5-i2"), $("#s5-i3")], 0.2, 0.015);
-      blurOut(14.72, [$("#s5-check")], 0.2, 0);
-      tl.set($("#s5-open"), { opacity: 1 }, 14.78);
+      tl.fromTo(cur, { x: 1140, y: 1480, opacity: 0 }, { x: 606.56, y: 1000, opacity: 1, duration: 0.45, ease: "power2.out" }, 14.75);
+      tl.to(cur, { scale: 0.82, duration: 0.07, ease: "power1.in", yoyo: true, repeat: 1 }, 15.25);
+      tl.to($("#s5-link"), { backgroundColor: "#FFD2BC", duration: 0.08, yoyo: true, repeat: 1 }, 15.25);
+      blurOut(15.4, [...t3, $("#s5-i0"), $("#s5-i1"), $("#s5-i2"), $("#s5-i3")], 0.2, 0.015);
+      blurOut(15.42, [$("#s5-check")], 0.2, 0);
+      tl.set($("#s5-open"), { opacity: 1 }, 15.48);
       // (le rectangle finit exactement sur le cadre de la fenêtre de la scène 6 : trait de 2,5 px centré, rayon 18 px à l'extérieur)
       tl.fromTo($("#s5-open"), { attr: { x: 332, y: 954.4, width: 416, height: 83.2, rx: 41.6, fill: "#FFF1E8", stroke: "#FF5700", "stroke-width": 2 } },
-        { attr: { x: 41.25, y: 411.25, width: 997.5, height: 1457.5, rx: 16.75, fill: "#FFFFFF", stroke: "#111111", "stroke-width": 2.5 }, duration: 0.62, ease: "power3.inOut", immediateRender: false }, 14.8);
-      tl.to($("#s5-docw"), { opacity: 0, filter: "blur(6px)", duration: 0.3, ease: "power2.in" }, 14.85);
+        { attr: { x: 41.25, y: 411.25, width: 997.5, height: 1457.5, rx: 16.75, fill: "#FFFFFF", stroke: "#111111", "stroke-width": 2.5 }, duration: 0.6, ease: "power3.inOut", immediateRender: false }, 15.5);
+      tl.to($("#s5-docw"), { opacity: 0, filter: "blur(6px)", duration: 0.3, ease: "power2.in" }, 15.55);
       window.__timelines["s5"] = tl;
     })();
   </script>

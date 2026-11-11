@@ -10,5 +10,10 @@
  "typing.mp3": 0.457,
  "typing-18.wav": 0.1,
  "typing-12.wav": 0.1,
- "drone-buzz.wav": 0.0
+ "drone-buzz.wav": 0.0,
+ "key-enter.wav": 0.05,
+ "validation-1.wav": 0.0,
+ "validation-2.wav": 0.0,
+ "validation-3.wav": 0.0,
+ "validation-4.wav": 0.0
 }

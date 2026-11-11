@@ -105,7 +105,7 @@
       $("#s7-head").textContent = txt("s7-head", "Retrouvez-nous sur…");
       const bar = $("#s7-bar"), caret = $("#s7-caret");
       const keys = (i) => Array.from($("#s7-q" + i).querySelectorAll(".k"));
-      const DT = 0.075;
+      const DT = 0.09;
       // 1. titre, barre de recherche, loupe ; le curseur de saisie clignote
       blurIn(0.05, $("#s7-head"), 0.2, 0);
       tl.fromTo(bar, { opacity: 0, scale: 0.94, transformOrigin: "50% 50%" }, { opacity: 1, scale: 1, duration: 0.4, ease: "back.out(1.6)" }, 0.15);
@@ -124,18 +124,18 @@
         tl.fromTo(img, { scale: 1 }, { scale: 1.035, duration: 2.2, ease: "sine.inOut", immediateRender: false }, t + 0.8);
       };
       // 2. « www.flyscanair.com », Entrée : la barre monte, le site s'affiche
-      type(0, 1.0);
-      tl.to(bar, { y: -370, duration: 0.5, ease: "power3.inOut" }, 2.65);
-      blurOut(2.6, $("#s7-head"), 0.2, 0);
-      result(0, 3.0);
+      type(0, 0.9);
+      tl.to(bar, { y: -370, duration: 0.5, ease: "power3.inOut" }, 2.8);
+      blurOut(2.75, $("#s7-head"), 0.2, 0);
+      result(0, 3.1);
       // 3. tout sélectionner, effacer, « Fly Scan'Air », Entrée : la page LinkedIn
       tl.set($("#s7-q0"), { backgroundColor: "rgba(255, 87, 0, 0.22)" }, 5.55);
       tl.set(keys(0), { display: "none" }, 5.8);
       tl.set($("#s7-q0"), { backgroundColor: "rgba(255, 87, 0, 0)" }, 5.8);
       blurOut(5.6, $("#s7-r0"), 0.3, 0);
       type(1, 6.05);
-      result(1, 7.25);
-      [7.45, 7.95, 8.45, 8.95, 9.45].forEach((t, i) => tl.set(caret, { opacity: i % 2 ? 1 : 0 }, t));
+      result(1, 7.4);
+      [7.6, 8.1, 8.6, 9.1, 9.6].forEach((t, i) => tl.set(caret, { opacity: i % 2 ? 1 : 0 }, t));
       // 4. sortie vers le carton final
       blurOut(9.85, [bar, $("#s7-r1")], 0.3, 0.04);
       window.__timelines["s7"] = tl;

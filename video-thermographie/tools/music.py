@@ -33,8 +33,8 @@ SECTIONS = [
     (10.8, 17.4, "drop", ["Em", "C", "G"]),  # S2 les enjeux
     (17.4, 24.0, "drive", ["Em", "C", "D"]),  # S3 drone
     (24.0, 31.2, "drive", ["Em", "C", "D"]),  # S4 détection
-    (31.2, 46.8, "groove", ["G", "D", "Em", "C", "G", "D", "C"]),  # S5 rapport
-    (46.8, 55.8, "drive", ["Em", "C", "G", "D"]),  # S6 plateforme en ligne
+    (31.2, 47.4, "groove", ["G", "D", "Em", "C", "G", "D", "C"]),  # S5 rapport
+    (47.4, 55.8, "drive", ["Em", "C", "G", "D"]),  # S6 plateforme en ligne
     (55.8, 64.2, "groove", ["G", "D", "Em", "C"]),  # S7 recherche (frappe au clavier)
     (64.2, 66.0, "build", ["D"]),  # courte montée vers le logo
     (66.0, 68.4, "break", ["Em"]),  # S8 serpentin + bruit de drone : nappe seule
@@ -249,7 +249,7 @@ for t0, end, step, v in ((BUILD0, BUILD0 + _bl / 3, BEAT / 2, 0.14), (BUILD0 + _
         t += step
 
 # cymbales, impacts et montées aux changements de scène
-for t0, big in ((10.8, True), (17.4, False), (24.0, True), (31.2, False), (46.8, False), (55.8, False), (68.4, True), (END0, True)):
+for t0, big in ((10.8, True), (17.4, False), (24.0, True), (31.2, False), (47.4, False), (55.8, False), (68.4, True), (END0, True)):
     add("fx", CR_, t0, 0.2, 0.14 if big else 0.09)
     add("fx", IMP, t0, 0, 0.2 if big else 0.11)
     add("fx", REV_CRASH, t0 - 0.9, -0.2, 0.12)
