@@ -1,5 +1,14 @@
 # REVIEW
 
+## Passage 16 — musique en fond, site sans zoom, page LinkedIn plus fidèle
+- Musique : 0,5 (−6 dB) sur toute la vidéo au lieu de 0,85, et 0,15 (−16,5 dB) sous la voix au lieu de 0,28 ; 0,3
+  pendant la frappe au clavier. La voix passe nettement au premier plan.
+- S7 : plus de zoom lent sur les captures du site et de LinkedIn.
+- S7 : la page LinkedIn reprend la capture complète, avec la barre LinkedIn (logo, recherche, Accueil, Réseau,
+  Emplois, Messagerie, Notifications) au-dessus de la bannière et de la carte de la page ; les pastilles de
+  notification (point rouge, « 6 », « 12 ») sont retirées et leurs trois icônes redessinées au même trait ; la ligne
+  « … et 5 autres relations suivent cette page » et la photo restent masquées (`tools/linkedin_image.cjs`).
+
 ## Passage 15 — orbite gravitationnelle, fin sans coordonnées, carte sans route, sons plus discrets
 - S2 : les pictogrammes sont « capturés » : chacun arrive de l'extérieur du cadre en spirale, se place sur l'orbite,
   tourne autour de l'installation (un peu plus vite et un peu plus grand en passant devant, pour la profondeur), puis

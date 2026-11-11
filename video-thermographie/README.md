@@ -17,11 +17,11 @@ Réalisée avec [HyperFrames](https://hyperframes.heygen.com) : HTML + SVG + GSA
 | Musique (originale, libre de droits) | `assets/audio/music.wav` (générée par `tools/music.py`) |
 | Effets sonores | `assets/audio/sfx/` (voir `CREDITS.md`) ; frappe au clavier (vraies touches découpées dans `typing.mp3`), son de validation des cases et bourdonnement du drone construits par `tools/sfx.py` |
 | Pictogrammes | Phosphor Icons, graisse bold (licence MIT, `assets/images/LICENSE-phosphor.txt`) : tracés dans `assets/icons-phosphor.json` |
-| Captures | site web : `assets/images/site-flyscanair.jpg` ; page LinkedIn : `assets/images/linkedin-flyscanair.jpg` (recadrée sur la page entreprise, sans barre de notifications ni relation personnelle) |
+| Captures | site web : `assets/images/site-flyscanair.jpg` ; page LinkedIn : `assets/images/linkedin-flyscanair.jpg` (vraie page avec la barre LinkedIn, pastilles de notification retirées, relation personnelle masquée ; préparée par `tools/linkedin_image.cjs`) |
 | Fiche technique | `SPEC.md` ; note de revue : `REVIEW.md` |
 
-Voix off en français (7 phrases, voix masculine grave « Umbriel ») ; la musique, à 0,85 (−1,4 dB), s’efface sous la voix
-(0,28, soit −11 dB) et remonte dans les silences ; elle baisse aussi un peu (0,5) pendant la frappe au clavier.
+Voix off en français (7 phrases, voix masculine grave « Umbriel ») ; la musique reste un fond : 0,5 (−6 dB) sur toute la
+vidéo, 0,15 (−16,5 dB) sous la voix, et 0,3 pendant la frappe au clavier.
 Pas de voix sur le titre, la plateforme, la recherche et le logo final (phrases à écrire plus tard).
 Les textes à l’écran portent toujours le message seuls, pour la lecture sans le son sur LinkedIn.
 
@@ -87,6 +87,11 @@ apparaît, accord final à 72 s ; `MUSIC_DEBUG=1` affiche l’équilibre par ban
 `python3 tools/sfx.py` régénère la frappe au clavier (vraies frappes découpées dans `typing.mp3`, une touche toutes
 les 90 ms comme l’affichage des lettres, `TYPE_DT`), la touche Entrée, le son de validation des quatre cases du
 rapport (`validation-1.wav` … `validation-4.wav`) et le bourdonnement du drone de la scène 8.
+
+`node tools/linkedin_image.cjs capture.png` prépare la page LinkedIn de la scène 7 à partir d’une capture d’écran de
+la page entreprise (barre LinkedIn comprise) : retire les pastilles de notification (icônes Accueil, Réseau et
+Notifications redessinées), masque la ligne « … relations suivent cette page » et recadre. La capture d’origine, qui
+contient des données personnelles, n’est pas versionnée.
 
 `python3 tools/voiceover.py` retraite la voix off à partir des fichiers FLORA `raw_XX.wav` : coupe les silences,
 raccourcit les pauses trop longues, accélère très légèrement certaines phrases (×1,03 à ×1,04, hauteur conservée),
