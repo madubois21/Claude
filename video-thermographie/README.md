@@ -15,7 +15,7 @@ Réalisée avec [HyperFrames](https://hyperframes.heygen.com) : HTML + SVG + GSA
 | Assets graphiques | tout est vectoriel dans les scènes (aucune photo de panneau) ; logo : lettres vectorisées depuis le logo fourni (`assets/images/logo-flyscanair.png` → `assets/logo-letters.json`, par `tools/logo_trace.py`), serpentin et billes remesurés sur la même image ; police Comfortaa `assets/fonts/` |
 | Voix off (FLORA, Gemini 3.1 Flash TTS, voix « Umbriel », fr-FR) | `assets/audio/vo/raw_XX.wav` (fichiers FLORA d’origine), `vo_01.wav` … `vo_07.wav` (nettoyés et placés par `tools/voiceover.py`) |
 | Musique (originale, libre de droits) | `assets/audio/music.wav` (générée par `tools/music.py`) |
-| Effets sonores | `assets/audio/sfx/` (voir `CREDITS.md`) ; frappe au clavier et bourdonnement du drone synthétisés par `tools/sfx.py` |
+| Effets sonores | `assets/audio/sfx/` (voir `CREDITS.md`) ; frappe au clavier (vraies touches découpées dans `typing.mp3`), son de validation des cases et bourdonnement du drone construits par `tools/sfx.py` |
 | Pictogrammes | Phosphor Icons, graisse bold (licence MIT, `assets/images/LICENSE-phosphor.txt`) : tracés dans `assets/icons-phosphor.json` |
 | Captures | site web : `assets/images/site-flyscanair.jpg` ; page LinkedIn : `assets/images/linkedin-flyscanair.jpg` (recadrée sur la page entreprise, sans barre de notifications ni relation personnelle) |
 | Fiche technique | `SPEC.md` ; note de revue : `REVIEW.md` |
@@ -42,8 +42,8 @@ Les textes à l’écran portent toujours le message seuls, pour la lecture sans
 | 2 — Les enjeux | `compositions/s2.html` | 10,8 – 17,4 s | l’installation du survol (7 × 3 modules, pas encore inspectée) au centre de l’écran ; six pictogrammes en orbite : perte de rendement, échauffement, défaut électrique, risque incendie, garantie, assurance ; ils s’éloignent, la caméra se rapproche et la question « Comment détecter ces anomalies ? » s’affiche |
 | 3 — Inspection drone | `compositions/s3.html` | 17,4 – 24 s | même champ, même cadre, même question (raccord sans coupure), puis drone + HUD, scan infrarouge, « Le scan infrarouge révèle chaque échauffement. » |
 | 4 — Détection | `compositions/s4.html` | 24 – 31,2 s | zoom sur le module : point chaud (cellule fissurée), diode by-pass, boîte de jonction, désignés par des lignes de rappel |
-| 5 — Rapport | `compositions/s5.html` | 31,2 – 46,8 s | trois pages : analyse détaillée (fiches « Défaut #1 » et « Défaut #2 »), résultats et gravité, couverture « Rapport d’inspection thermique » (tampon « Conforme IEC TS 62446-3 ») avec le lien « Accéder à votre installation » : le curseur clique, la fenêtre de la plateforme s’ouvre depuis le lien |
-| 6 — Plateforme en ligne | `compositions/s6.html` | 46,8 – 55,8 s | « Suivez votre installation sur notre plateforme en ligne. » : liste des anomalies en haut à gauche, vues IR et RVB du module sélectionné en bas à gauche, carte de l’installation à droite ; deux clics (point chaud B5, puis module à vide C3) |
+| 5 — Rapport | `compositions/s5.html` | 31,2 – 47,4 s | trois pages : analyse détaillée (fiches « Défaut #1 » et « Défaut #2 »), résultats et gravité, couverture « Rapport d’inspection thermique » (tampon « Conforme IEC TS 62446-3 ») avec le lien « Accéder à votre installation » ; les quatre cases de la checklist se cochent (son de validation), puis le curseur arrive, clique sur le lien et la fenêtre de la plateforme s’ouvre depuis le lien |
+| 6 — Plateforme en ligne | `compositions/s6.html` | 47,4 – 55,8 s | « Suivez votre installation sur notre plateforme en ligne. » : carte de l’installation à gauche, liste des anomalies en haut à droite, vues IR et RVB du module sélectionné en bas à droite (en 9:16 : carte en haut, puis liste, puis vues) ; deux clics (point chaud B5, puis module à vide C3) |
 | 7 — Retrouvez-nous | `compositions/s7.html` | 55,8 – 66 s | barre de recherche (loupe), frappe de « www.flyscanair.com » → capture du site ; puis « Fly Scan’Air » → page LinkedIn |
 | 8 — Logo | `compositions/s8.html` | 66 – 74,4 s | le serpentin du logo se trace (bruit de drone), le nom apparaît au centre, le logo remonte, slogan « Inspections techniques aériennes, *révélez l’invisible*. » et coordonnées, tenus ≈ 3,5 s |
 
@@ -84,8 +84,9 @@ grosse caisse à la noire, clap, charleston en doubles-croches, basse pompée, a
 montées et impacts aux changements de scène ; respiration pendant le tracé du serpentin, retombée quand le nom
 apparaît, accord final à 72 s ; `MUSIC_DEBUG=1` affiche l’équilibre par bande). Les sections sont dans `SECTIONS`.
 
-`python3 tools/sfx.py` régénère la frappe au clavier (une touche toutes les 75 ms, comme l’affichage des lettres,
-`TYPE_DT`) et le bourdonnement du drone de la scène 8.
+`python3 tools/sfx.py` régénère la frappe au clavier (vraies frappes découpées dans `typing.mp3`, une touche toutes
+les 90 ms comme l’affichage des lettres, `TYPE_DT`), la touche Entrée, le son de validation des quatre cases du
+rapport (`validation-1.wav` … `validation-4.wav`) et le bourdonnement du drone de la scène 8.
 
 `python3 tools/voiceover.py` retraite la voix off à partir des fichiers FLORA `raw_XX.wav` : coupe les silences,
 raccourcit les pauses trop longues, accélère très légèrement certaines phrases (×1,03 à ×1,04, hauteur conservée),

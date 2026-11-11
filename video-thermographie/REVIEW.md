@@ -1,5 +1,17 @@
 # REVIEW
 
+## Passage 14 — coches, son de validation, plateforme inversée, clavier, axe du graphique
+- S5 page 3 : les quatre cases se cochent toutes les 0,36 s (au lieu de 0,25 s), chacune avec un son de validation
+  (deux notes montantes, timbre doux, un cran plus haut à chaque case : sol – la – si – ré, dans la tonalité de la
+  musique) ; la souris n'apparaît qu'une fois la dernière case cochée, puis clique sur « Accéder à votre installation ».
+  Scène 5 : 16,2 s (+0,6 s), repris sur la plateforme (8,4 s, deuxième clic plus tôt) : durée totale inchangée, 74,4 s.
+- S5 page 2 : l'axe X du graphique « Production (kWh/an) » passe par-dessus les deux barres (barres coupées net sur
+  l'axe, aussi en 9:16 et 1:1 où elles dépassaient de 12 px).
+- S6 : carte de l'installation à gauche, liste des anomalies et vues IR/RVB à droite (en 9:16 : carte en haut) ; le
+  bâtiment (rectangle à quatre cases) est retiré de la carte ; colonnes de la liste étroite (1:1) élargies.
+- S7 : la frappe est faite de vraies touches de clavier, découpées dans l'enregistrement `typing.mp3` (11 frappes
+  différentes, une par lettre affichée, 90 ms par touche) ; touche Entrée et effacement avec une vraie frappe.
+
 ## Passage 13 — titre, pictogrammes en orbite, plateforme en ligne, recherche, logo final
 - Retour à la base du passage 11 : aucune photo réelle (la photo thermique est retirée du projet) ; voix 04 d'origine.
 - S0 (nouvelle) : titre centré « Le contrôle *thermographique* appliqué aux installations photovoltaïques », sans voix.

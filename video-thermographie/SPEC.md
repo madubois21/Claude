@@ -2,6 +2,9 @@
 
 Source : `Cahier_des_charges.pdf` (structure en 6 scènes, textes S1 et S2 imposés).
 Choix validés avec le client : pas de voix off ; musique originale composée ; 16:9 seul pour ce premier passage.
+Passage 14 : cases du rapport cochées plus lentement (son de validation), souris après la dernière case ; plateforme
+avec la carte à gauche, la liste et les vues IR/RVB à droite, sans bâtiment ; vraie frappe au clavier ; axe X du graphique
+au-dessus des barres.
 Passage 13 : retour à la base du passage 11 (sans photo réelle), 74,4 s, 9 scènes : titre d'ouverture ; installation au centre
 avec six pictogrammes en orbite (remplace le graphique de rendement), raccord exact vers le survol ; « Comment détecter ces
 anomalies ? » ; lien « Accéder à votre installation » sur le rapport, puis plateforme en ligne (liste, vues IR/RVB, carte ;
@@ -25,7 +28,7 @@ contact www.flyscanair.com · 06 22 80 57 69 · contact@flyscanair.com ; plus de
 GOAL:    le spectateur comprend qu'un défaut invisible coûte cher et qu'un survol thermique par drone le révèle ; il retient « faire contrôler son installation ».
 OUTPUT:  HyperFrames, 1920 x 1080, 30 fps, MP4 H.264 (version LinkedIn).
 TIME:    74,4 s x 30 = 2232 images, fin tenue sur le logo, le slogan et les coordonnées (passage 13). Musique 100 BPM : 1 temps = 0,6 s = 18 images, 1 mesure = 2,4 s.
-         Coupes : S0 0–3,6 · S1 3,6–10,8 · S2 10,8–17,4 · S3 17,4–24,0 · S4 24,0–31,2 · S5 31,2–46,8 · S6 46,8–55,8 · S7 55,8–66,0 · S8 66,0–74,4.
+         Coupes : S0 0–3,6 · S1 3,6–10,8 · S2 10,8–17,4 · S3 17,4–24,0 · S4 24,0–31,2 · S5 31,2–47,4 · S6 47,4–55,8 · S7 55,8–66,0 · S8 66,0–74,4.
          (Le détail SHOTS ci-dessous décrit la conception d'origine ; le déroulé actuel est dans README.md.)
 LOOK:    fond #FFFFFF plat + trame de points Ø2 px #E4E4E7 au pas de 48 px (papier technique, aucun dégradé).
          Encre #111111 : traits de structure 2,5 px, détails 1,5 px, cellules 1 px #D4D4D8, fond de panneau #F3F3F4.

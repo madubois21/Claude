@@ -36,6 +36,7 @@ without any attribution requirement.
 
 ## Sons synthétisés pour la vidéo Fly Scan’Air
 
-- `typing-18.wav`, `typing-12.wav` : frappe au clavier calée sur l’affichage des lettres (une touche toutes les 75 ms),
-  construite à partir de `key-press.mp3` (hauteur et force variées d’une touche à l’autre) par `tools/sfx.py`.
+- `typing-18.wav`, `typing-12.wav`, `key-enter.wav` : frappe au clavier calée sur l’affichage des lettres (une touche
+  toutes les 90 ms), faite des vraies frappes découpées dans `typing.mp3` (Pixabay), par `tools/sfx.py`.
+- `validation-1.wav` … `validation-4.wav` : son de validation des cases cochées, entièrement synthétisé par `tools/sfx.py`.
 - `drone-buzz.wav` : bourdonnement de drone quadrirotor entièrement synthétisé (numpy) par `tools/sfx.py`.
