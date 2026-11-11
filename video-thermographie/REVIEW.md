@@ -12,6 +12,8 @@
 - S6 : la route (et le parking qui la longeait) est retirée de la carte.
 - Sons : validation des cases plus douce (sans harmonique brillant, extinction plus courte) et plus basse (0,2 au lieu
   de 0,5) ; bourdonnement du drone feutré (moins d'harmoniques, filtré plus bas) et plus bas (0,22 au lieu de 0,5).
+- Rendus (trois formats) : 74,4 s ; −16,7 LUFS intégré, crête vraie −1,3 dBTP ; passage du serpentin −21,7 LUFS
+  (au lieu de −18,7) ; `hyperframes check` : 0 erreur, 0 avertissement sur les trois formats ; images clés relues.
 
 ## Passage 14 — coches, son de validation, plateforme inversée, clavier, axe du graphique
 - S5 page 3 : les quatre cases se cochent toutes les 0,36 s (au lieu de 0,25 s), chacune avec un son de validation
