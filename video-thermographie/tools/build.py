@@ -1829,7 +1829,7 @@ def build_s6():
 # S7 — « Retrouvez-nous sur… » : barre de recherche (générique), site web puis page LinkedIn
 # --------------------------------------------------------------------------
 SITE_IMG = (1360, 649)  # capture du site (assets/images/site-flyscanair.jpg)
-LI_IMG = (1192, 754)  # page LinkedIn (assets/images/linkedin-flyscanair.jpg : recadrée, sans données personnelles)
+LI_IMG = (1220, 874)  # page LinkedIn (assets/images/linkedin-flyscanair.jpg, tools/linkedin_image.cjs : barre LinkedIn comprise, sans pastilles ni données personnelles)
 TYPE_DT = 0.09  # une touche toutes les 90 ms (tools/sfx.py génère le bruit de clavier sur la même cadence)
 S7_Q = [  # texte tapé, début de la frappe (s, scène), adresse affichée par le navigateur, image, taille
     ("www.flyscanair.com", 0.9, "flyscanair.com", "assets/images/site-flyscanair.jpg", SITE_IMG),
@@ -1897,7 +1897,6 @@ def build_s7():
         tl.fromTo(img, {{ clipPath: "inset(0 100% 0 0)" }}, {{ clipPath: "inset(0 0% 0 0)", duration: 0.6, ease: "power1.inOut" }}, t + 0.2);
         tl.fromTo(scan, {{ opacity: 1, x: 0 }}, {{ x: w - 4, duration: 0.6, ease: "power1.inOut" }}, t + 0.2);
         fadeOut(t + 0.8, scan, 0.12);
-        tl.fromTo(img, {{ scale: 1 }}, {{ scale: 1.035, duration: 2.2, ease: "sine.inOut", immediateRender: false }}, t + 0.8);
       }};
       // 2. « www.flyscanair.com », Entrée : la barre monte, le site s'affiche
       type(0, {S7_Q[0][1]});
@@ -2035,8 +2034,8 @@ SFX = [
     ("sfx-logo", "impact-bass-1.mp3", T_["s8"] + 2.45, 0.22),
     ("sfx-lift", "whoosh-low.mp3", T_["s8"] + 3.75, 0.18),
 ]
-# musique un peu plus basse pendant la frappe au clavier (scène 7)
-DUCK_EXTRA = [(T_["s7"] + 0.7, T_["s7"] + 3.05, 0.5), (T_["s7"] + 5.5, T_["s7"] + 7.65, 0.5)]
+# musique encore plus basse pendant la frappe au clavier (scène 7)
+DUCK_EXTRA = [(T_["s7"] + 0.7, T_["s7"] + 3.05, 0.3), (T_["s7"] + 5.5, T_["s7"] + 7.65, 0.3)]
 
 
 def build_index(sfx_offsets):
@@ -2058,7 +2057,7 @@ def build_index(sfx_offsets):
     # voix off (tools/voiceover.py) : une piste par phrase, et la musique s'efface sous la voix
     vo_path = os.path.join(ROOT, "assets", "audio", "vo", "vo.json")
     vo = json.load(open(vo_path, encoding="utf-8")) if os.path.exists(vo_path) else []
-    duck, base = 0.28, 0.85  # musique -1,4 dB partout, -11 dB sous la voix
+    duck, base = 0.15, 0.5  # musique de fond : -6 dB partout, -16,5 dB sous la voix (la voix reste claire)
     segs = []
     for v in vo:
         s0, s1 = v["start"] - 0.3, v["start"] + v["dur"] + 0.45
