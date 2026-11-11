@@ -4,6 +4,8 @@
 - Nouvelle capture du site fournie, recadrée sur la page web seule (sans onglets, barre d'adresse, favoris, barre de
   défilement ni barre des tâches) : 1989 × 993 px au lieu de 1360 × 649, image plus nette dans le navigateur de la
   scène 7.
+- Rendus (trois formats) : 74,4 s ; −17,9 LUFS intégré, crête vraie −2,5 dBTP ; `hyperframes check` : 0 erreur,
+  0 avertissement ; capture vérifiée dans les trois formats.
 
 ## Passage 17 — anomalies réalistes sur la plateforme en ligne
 - Carte : l'installation est affichée en vue thermique (comme après le scan du drone), chaque anomalie avec sa vraie
