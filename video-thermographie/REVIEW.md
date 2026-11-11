@@ -11,6 +11,8 @@
   bâtiment (rectangle à quatre cases) est retiré de la carte ; colonnes de la liste étroite (1:1) élargies.
 - S7 : la frappe est faite de vraies touches de clavier, découpées dans l'enregistrement `typing.mp3` (11 frappes
   différentes, une par lettre affichée, 90 ms par touche) ; touche Entrée et effacement avec une vraie frappe.
+- Rendus (trois formats) : 74,4 s, 30 i/s ; −16,6 LUFS intégré, crête vraie −1,3 dBTP (frappes plus présentes) ;
+  `hyperframes check` : 0 erreur, 0 avertissement sur les trois formats ; images clés relues.
 
 ## Passage 13 — titre, pictogrammes en orbite, plateforme en ligne, recherche, logo final
 - Retour à la base du passage 11 : aucune photo réelle (la photo thermique est retirée du projet) ; voix 04 d'origine.
