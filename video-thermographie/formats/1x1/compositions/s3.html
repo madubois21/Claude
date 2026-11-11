@@ -23,7 +23,7 @@
     data-composition-id="s3"
     data-width="1080"
     data-height="1080"
-    data-composition-variables="[{&quot;id&quot;: &quot;s3-title&quot;, &quot;type&quot;: &quot;string&quot;, &quot;label&quot;: &quot;Scène 3 — titre&quot;, &quot;default&quot;: &quot;Le scan infrarouge révèle|chaque *échauffement*.&quot;}, {&quot;id&quot;: &quot;s3-q&quot;, &quot;type&quot;: &quot;string&quot;, &quot;label&quot;: &quot;Scènes 2-3 — question (| = retour ligne, *mot* = orange)&quot;, &quot;default&quot;: &quot;Comment détecter|ces *anomalies* ?&quot;}]"
+    data-composition-variables="[{&quot;id&quot;: &quot;s3-title&quot;, &quot;type&quot;: &quot;string&quot;, &quot;label&quot;: &quot;Scène 3 — titre&quot;, &quot;default&quot;: &quot;La caméra infrarouge révèle|chaque *échauffement*.&quot;}, {&quot;id&quot;: &quot;s3-q&quot;, &quot;type&quot;: &quot;string&quot;, &quot;label&quot;: &quot;Scènes 2-3 — question (| = retour ligne, *mot* = orange)&quot;, &quot;default&quot;: &quot;Comment détecter|ces *anomalies* ?&quot;}]"
   >
     <svg id="s3-svg" class="world zoom" data-dash="1.08" viewBox="-35 87.4 1000 1000" width="1080" height="1080" style="width: 1080px; height: 1080px">
       <defs>
@@ -56,7 +56,7 @@
       <div id="s3-tag" class="tag">Caméra infrarouge</div>
       <div id="s3-scale" class="scale"><span>Froid</span><i></i><span>Chaud</span></div>
     </div>
-    <div id="s3-title" class="title" style="left: 108px; top: 108px; font-size: 52px">Le scan infrarouge révèle<br />chaque échauffement.</div>
+    <div id="s3-title" class="title" style="left: 108px; top: 108px; font-size: 52px">La caméra infrarouge révèle<br />chaque échauffement.</div>
     <div id="s3-q" class="title" style="left: 108px; top: 108px; font-size: 52px">Comment détecter<br />ces anomalies ?</div>
   </div>
   <script>
@@ -122,7 +122,7 @@
       const fadeOut = (t, els, d = 0.3, stagger = 0, ease = "power1.in") =>
         tl.to(els, { opacity: 0, duration: d, ease, stagger }, t);
 
-      const title = words($("#s3-title"), txt("s3-title", "Le scan infrarouge révèle|chaque *échauffement*."));
+      const title = words($("#s3-title"), txt("s3-title", "La caméra infrarouge révèle|chaque *échauffement*."));
       const HOVER = 215, END = 1790, Y = 680;
       const T0 = 3.2, TD = 1.5; // balayage rapide
       // 1. raccord de la scène 2 : le champ est déjà là, la question reste affichée puis laisse place au titre

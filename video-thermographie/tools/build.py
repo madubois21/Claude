@@ -887,7 +887,7 @@ def build_s3():
       <div id="s3-tag" class="tag">Caméra infrarouge</div>
       <div id="s3-scale" class="scale"><span>Froid</span><i></i><span>Chaud</span></div>
     </div>
-    <div id="s3-title" class="title" style="{tstyle(L and L["s3_title"], "left: 140px; top: 120px")}">Le scan infrarouge révèle<br />chaque échauffement.</div>
+    <div id="s3-title" class="title" style="{tstyle(L and L["s3_title"], "left: 140px; top: 120px")}">La caméra infrarouge révèle<br />chaque échauffement.</div>
     {question_html("s3")}"""
     css = """
     #root #s3-hud { position: absolute; left: 480px; top: 306px; display: flex; align-items: center; gap: 36px; }
@@ -899,7 +899,7 @@ def build_s3():
         css += f"""
     #root #s3-hud {{ left: {L["s3_hud"][0]}px; top: {L["s3_hud"][1]}px; flex-direction: column; align-items: flex-start; gap: 12px; }}"""
     js = f"""
-      const title = words($("#s3-title"), txt("s3-title", "Le scan infrarouge révèle|chaque *échauffement*."));
+      const title = words($("#s3-title"), txt("s3-title", "La caméra infrarouge révèle|chaque *échauffement*."));
       const HOVER = {HOVER_X}, END = {SCAN_END_X}, Y = {DRONE_Y};
       const T0 = 3.2, TD = 1.5; // balayage rapide
       // 1. raccord de la scène 2 : le champ est déjà là, la question reste affichée puis laisse place au titre
@@ -942,7 +942,7 @@ def build_s3():
     write_scene(
         "s3",
         "Scène 3 — Inspection drone",
-        [svar("s3-title", "Scène 3 — titre", "Le scan infrarouge révèle|chaque *échauffement*."),
+        [svar("s3-title", "Scène 3 — titre", "La caméra infrarouge révèle|chaque *échauffement*."),
          svar("s3-q", "Scènes 2-3 — question (| = retour ligne, *mot* = orange)", QUESTION)],
         css,
         body,
