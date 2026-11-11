@@ -1875,7 +1875,7 @@ def build_s6():
 # --------------------------------------------------------------------------
 # S7 — « Retrouvez-nous sur… » : barre de recherche (générique), site web puis page LinkedIn
 # --------------------------------------------------------------------------
-SITE_IMG = (1360, 649)  # capture du site (assets/images/site-flyscanair.jpg)
+SITE_IMG = (1989, 993)  # capture du site (assets/images/site-flyscanair.jpg : page seule, sans le navigateur)
 LI_IMG = (1220, 874)  # page LinkedIn (assets/images/linkedin-flyscanair.jpg, tools/linkedin_image.cjs : barre LinkedIn comprise, sans pastilles ni données personnelles)
 TYPE_DT = 0.09  # une touche toutes les 90 ms (tools/sfx.py génère le bruit de clavier sur la même cadence)
 S7_Q = [  # texte tapé, début de la frappe (s, scène), adresse affichée par le navigateur, image, taille
