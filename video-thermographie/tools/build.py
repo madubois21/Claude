@@ -453,10 +453,14 @@ P0 = {  # titre d'ouverture (taille du corps, texte : | = retour ligne, *mot* = 
     "9x16": dict(size=74, text="Le contrôle|*thermographique*|appliqué aux|installations|photovoltaïques"),
     "1x1": dict(size=60, text="Le contrôle|*thermographique* appliqué|aux installations|photovoltaïques"),
 }[FMT]
-P2 = {  # installation au centre : échelle du champ, ellipse des pictogrammes (rayons), rayon d'une pastille, corps des légendes
-    "16x9": dict(s=0.6, rx=700, ry=330, r=62, lf=30),
-    "9x16": dict(s=0.415, rx=400, ry=650, r=60, lf=32),
-    "1x1": dict(s=0.4, rx=410, ry=330, r=50, lf=28),
+P2 = {  # installation au centre : échelle du champ, ellipse de l'orbite (rayons), rayon d'une pastille, corps des légendes,
+    #   angles de départ (degrés, sens horaire depuis la droite), angle parcouru pendant la scène, angle d'arrivée en spirale,
+    #   angle de sortie, excentricité apparente (accélération au passage devant), profondeur (pastille plus grande devant).
+    # Les ellipses et les arcs sont choisis pour qu'aucune légende ne passe sur l'installation ni ne sorte du cadre :
+    # tour complet en 16:9 ; en 9:16 et 1:1, trois pictogrammes sur l'arc du haut et trois sur l'arc du bas.
+    "16x9": dict(s=0.52, rx=760, ry=405, r=56, lf=31, a0=(-90, -30, 30, 90, 150, 210), sweep=80, ain=-100, aout=45, ecc=0.15, dep=0.08),
+    "9x16": dict(s=0.42, rx=350, ry=660, r=54, lf=32, a0=(-158, -104, -50, 22, 76, 130), sweep=36, ain=-40, aout=12, ecc=0.0, dep=0.06),
+    "1x1": dict(s=0.38, rx=380, ry=360, r=46, lf=30, a0=(-146, -103, -60, 32, 75, 118), sweep=28, ain=-40, aout=12, ecc=0.0, dep=0.06),
 }[FMT]
 P6 = {  # plateforme en ligne : titre (gauche, haut, corps), fenêtre à l'écran (x, y, l, h), volets en coordonnées fenêtre
     "16x9": dict(title=(120, 50, 48), text="Suivez votre installation|sur notre *plateforme en ligne*.",
@@ -475,13 +479,10 @@ P7 = {  # « Retrouvez-nous sur… » : titre (haut, corps), barre (largeur, hau
     "9x16": dict(head=(770, 62), bar=(960, 110, 960, 590), res=(705, 1000, 640), chrome=50, fs=42),
     "1x1": dict(head=(400, 50), bar=(900, 84, 540, 205), res=(277, 1000, 600), chrome=40, fs=34),
 }[FMT]
-P8 = {  # carton final : échelle et haut du logo (position finale), slogan (haut, corps), coordonnées (haut, corps)
-    "16x9": dict(s=0.72, y=234, slogan=(604, 56), contacts=(806, 32),
-                 text="Inspections techniques aériennes,|*révélez l’invisible*."),
-    "9x16": dict(s=0.7, y=607, slogan=(978, 60), contacts=(1270, 34),
-                 text="Inspections techniques|aériennes,|*révélez l’invisible*."),
-    "1x1": dict(s=0.6, y=250, slogan=(558, 50), contacts=(795, 30),
-                text="Inspections techniques|aériennes,|*révélez l’invisible*."),
+P8 = {  # carton final : échelle et haut du logo (position finale), slogan (haut, corps) — ensemble centré dans le cadre
+    "16x9": dict(s=0.72, y=289, slogan=(659, 56), text="Inspections techniques aériennes,|*révélez l’invisible*."),
+    "9x16": dict(s=0.7, y=668, slogan=(1039, 60), text="Inspections techniques|aériennes,|*révélez l’invisible*."),
+    "1x1": dict(s=0.6, y=297, slogan=(605, 50), text="Inspections techniques|aériennes,|*révélez l’invisible*."),
 }[FMT]
 LOGO_S = P8["s"]
 LOGO_X = (W - 1270 * LOGO_S) / 2
@@ -697,15 +698,14 @@ if L:  # caméra de la scène 3 : cadre vertical / carré qui suit le drone
     S3_VB1 = (_cx1, _cy, _cvw, _cvw * H / W)
 else:
     S3_VB0 = S3_VB1 = (0, 0, W, H)
-S2_PICTOS = [  # légende, icône Phosphor (assets/icons-phosphor.json), angle de départ (degrés, sens horaire depuis la droite)
-    ("Perte de rendement", "trend-down", -90),
-    ("Échauffement", "thermometer-hot", -45),
-    ("Défaut électrique", "lightning", 45),
-    ("Risque incendie", "fire", 90),
-    ("Garantie", "seal-check", 135),
-    ("Assurance", "shield-check", -135),
+S2_PICTOS = [  # légende, icône Phosphor (assets/icons-phosphor.json), dans l'ordre d'apparition (sens horaire)
+    ("Perte de rendement", "trend-down"),
+    ("Échauffement", "thermometer-hot"),
+    ("Défaut électrique", "lightning"),
+    ("Risque incendie", "fire"),
+    ("Garantie", "seal-check"),
+    ("Assurance", "shield-check"),
 ]
-S2_ROT = 22  # degrés parcourus par les pictogrammes pendant la scène
 QUESTION = "Comment détecter|ces *anomalies* ?"  # raccord S2 -> S3 : même place, même texte
 
 
@@ -733,11 +733,10 @@ def question_html(sid):
 def build_s2():
     r, lf = P2["r"], P2["lf"]
     pictos = []
-    for i, (label, icon, ang) in enumerate(S2_PICTOS):
-        above = ang < 0  # moitié haute : légende au-dessus, moitié basse : en dessous (jamais sur l'installation)
-        lab = f"bottom: {n(r + 14)}px" if above else f"top: {n(r + 14)}px"
+    for i, (label, icon) in enumerate(S2_PICTOS):
+        lab = f"top: {n(r + 12)}px"  # légende sous la pastille
         pictos.append(
-            f'<div id="s2-k{i}" class="pk"><div class="pk-in">'
+            f'<div id="s2-k{i}" class="pk" data-layout-allow-overflow><div class="pk-in">'
             f'<div class="pk-c" style="left: {-r}px; top: {-r}px; width: {2 * r}px; height: {2 * r}px">'
             f'<svg viewBox="0 0 256 256" width="{n(r * 1.06)}" height="{n(r * 1.06)}"><path d="{ICONS[icon]}" fill="{ACC}"/></svg></div>'
             f'<div class="pk-l" style="{lab}; font-size: {lf}px">{label}</div></div></div>')
@@ -752,6 +751,7 @@ def build_s2():
     css = f"""
     #root .pk {{ position: absolute; left: 0; top: 0; width: 0; height: 0; }}
     #root .pk-in {{ position: absolute; left: 0; top: 0; width: 0; height: 0; transform-origin: 0 0; opacity: 0; }}
+    #root .pk-l {{ opacity: 0; }}
     #root .pk-c {{ position: absolute; box-sizing: border-box; border-radius: 50%; background: #FFFFFF; border: 2.5px solid #111111; display: flex; align-items: center; justify-content: center; }}
     #root .pk-l {{ position: absolute; left: -260px; width: 520px; text-align: center; font-family: "Comfortaa", sans-serif; font-weight: 700; line-height: 1.2; color: #111111; white-space: nowrap; }}
     #root .s2-pfill, #root .s2-cells, #root #s2-orbit {{ opacity: 0; }}"""
@@ -766,25 +766,39 @@ def build_s2():
       const orbit = $("#s2-orbit");
       fadeIn(0.55, orbit, 0.6);
       tl.fromTo(orbit, {{ attr: {{ "stroke-dashoffset": 0 }} }}, {{ attr: {{ "stroke-dashoffset": -160 }}, duration: 6.6, ease: "none" }}, 0);
+      // orbite : angle = départ + rotation lente + arrivée en spirale + sortie ; un peu plus vite quand le pictogramme
+      // passe devant (bas de l'ellipse), un peu plus grand aussi (profondeur)
       const CX = {n(W / 2)}, CY = {n(H / 2)}, RX = {P2["rx"]}, RY = {P2["ry"]};
-      const A0 = {[a for _, _, a in S2_PICTOS]};
+      const A0 = {list(P2["a0"])}, SWEEP = {P2["sweep"]}, AIN = {P2["ain"]}, AOUT = {P2["aout"]}, ECC = {P2["ecc"]}, DEP = {P2["dep"]};
       const K = $$(".pk");
       K.forEach((el, i) => {{ const v = txt("s2-k" + i, ""); if (v) el.querySelector(".pk-l").textContent = v; }});
-      const st = K.map(() => ({{ a: 0, rf: 1.3 }}));
+      const G = {{ p: 0 }};
+      const st = K.map(() => ({{ ea: 0, er: 0, xa: 0, xr: 0 }}));
+      const D = Math.PI / 180;
       const place = (i) => {{
-        const a = ((A0[i] + st[i].a) * Math.PI) / 180, rf = st[i].rf;
-        K[i].style.transform = "translate(" + (CX + RX * rf * Math.cos(a)).toFixed(2) + "px, " + (CY + RY * rf * Math.sin(a)).toFixed(2) + "px)";
+        const s_ = st[i];
+        const lin = A0[i] + SWEEP * G.p + AIN * (1 - s_.ea) + AOUT * s_.xa;
+        const th = (lin + (ECC / D) * Math.sin(lin * D - Math.PI / 2)) * D;
+        const rf = 1 + 1.3 * (1 - s_.er) + 1.1 * s_.xr;
+        const k = 1 + DEP * Math.sin(th);
+        K[i].style.transform = "translate(" + (CX + RX * rf * Math.cos(th)).toFixed(2) + "px, " + (CY + RY * rf * Math.sin(th)).toFixed(2) + "px) scale(" + k.toFixed(4) + ")";
       }};
+      const placeAll = () => K.forEach((el, i) => place(i));
+      placeAll();
+      tl.fromTo(G, {{ p: 0 }}, {{ p: 1, duration: 6.6, ease: "none", onUpdate: placeAll }}, 0);
       K.forEach((el, i) => {{
-        place(i);
-        const pin = el.querySelector(".pk-in");
-        const t = 0.9 + i * 0.4;
-        tl.fromTo(st[i], {{ a: 0 }}, {{ a: {S2_ROT}, duration: 6.6, ease: "none", onUpdate: () => place(i) }}, 0);
-        tl.fromTo(st[i], {{ rf: 1.3 }}, {{ rf: 1, duration: 0.7, ease: "power3.out", onUpdate: () => place(i), immediateRender: false }}, t);
-        tl.fromTo(pin, {{ opacity: 0, scale: 0.4, filter: "blur(6px)" }}, {{ opacity: 1, scale: 1, filter: "blur(0px)", duration: 0.45, ease: "back.out(1.7)" }}, t);
-        // 3. les pictogrammes s'éloignent et disparaissent
-        tl.to(st[i], {{ rf: 1.22, duration: 0.4, ease: "power2.in", onUpdate: () => place(i) }}, 5.2 + i * 0.05);
-        tl.to(pin, {{ opacity: 0, scale: 0.7, filter: "blur(6px)", duration: 0.35, ease: "power2.in" }}, 5.2 + i * 0.05);
+        const pin = el.querySelector(".pk-in"), lab = el.querySelector(".pk-l");
+        const t = 0.7 + i * 0.32, tx = 5.05 + i * 0.05;
+        // 2a. capture : le pictogramme arrive de loin en spirale et se place sur l'orbite
+        tl.fromTo(st[i], {{ ea: 0 }}, {{ ea: 1, duration: 1.2, ease: "power2.out", onUpdate: () => place(i), immediateRender: false }}, t);
+        tl.fromTo(st[i], {{ er: 0 }}, {{ er: 1, duration: 1.2, ease: "power3.out", onUpdate: () => place(i), immediateRender: false }}, t);
+        tl.fromTo(pin, {{ opacity: 0, scale: 0.55 }}, {{ opacity: 1, scale: 1, duration: 0.7, ease: "power2.out" }}, t);
+        fadeIn(t + 0.75, lab, 0.3);
+        // 3. échappement : la légende s'efface, le pictogramme repart en s'éloignant de plus en plus vite
+        fadeOut(tx, lab, 0.15);
+        tl.fromTo(st[i], {{ xa: 0 }}, {{ xa: 1, duration: 0.6, ease: "power2.in", onUpdate: () => place(i), immediateRender: false }}, tx);
+        tl.fromTo(st[i], {{ xr: 0 }}, {{ xr: 1, duration: 0.6, ease: "power2.in", onUpdate: () => place(i), immediateRender: false }}, tx);
+        tl.to(pin, {{ opacity: 0, scale: 0.8, duration: 0.45, ease: "power2.in" }}, tx + 0.12);
       }});
       fadeOut(5.2, orbit, 0.4);
       // 4. la caméra se rapproche : l'installation prend la place du survol (scène 3), la question s'affiche
@@ -794,7 +808,7 @@ def build_s2():
         "s2",
         "Scène 2 — Les enjeux : installation au centre, pictogrammes en orbite",
         [svar("s3-q", "Scènes 2-3 — question (| = retour ligne, *mot* = orange)", QUESTION)]
-        + [svar(f"s2-k{i}", f"Scène 2 — pictogramme {i + 1}", lab) for i, (lab, _, _) in enumerate(S2_PICTOS)],
+        + [svar(f"s2-k{i}", f"Scène 2 — pictogramme {i + 1}", lab) for i, (lab, _) in enumerate(S2_PICTOS)],
         css,
         body,
         js,
@@ -1687,16 +1701,9 @@ def build_s6():
         return fx + (x - FX0) * fs_, fy + (y - FY0) * fs_
 
     k_ = fs_ / 0.47
-    road_y = fy + FH_ * fs_ + (my + mh - fy - FH_ * fs_) * 0.52
     terrain = [
-        f'<rect x="{n(mx)}" y="{n(road_y - 22 * k_)}" width="{n(mw)}" height="{n(44 * k_)}" fill="#FFFFFF"/>',
-        f'<g stroke="#D4D4D8" stroke-width="1.5"><line x1="{n(mx)}" y1="{n(road_y - 22 * k_)}" x2="{n(mx + mw)}" y2="{n(road_y - 22 * k_)}"/>'
-        f'<line x1="{n(mx)}" y1="{n(road_y + 22 * k_)}" x2="{n(mx + mw)}" y2="{n(road_y + 22 * k_)}"/></g>',
-        f'<line x1="{n(mx)}" y1="{n(road_y)}" x2="{n(mx + mw)}" y2="{n(road_y)}" stroke="#D4D4D8" stroke-width="2" stroke-dasharray="14 12"/>',
         f'<rect x="{n(fx - 26 * k_)}" y="{n(fy - 26 * k_)}" width="{n(FW_ * fs_ + 52 * k_)}" height="{n(FH_ * fs_ + 52 * k_)}" rx="6" fill="#ECECEE" stroke="#D4D4D8" stroke-width="1.5" stroke-dasharray="6 6"/>',
     ]
-    stalls = "".join(f'M{n(mx + mw * 0.52 + j * 30 * k_)} {n(road_y + 30 * k_)}v{n(40 * k_)}' for j in range(int(mw * 0.36 / (30 * k_)) + 1))
-    terrain.append(f'<path d="{stalls}" stroke="#D4D4D8" stroke-width="1.5"/>')
     for j, (u, v, rr) in enumerate(((0.07, 0.12, 26), (0.15, 0.2, 18), (0.9, 0.1, 22), (0.95, 0.24, 16), (0.06, 0.78, 20), (0.93, 0.8, 24), (0.85, 0.9, 15))):
         terrain.append(f'<circle cx="{n(mx + u * mw)}" cy="{n(my + v * mh)}" r="{n(rr * k_)}" fill="#E4E4E7" stroke="#C9CBD1" stroke-width="1.5"/>')
     mods = []
@@ -1925,7 +1932,6 @@ S8_DUR = 8.4
 
 def build_s8():
     lift = LOGO_Y0 - LOGO_Y
-    ct, cs = P8["contacts"]
     st_, ss_ = P8["slogan"]
     body = f"""    <svg class="world" viewBox="0 0 {W} {H}" width="{W}" height="{H}"{CANVAS}>
       <defs>
@@ -1954,23 +1960,12 @@ def build_s8():
       </g>
       </g>
     </svg>
-    <div id="s8-slogan" class="title cta1"></div>
-    <div id="s8-contact" class="cta3"></div>"""
+    <div id="s8-slogan" class="title cta1"></div>"""
     css = f"""
     #root .cta1 {{ left: 0; width: {W}px; top: {st_}px; text-align: center; font-size: {ss_}px; line-height: 1.18; }}
-    #root .cta3 {{ position: absolute; left: 0; width: {W}px; top: {ct}px; text-align: center; font-family: "Comfortaa", sans-serif; font-weight: 600; font-size: {cs}px; color: #3F3F46; display: flex; justify-content: center; align-items: center; }}
-    #root .cta3 .sq {{ display: inline-block; width: 10px; height: 10px; background: #FF5700; margin: 0 24px; }}
     #root #s8-lscan, #root #s8-ballr, #root #s8-balll {{ opacity: 0; }}"""
     js = f"""
       const slogan = words($("#s8-slogan"), txt("s8-slogan", "{P8["text"]}"));
-      const contact = txt("s8-contact", "06 22 80 57 69|contact@flyscanair.com");
-      const cEl = $("#s8-contact");
-      cEl.textContent = "";
-      const parts = [];
-      contact.split("|").forEach((part, i) => {{
-        if (i) {{ const q = document.createElement("i"); q.className = "sq"; cEl.appendChild(q); parts.push(q); }}
-        const sp = document.createElement("span"); sp.textContent = part.trim(); cEl.appendChild(sp); parts.push(sp);
-      }});
       const lift = $("#s8-lift");
       tl.set(lift, {{ y: {n(lift)} }}, 0);
       // 1. le trajet du drone : la bille de départ, puis le serpentin se trace (bruit de drone)
@@ -1982,18 +1977,16 @@ def build_s8():
       tl.fromTo($("#s8-lscan"), {{ x: 120 }}, {{ x: 1230, duration: 0.85, ease: "power1.inOut" }}, 2.4);
       tl.fromTo($("#s8-wordclip"), {{ attr: {{ width: 0 }} }}, {{ attr: {{ width: 1110 }}, duration: 0.85, ease: "power1.inOut" }}, 2.4);
       tl.to($("#s8-lscan"), {{ opacity: 0, duration: 0.15 }}, 3.2);
-      // 3. le logo remonte en douceur ; le slogan puis les coordonnées s'installent dessous
+      // 3. le logo remonte en douceur ; le slogan s'installe dessous
       tl.to(lift, {{ y: 0, duration: 0.85, ease: "power2.inOut" }}, 3.6);
       blurIn(4.25, slogan, 0.16, 0.07);
-      blurIn(4.95, parts, 0.2, 0.08);
-      // 4. fin : logo, slogan et coordonnées restent affichés jusqu'à la dernière image
+      // 4. fin : logo et slogan restent affichés jusqu'à la dernière image
       tl.set({{}}, {{}}, {n(S8_DUR)});"""
     write_scene(
         "s8",
-        "Scène 8 — Logo, slogan et coordonnées",
+        "Scène 8 — Logo et slogan",
         [
             svar("s8-slogan", "Scène 8 — slogan (| = retour ligne, *mots* = orange)", P8["text"]),
-            svar("s8-contact", "Scène 8 — coordonnées (| sépare les éléments)", "06 22 80 57 69|contact@flyscanair.com"),
         ],
         css,
         body,
@@ -2026,7 +2019,7 @@ SFX = [
     ("sfx-page2", "whoosh-high.mp3", T_["s5"] + 8.2, 0.18),
     ("sfx-page3", "whoosh-high.mp3", T_["s5"] + 11.75, 0.18),
     ("sfx-stamp", "pop.mp3", T_["s5"] + 12.88, 0.45),
-    *[(f"sfx-check{i + 1}", f"validation-{i + 1}.wav", T_["s5"] + t + 0.1, 0.5) for i, t in enumerate(S5_CHECKS)],
+    *[(f"sfx-check{i + 1}", f"validation-{i + 1}.wav", T_["s5"] + t + 0.1, 0.2) for i, t in enumerate(S5_CHECKS)],
     ("sfx-link", "click-soft.mp3", T_["s5"] + 15.25, 0.75),
     ("sfx-open", "whoosh-short.mp3", T_["s5"] + 15.7, 0.3),
     ("sfx-row1", "click-soft.mp3", T_["s6"] + 2.25, 0.75),
@@ -2038,7 +2031,7 @@ SFX = [
     ("sfx-type2", "typing-12.wav", T_["s7"] + S7_Q[1][1], 0.75),
     ("sfx-enter2", "key-enter.wav", T_["s7"] + 7.3, 0.8),
     ("sfx-res2", "whoosh-short.mp3", T_["s7"] + 7.5, 0.22),
-    ("sfx-buzz", "drone-buzz.wav", T_["s8"] + 0.05, 0.5),
+    ("sfx-buzz", "drone-buzz.wav", T_["s8"] + 0.05, 0.22),
     ("sfx-logo", "impact-bass-1.mp3", T_["s8"] + 2.45, 0.22),
     ("sfx-lift", "whoosh-low.mp3", T_["s8"] + 3.75, 0.18),
 ]

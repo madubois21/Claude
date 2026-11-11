@@ -6,9 +6,9 @@
   typing.mp3 (11 touches différentes, jouées dans un ordre qui ne se répète pas) ; barre d'espace plus grave ;
 - key-enter.wav : touche Entrée (la frappe la plus franche de l'enregistrement, un peu plus grave) ;
 - validation-1.wav … validation-4.wav : son de validation des cases cochées du rapport (deux notes montantes,
-  timbre doux de type marimba, un cran plus haut à chaque case : sol – la – si – ré, dans la tonalité de la musique) ;
-- drone-buzz.wav : bourdonnement d'un drone quadrirotor (4 rotors légèrement désaccordés, sifflement des moteurs,
-  souffle), qui traverse l'image de gauche à droite pendant le tracé du serpentin du logo.
+  discrètes, un cran plus haut à chaque case : sol – la – si – ré, dans la tonalité de la musique) ;
+- drone-buzz.wav : bourdonnement feutré d'un drone quadrirotor (4 rotors légèrement désaccordés, souffle), qui
+  traverse l'image de gauche à droite pendant le tracé du serpentin du logo.
 Les instants des pics sont inscrits dans peaks.json (lu par tools/build.py pour caler chaque son sur l'image).
 
     python3 tools/sfx.py
@@ -114,21 +114,20 @@ def mtof(m):
 
 
 def validation():
-    """Deux notes montantes, attaque nette et extinction rapide (≈ 0,4 s) : « c'est validé »."""
+    """Deux notes montantes, discrètes : attaque douce, extinction rapide (≈ 0,3 s), sans harmonique brillant."""
     peaks = {}
     for k, (a, b) in enumerate(((79, 86), (81, 88), (83, 90), (86, 91)), start=1):  # sol5-ré6, la5-mi6, si5-fa#6, ré6-sol6
         n = int(0.6 * SR)
         t = np.arange(n) / SR
         out = np.zeros(n)
-        for m, t0, g in ((a, 0.0, 0.75), (b, 0.075, 1.0)):
+        for m, t0, g in ((a, 0.0, 0.8), (b, 0.07, 0.7)):
             tt = np.clip(t - t0, 0, None)
             on = t >= t0
             f = mtof(m)
-            tone = (np.sin(2 * np.pi * f * tt) + 0.22 * np.sin(2 * np.pi * 4 * f * tt) * np.exp(-tt / 0.03)
-                    + 0.08 * np.sin(2 * np.pi * 2 * f * tt))
-            e = np.exp(-tt / 0.13) * np.minimum(1, tt / 0.002)
+            tone = np.sin(2 * np.pi * f * tt) + 0.06 * np.sin(2 * np.pi * 2 * f * tt)  # timbre doux, sans harmonique brillant
+            e = np.exp(-tt / 0.09) * np.minimum(1, tt / 0.004)
             out += np.where(on, tone * e * g, 0)
-        out = soften(out, 7000)
+        out = soften(out, 3500)
         st = np.stack([out, out], axis=1)
         st *= 0.7 / np.max(np.abs(st))
         name = f"validation-{k}.wav"
@@ -147,12 +146,12 @@ def drone(dur=2.75):
     out = np.zeros(n)
     for det, ph in ((1.0, 0.0), (1.013, 1.1), (0.988, 2.3), (1.021, 3.7)):  # quatre rotors
         phase = 2 * np.pi * np.cumsum(f0 * det) / SR + ph
-        rotor = sum(np.sin(k * phase + 0.4 * k) / k ** 1.15 for k in range(1, 14))
-        out += rotor * (1 + 0.18 * np.sin(2 * np.pi * (10.5 + det) * t + ph))
-    whine = np.sin(2 * np.pi * np.cumsum(f0 * 8.2) / SR) * 0.07  # moteurs
+        rotor = sum(np.sin(k * phase + 0.4 * k) / k ** 1.7 for k in range(1, 9))  # bourdonnement feutré
+        out += rotor * (1 + 0.12 * np.sin(2 * np.pi * (10.5 + det) * t + ph))
+    whine = np.sin(2 * np.pi * np.cumsum(f0 * 8.2) / SR) * 0.015  # moteurs, à peine
     noise = rng.standard_normal(n)
-    wash = soften(noise - soften(noise, 300), 2600) * 0.5
-    sig = soften(out * 0.22 + whine + wash, 4200)
+    wash = soften(noise - soften(noise, 250), 1800) * 0.35
+    sig = soften(soften(out * 0.22 + whine + wash, 2000), 2000)
     e = np.minimum(1, t / 0.35) * np.minimum(1, (dur - t) / 0.6) ** 1.5
     sig *= e
     pan = -0.65 + 1.3 * x  # traverse l'image de gauche à droite, comme le serpentin
