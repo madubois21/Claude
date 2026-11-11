@@ -6,6 +6,8 @@
   scène 6 (48,0 – 50,9 s) ; la musique s'atténue dessous comme pour les autres phrases. L'ancienne phrase 08
   (« Bientôt… ») est gardée sous `raw_08_bientot.wav`.
 - Bruitage du drone pendant le tracé du serpentin : 0,3 au lieu de 0,22 (+2,7 dB).
+- Rendus (trois formats) : 74,4 s ; −17,8 LUFS intégré, crête vraie −2,3 dBTP ; phrase 08 dans le mix −17,5 LUFS pour
+  −17,6 LUFS seule ; `hyperframes check` : 0 erreur, 0 avertissement sur les trois formats.
 
 ## Passage 18 — capture du site plus nette
 - Nouvelle capture du site fournie, recadrée sur la page web seule (sans onglets, barre d'adresse, favoris, barre de
