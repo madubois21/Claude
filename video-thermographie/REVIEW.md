@@ -1,5 +1,10 @@
 # REVIEW
 
+## Passage 18 — capture du site plus nette
+- Nouvelle capture du site fournie, recadrée sur la page web seule (sans onglets, barre d'adresse, favoris, barre de
+  défilement ni barre des tâches) : 1989 × 993 px au lieu de 1360 × 649, image plus nette dans le navigateur de la
+  scène 7.
+
 ## Passage 17 — anomalies réalistes sur la plateforme en ligne
 - Carte : l'installation est affichée en vue thermique (comme après le scan du drone), chaque anomalie avec sa vraie
   signature (point chaud de la cellule fissurée, sous-chaîne de la diode by-pass, boîte de jonction, module à vide,
