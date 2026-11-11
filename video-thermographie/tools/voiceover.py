@@ -28,8 +28,8 @@ SR = 48000
 
 # (id, run FLORA, début absolu (s), pause interne max (s), tempo, texte)
 # Placement calé sur l'image (version 13) : S0 titre 0–3,6 · S1 3,6–10,8 · S2 10,8–17,4 · S3 17,4–24,0 · S4 24,0–31,2 ·
-# S5 31,2–46,8 · S6 plateforme 46,8–55,8 · S7 recherche 55,8–66,0 · S8 logo 66,0–74,4.
-# Pas de voix sur le titre, la plateforme, la recherche et le logo (phrases 08 à 10 retirées : à réécrire plus tard).
+# S5 31,2–47,4 · S6 plateforme 47,4–55,8 · S7 recherche 55,8–66,0 · S8 logo 66,0–74,4.
+# Pas de voix sur le titre, la recherche et le logo ; phrase 08 (plateforme) régénérée au passage 19.
 LINES = [
     ("01", "m170bcwv0qx4nt99xpssgpz26d8hhbf6", 4.50, 0.30, 1.00,
      "Sur une toiture solaire, certains défauts restent totalement invisibles à l'œil nu."),
@@ -45,9 +45,11 @@ LINES = [
      "classé par niveau de gravité, avec l'action à mener."),
     ("07", "m179b0j2z3xd0b1gqx84jdhe458hhav1", 43.05, 0.24, 1.04,
      "Un rapport aux normes, utile aussi auprès de votre assureur."),
+    ("08", "m173wbh6gymqash7mnpm227yzd8j0xxs", 47.70, 0.24, 1.00,
+     "Sur votre plateforme en ligne, chaque anomalie est localisée sur la carte, en thermique comme en visible."),
 ]
 GAP = 0.15  # silence minimal entre deux phrases
-END = 46.8  # la dernière phrase se termine avec la scène du rapport
+END = 55.6  # la dernière phrase (plateforme) se termine avant la recherche
 
 
 def ff(*args, capture=False):

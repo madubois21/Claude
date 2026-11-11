@@ -2077,7 +2077,7 @@ SFX = [
     ("sfx-type2", "typing-12.wav", T_["s7"] + S7_Q[1][1], 0.75),
     ("sfx-enter2", "key-enter.wav", T_["s7"] + 7.3, 0.8),
     ("sfx-res2", "whoosh-short.mp3", T_["s7"] + 7.5, 0.22),
-    ("sfx-buzz", "drone-buzz.wav", T_["s8"] + 0.05, 0.22),
+    ("sfx-buzz", "drone-buzz.wav", T_["s8"] + 0.05, 0.3),
     ("sfx-logo", "impact-bass-1.mp3", T_["s8"] + 2.45, 0.22),
     ("sfx-lift", "whoosh-low.mp3", T_["s8"] + 3.75, 0.18),
 ]
