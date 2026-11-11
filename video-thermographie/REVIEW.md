@@ -28,6 +28,8 @@
   apparaît au centre (balayage), le logo remonte, slogan « Inspections techniques aériennes, *révélez l'invisible*. »
   (« révélez l'invisible » entièrement en orange) puis téléphone et e-mail ; tenue ≈ 3,5 s jusqu'à la dernière image.
 - Voix : phrases 01 à 07 recalées ; 08 à 10 retirées (pas de voix sur la plateforme, la recherche et le logo).
+- Rendus (trois formats) : 74,4 s, 30 i/s ; −16,7 LUFS intégré, crête vraie −2,6 dBTP ; `hyperframes check` : 0 erreur,
+  0 avertissement sur les trois formats ; images clés relues (raccord S2 → S3 au pixel près, plateforme, recherche, logo).
 - Musique redécoupée pour 74,4 s : intro sur le titre et la maison, groove plus léger pendant la recherche (et musique à
   0,5 pendant la frappe), courte montée, respiration (nappe seule) pendant le tracé du serpentin, retombée quand le nom
   apparaît, accord final à 72 s.
