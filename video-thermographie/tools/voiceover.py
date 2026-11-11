@@ -45,8 +45,8 @@ LINES = [
      "classé par niveau de gravité, avec l'action à mener."),
     ("07", "m179b0j2z3xd0b1gqx84jdhe458hhav1", 43.05, 0.24, 1.04,
      "Un rapport aux normes, utile aussi auprès de votre assureur."),
-    ("08", "m173wbh6gymqash7mnpm227yzd8j0xxs", 47.70, 0.24, 1.00,
-     "Sur votre plateforme en ligne, chaque anomalie est localisée sur la carte, en thermique comme en visible."),
+    ("08", "m17a6931474b0qd1bbcsee5y3n8j1yv2", 48.00, 0.24, 1.00,
+     "Suivez votre installation sur notre plateforme en ligne."),
 ]
 GAP = 0.15  # silence minimal entre deux phrases
 END = 55.6  # la dernière phrase (plateforme) se termine avant la recherche
