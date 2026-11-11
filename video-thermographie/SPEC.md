@@ -2,6 +2,8 @@
 
 Source : `Cahier_des_charges.pdf` (structure en 6 scènes, textes S1 et S2 imposés).
 Choix validés avec le client : pas de voix off ; musique originale composée ; 16:9 seul pour ce premier passage.
+Passage 15 : pictogrammes en orbite « gravitationnelle » (capture en spirale, profondeur, échappement) ; fin sur le logo
+et le slogan seuls (sans téléphone ni e-mail) ; carte de la plateforme sans route ; sons de validation et de drone plus discrets.
 Passage 14 : cases du rapport cochées plus lentement (son de validation), souris après la dernière case ; plateforme
 avec la carte à gauche, la liste et les vues IR/RVB à droite, sans bâtiment ; vraie frappe au clavier ; axe X du graphique
 au-dessus des barres.

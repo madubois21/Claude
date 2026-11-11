@@ -1,5 +1,18 @@
 # REVIEW
 
+## Passage 15 — orbite gravitationnelle, fin sans coordonnées, carte sans route, sons plus discrets
+- S2 : les pictogrammes sont « capturés » : chacun arrive de l'extérieur du cadre en spirale, se place sur l'orbite,
+  tourne autour de l'installation (un peu plus vite et un peu plus grand en passant devant, pour la profondeur), puis
+  s'échappe en s'éloignant de plus en plus vite. Tour complet en 16:9 (80° parcourus pendant la scène) ; en 9:16 et
+  1:1, trois pictogrammes sur l'arc du haut et trois sur l'arc du bas (un tour complet ferait passer les légendes sur
+  l'installation ou hors du cadre). Les légendes apparaissent en fin de spirale et s'effacent avant l'échappement ;
+  trajectoires vérifiées par simulation image par image : aucune légende sur l'installation, hors du cadre ou sur une
+  autre (écart minimal 25 px en 1:1, 85 px en 9:16, 170 px en 16:9).
+- S8 : téléphone et e-mail retirés ; logo et slogan recentrés dans le cadre.
+- S6 : la route (et le parking qui la longeait) est retirée de la carte.
+- Sons : validation des cases plus douce (sans harmonique brillant, extinction plus courte) et plus basse (0,2 au lieu
+  de 0,5) ; bourdonnement du drone feutré (moins d'harmoniques, filtré plus bas) et plus bas (0,22 au lieu de 0,5).
+
 ## Passage 14 — coches, son de validation, plateforme inversée, clavier, axe du graphique
 - S5 page 3 : les quatre cases se cochent toutes les 0,36 s (au lieu de 0,25 s), chacune avec un son de validation
   (deux notes montantes, timbre doux, un cran plus haut à chaque case : sol – la – si – ré, dans la tonalité de la
