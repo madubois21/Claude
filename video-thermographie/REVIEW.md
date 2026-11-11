@@ -1,5 +1,15 @@
 # REVIEW
 
+## Passage 17 — anomalies réalistes sur la plateforme en ligne
+- Carte : l'installation est affichée en vue thermique (comme après le scan du drone), chaque anomalie avec sa vraie
+  signature (point chaud de la cellule fissurée, sous-chaîne de la diode by-pass, boîte de jonction, module à vide,
+  cellules échauffées, points chauds isolés) et un cadre de détection à la couleur de sa gravité, à la place des
+  pastilles ; bascule « IR | RVB » (IR actif) ; l'anomalie sélectionnée est cerclée d'orange, son cadre pulse.
+- Vue IR du module sélectionné plus grande, avec un réticule et la température maximale sur le point le plus chaud
+  (58,0 °C, 49,0 °C) et une échelle des températures (de MaxT − ΔT − 2 à MaxT), comme dans un logiciel de
+  thermographie ; vue RVB : le même cadre en pointillé, sur un module où rien ne se voit.
+- En-tête du détail sur une seule ligne dans les formats larges (vues plus hautes) ; en 1:1, échelle horizontale.
+
 ## Passage 16 — musique en fond, site sans zoom, page LinkedIn plus fidèle
 - Musique : 0,5 (−6 dB) sur toute la vidéo au lieu de 0,85, et 0,15 (−16,5 dB) sous la voix au lieu de 0,28 ; 0,3
   pendant la frappe au clavier. La voix passe nettement au premier plan.
