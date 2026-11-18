@@ -3,21 +3,21 @@
   "id": "01",
   "file": "assets/audio/vo/vo_01.wav",
   "start": 4.5,
-  "dur": 4.71,
+  "dur": 4.36,
   "tempo": 1.0,
-  "raw": 5.24,
+  "raw": 4.51,
   "speech": [
    [
     4.54,
-    5.95
+    5.76
    ],
    [
-    6.18,
-    7.44
+    5.97,
+    7.04
    ],
    [
-    7.58,
-    9.11
+    7.17,
+    8.76
    ]
   ],
   "text": "Sur une toiture solaire, certains défauts restent totalement invisibles à l'œil nu."
@@ -26,25 +26,25 @@
   "id": "02",
   "file": "assets/audio/vo/vo_02.wav",
   "start": 10.5,
-  "dur": 5.66,
+  "dur": 5.36,
   "tempo": 1.0,
-  "raw": 6.28,
+  "raw": 5.785,
   "speech": [
    [
     10.54,
-    11.05
+    10.94
    ],
    [
-    11.17,
-    12.52
+    11.23,
+    12.41
    ],
    [
-    12.82,
-    14.38
+    12.66,
+    14.08
    ],
    [
-    14.55,
-    16.06
+    14.27,
+    15.76
    ]
   ],
   "text": "Pourtant, ils font baisser le rendement, augmentent le risque d'incendie et fragilisent votre garantie."
@@ -53,25 +53,21 @@
   "id": "03",
   "file": "assets/audio/vo/vo_03.wav",
   "start": 17.8,
-  "dur": 6.03,
+  "dur": 5.35,
   "tempo": 1.0,
-  "raw": 6.56,
+  "raw": 5.75,
   "speech": [
    [
     17.84,
-    18.72
+    18.55
    ],
    [
-    18.87,
-    20.78
+    18.68,
+    20.32
    ],
    [
-    21.04,
-    22.19
-   ],
-   [
-    22.36,
-    23.73
+    20.61,
+    23.05
    ]
   ],
   "text": "Notre drone, équipé d'une caméra infrarouge, survole vos panneaux et révèle chaque échauffement."
@@ -80,29 +76,25 @@
   "id": "04",
   "file": "assets/audio/vo/vo_04.wav",
   "start": 24.25,
-  "dur": 6.475,
-  "tempo": 1.03,
-  "raw": 7.6,
+  "dur": 6.04,
+  "tempo": 1.0,
+  "raw": 6.4,
   "speech": [
    [
-    24.289,
-    24.949
+    24.29,
+    24.93
    ],
    [
-    25.182,
-    27.036
+    25.11,
+    26.57
    ],
    [
-    27.269,
-    28.93
+    26.87,
+    28.29
    ],
    [
-    29.163,
-    29.92
-   ],
-   [
-    30.036,
-    30.619
+    28.59,
+    30.19
    ]
   ],
   "text": "Points chauds, diodes by-pass défectueuses, boîtes de jonction en surchauffe : chaque anomalie est localisée."
@@ -111,17 +103,17 @@
   "id": "05",
   "file": "assets/audio/vo/vo_05.wav",
   "start": 33.6,
-  "dur": 5.118,
-  "tempo": 1.04,
-  "raw": 6.16,
+  "dur": 4.5,
+  "tempo": 1.0,
+  "raw": 4.825,
   "speech": [
    [
-    33.638,
-    35.937
+    33.64,
+    35.54
    ],
    [
-    36.167,
-    38.61
+    35.84,
+    38.0
    ]
   ],
   "text": "Vous recevez ensuite un rapport détaillé : chaque défaut y est décrit et qualifié,"
@@ -130,17 +122,17 @@
   "id": "06",
   "file": "assets/audio/vo/vo_06.wav",
   "start": 39.55,
-  "dur": 3.17,
-  "tempo": 1.04,
-  "raw": 3.92,
+  "dur": 2.88,
+  "tempo": 1.0,
+  "raw": 3.085,
   "speech": [
    [
-    39.588,
-    41.31
+    39.59,
+    41.04
    ],
    [
-    41.54,
-    42.617
+    41.26,
+    42.33
    ]
   ],
   "text": "classé par niveau de gravité, avec l'action à mener."
@@ -148,18 +140,18 @@
  {
   "id": "07",
   "file": "assets/audio/vo/vo_07.wav",
-  "start": 43.05,
-  "dur": 3.178,
-  "tempo": 1.04,
-  "raw": 3.92,
+  "start": 44.05,
+  "dur": 2.8,
+  "tempo": 1.0,
+  "raw": 3.14,
   "speech": [
    [
-    43.088,
-    44.156
+    44.09,
+    44.97
    ],
    [
-    44.387,
-    46.127
+    45.15,
+    46.75
    ]
   ],
   "text": "Un rapport aux normes, utile aussi auprès de votre assureur."
@@ -167,14 +159,14 @@
  {
   "id": "08",
   "file": "assets/audio/vo/vo_08.wav",
-  "start": 48.0,
-  "dur": 2.87,
+  "start": 50.0,
+  "dur": 2.66,
   "tempo": 1.0,
-  "raw": 3.4,
+  "raw": 2.985,
   "speech": [
    [
-    48.04,
-    50.77
+    50.04,
+    52.56
    ]
   ],
   "text": "Suivez votre installation sur notre plateforme en ligne."

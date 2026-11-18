@@ -279,36 +279,36 @@
         blurIn(9.65 + i * 0.3, $("#s5-cat" + i), 0.18);
       });
       // PAGE 3 — couverture du rapport, conforme à la norme
-      blurOut(11.6, t2, 0.16, 0.02);
-      blurOut(11.6, [$("#s5-chart"), $("#s5-lab-y"), $("#s5-cat0"), $("#s5-cat1")], 0.2, 0.02);
-      pageOut(11.6, P2);
-      pageIn(11.8, P3);
-      blurIn(11.9, t3, 0.15, 0.067);
-      draw(11.9, $("#s5-acc"), 0.4, "power2.out");
-      blurIn(11.95, $("#s5-ct"), 0.2);
-      blurIn(12.15, $("#s5-cs"), 0.2);
-      draw(12.0, $$(".s5-ill"), 0.4, "power2.out", 0.05);
-      fadeIn(12.4, $("#s5-hotc"), 0.3);
-      fadeIn(12.5, $("#s5-mlogo"), 0.35);
-      tl.fromTo($("#s5-stamp"), { opacity: 0, scale: 1.45, transformOrigin: "50% 50%" }, { opacity: 1, scale: 1, duration: 0.32, ease: "back.out(1.8)" }, 12.8);
+      blurOut(12.6, t2, 0.16, 0.02);
+      blurOut(12.6, [$("#s5-chart"), $("#s5-lab-y"), $("#s5-cat0"), $("#s5-cat1")], 0.2, 0.02);
+      pageOut(12.6, P2);
+      pageIn(12.8, P3);
+      blurIn(12.9, t3, 0.15, 0.067);
+      draw(12.9, $("#s5-acc"), 0.4, "power2.out");
+      blurIn(12.95, $("#s5-ct"), 0.2);
+      blurIn(13.15, $("#s5-cs"), 0.2);
+      draw(13, $$(".s5-ill"), 0.4, "power2.out", 0.05);
+      fadeIn(13.4, $("#s5-hotc"), 0.3);
+      fadeIn(13.5, $("#s5-mlogo"), 0.35);
+      tl.fromTo($("#s5-stamp"), { opacity: 0, scale: 1.45, transformOrigin: "50% 50%" }, { opacity: 1, scale: 1, duration: 0.32, ease: "back.out(1.8)" }, 13.8);
       //   ce que contient le rapport
-      draw(13.0, $$(".s5-box"), 0.3, "power2.out", 0.1);
-      blurIn(13.1, [$("#s5-i0"), $("#s5-i1"), $("#s5-i2"), $("#s5-i3")], 0.18, 0.15);
-      [13.3, 13.66, 14.02, 14.38].forEach((t, i) => draw(t, $("#s5-k" + i), 0.28, "power2.out"));
+      draw(14, $$(".s5-box"), 0.3, "power2.out", 0.1);
+      blurIn(14.1, [$("#s5-i0"), $("#s5-i1"), $("#s5-i2"), $("#s5-i3")], 0.18, 0.15);
+      [14.3, 14.66, 15.02, 15.38].forEach((t, i) => draw(t, $("#s5-k" + i), 0.28, "power2.out"));
       //   le rapport contient le lien vers la plateforme en ligne
-      tl.fromTo($("#s5-link"), { opacity: 0, scale: 0.9, transformOrigin: "50% 50%" }, { opacity: 1, scale: 1, duration: 0.35, ease: "back.out(1.6)" }, 13.0);
+      tl.fromTo($("#s5-link"), { opacity: 0, scale: 0.9, transformOrigin: "50% 50%" }, { opacity: 1, scale: 1, duration: 0.35, ease: "back.out(1.6)" }, 14);
       // 4. toutes les cases cochées, le curseur arrive et clique sur le lien ; la fenêtre de la plateforme s'ouvre depuis le lien
       const cur = $("#s5-cur");
-      tl.fromTo(cur, { x: 1980, y: 979, opacity: 0 }, { x: 603.2, y: 709, opacity: 1, duration: 0.45, ease: "power2.out" }, 14.75);
-      tl.to(cur, { scale: 0.82, duration: 0.07, ease: "power1.in", yoyo: true, repeat: 1 }, 15.25);
-      tl.to($("#s5-link"), { backgroundColor: "#FFD2BC", duration: 0.08, yoyo: true, repeat: 1 }, 15.25);
-      blurOut(15.4, [...t3, $("#s5-i0"), $("#s5-i1"), $("#s5-i2"), $("#s5-i3")], 0.2, 0.015);
-      blurOut(15.42, [$("#s5-check")], 0.2, 0);
-      tl.set($("#s5-open"), { opacity: 1 }, 15.48);
+      tl.fromTo(cur, { x: 1980, y: 979, opacity: 0 }, { x: 603.2, y: 709, opacity: 1, duration: 0.45, ease: "power2.out" }, 16.75);
+      tl.to(cur, { scale: 0.82, duration: 0.07, ease: "power1.in", yoyo: true, repeat: 1 }, 17.25);
+      tl.to($("#s5-link"), { backgroundColor: "#FFD2BC", duration: 0.08, yoyo: true, repeat: 1 }, 17.25);
+      blurOut(17.4, [...t3, $("#s5-i0"), $("#s5-i1"), $("#s5-i2"), $("#s5-i3")], 0.2, 0.015);
+      blurOut(17.42, [$("#s5-check")], 0.2, 0);
+      tl.set($("#s5-open"), { opacity: 1 }, 17.48);
       // (le rectangle finit exactement sur le cadre de la fenêtre de la scène 6 : trait de 2,5 px centré, rayon 18 px à l'extérieur)
       tl.fromTo($("#s5-open"), { attr: { x: 260, y: 676, width: 520, height: 58, rx: 29, fill: "#FFF1E8", stroke: "#FF5700", "stroke-width": 2 } },
-        { attr: { x: 121.25, y: 197.25, width: 1677.5, height: 833.5, rx: 16.75, fill: "#FFFFFF", stroke: "#111111", "stroke-width": 2.5 }, duration: 0.6, ease: "power3.inOut", immediateRender: false }, 15.5);
-      tl.to($("#s5-docw"), { opacity: 0, filter: "blur(6px)", duration: 0.3, ease: "power2.in" }, 15.55);
+        { attr: { x: 121.25, y: 197.25, width: 1677.5, height: 833.5, rx: 16.75, fill: "#FFFFFF", stroke: "#111111", "stroke-width": 2.5 }, duration: 0.6, ease: "power3.inOut", immediateRender: false }, 17.5);
+      tl.to($("#s5-docw"), { opacity: 0, filter: "blur(6px)", duration: 0.3, ease: "power2.in" }, 17.55);
       window.__timelines["s5"] = tl;
     })();
   </script>

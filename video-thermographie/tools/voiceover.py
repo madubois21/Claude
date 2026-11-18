@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
-"""Voix off (FLORA — Gemini 3.1 Flash TTS, voix « Umbriel », fr-FR) : nettoyage et placement.
+"""Voix off (FLORA — ElevenLabs v4, voix « Charlotte », fr) : nettoyage et placement.
 
-Les phrases ont été générées dans FLORA puis déposées dans assets/audio/vo/raw_XX.wav (24 kHz mono).
+La voix a été générée dans FLORA (lecture d'une traite), découpée par tools/voice_split.py en assets/audio/vo/raw_XX.wav.
 Ce script, déterministe :
 1. coupe les silences de début et de fin ;
 2. raccourcit les pauses internes trop longues (au plus `pause` secondes, fondu de 12 ms aux raccords) ;
@@ -27,29 +27,32 @@ BASE = "https://media.flora.ai/node-inputs/2026/11/3/px78199r2h4zbzqw7mjp0659jx8
 SR = 48000
 
 # (id, run FLORA, début absolu (s), pause interne max (s), tempo, texte)
-# Placement calé sur l'image (version 13) : S0 titre 0–3,6 · S1 3,6–10,8 · S2 10,8–17,4 · S3 17,4–24,0 · S4 24,0–31,2 ·
-# S5 31,2–47,4 · S6 plateforme 47,4–55,8 · S7 recherche 55,8–66,0 · S8 logo 66,0–74,4.
-# Pas de voix sur le titre, la recherche et le logo ; phrase 08 (plateforme) régénérée au passage 19.
+# Voix « Charlotte » (ElevenLabs v4, via FLORA), lue d'une traite (run m17fref01q1qsrdygnf1kx3ysx8jf8x0) puis découpée
+# en phrases par tools/voice_split.py ; les anciennes voix « Umbriel » sont gardées sous raw_XX_umbriel.wav.
+# Placement calé sur l'image (version 21, 76,4 s) : S0 titre 0–3,6 · S1 3,6–10,8 · S2 10,8–17,4 · S3 17,4–24,0 ·
+# S4 24,0–31,2 · S5 rapport 31,2–49,4 (page 2 à 39,45, page 3 à 44,0) · S6 plateforme 49,4–57,8 · S7 recherche 57,8–68,0 ·
+# S8 logo 68,0–76,4. Pas de voix sur le titre, la recherche et le logo.
+RUN = "m17fref01q1qsrdygnf1kx3ysx8jf8x0"
 LINES = [
-    ("01", "m170bcwv0qx4nt99xpssgpz26d8hhbf6", 4.50, 0.30, 1.00,
+    ("01", RUN, 4.50, 0.30, 1.00,
      "Sur une toiture solaire, certains défauts restent totalement invisibles à l'œil nu."),
-    ("02", "m1727fhvadwgj3kx3gc2a2w52s8hhmpy", 10.50, 0.30, 1.00,
+    ("02", RUN, 10.50, 0.30, 1.00,
      "Pourtant, ils font baisser le rendement, augmentent le risque d'incendie et fragilisent votre garantie."),
-    ("03", "m1701etqdmbs0cs3s05v0syex18hgww5", 17.80, 0.30, 1.00,
+    ("03", RUN, 17.80, 0.30, 1.00,
      "Notre drone, équipé d'une caméra infrarouge, survole vos panneaux et révèle chaque échauffement."),
-    ("04", "m17e57pvwm0ppxntect1mewzf18hghmv", 24.25, 0.24, 1.03,
+    ("04", RUN, 24.25, 0.30, 1.00,
      "Points chauds, diodes by-pass défectueuses, boîtes de jonction en surchauffe : chaque anomalie est localisée."),
-    ("05", "m178gqwz34r99kc08kxs3zhfw58hhs86", 33.60, 0.24, 1.04,
+    ("05", RUN, 33.60, 0.30, 1.00,
      "Vous recevez ensuite un rapport détaillé : chaque défaut y est décrit et qualifié,"),
-    ("06", "m170f6ptnpv9z50g3qawwjke2h8hg17x", 39.55, 0.24, 1.04,
+    ("06", RUN, 39.55, 0.30, 1.00,
      "classé par niveau de gravité, avec l'action à mener."),
-    ("07", "m179b0j2z3xd0b1gqx84jdhe458hhav1", 43.05, 0.24, 1.04,
+    ("07", RUN, 44.05, 0.30, 1.00,
      "Un rapport aux normes, utile aussi auprès de votre assureur."),
-    ("08", "m17a6931474b0qd1bbcsee5y3n8j1yv2", 48.00, 0.24, 1.00,
+    ("08", RUN, 50.00, 0.30, 1.00,
      "Suivez votre installation sur notre plateforme en ligne."),
 ]
 GAP = 0.15  # silence minimal entre deux phrases
-END = 55.6  # la dernière phrase (plateforme) se termine avant la recherche
+END = 57.6  # la dernière phrase (plateforme) se termine avant la recherche
 
 
 def ff(*args, capture=False):
