@@ -2,6 +2,7 @@
 
 Source : `Cahier_des_charges.pdf` (structure en 6 scènes, textes S1 et S2 imposés).
 Choix validés avec le client : pas de voix off ; musique originale composée ; 16:9 seul pour ce premier passage.
+Passage 21 : musique « Tech Background Music » (ElevenLabs Music) ; voix « Charlotte » (ElevenLabs v4) ; rapport +2 s ; 76,4 s.
 Passage 19 : voix off de la plateforme (« Suivez votre installation sur notre plateforme en ligne. ») ; drone du logo +2,7 dB.
 Passage 17 : plateforme : carte thermique avec signatures et cadres de détection, vue IR avec réticule et échelle.
 Passage 16 : musique en fond (0,5, et 0,15 sous la voix) ; captures sans zoom ; page LinkedIn avec la barre LinkedIn.
@@ -33,7 +34,7 @@ contact www.flyscanair.com · 06 22 80 57 69 · contact@flyscanair.com ; plus de
 GOAL:    le spectateur comprend qu'un défaut invisible coûte cher et qu'un survol thermique par drone le révèle ; il retient « faire contrôler son installation ».
 OUTPUT:  HyperFrames, 1920 x 1080, 30 fps, MP4 H.264 (version LinkedIn).
 TIME:    74,4 s x 30 = 2232 images, fin tenue sur le logo, le slogan et les coordonnées (passage 13). Musique 100 BPM : 1 temps = 0,6 s = 18 images, 1 mesure = 2,4 s.
-         Coupes : S0 0–3,6 · S1 3,6–10,8 · S2 10,8–17,4 · S3 17,4–24,0 · S4 24,0–31,2 · S5 31,2–47,4 · S6 47,4–55,8 · S7 55,8–66,0 · S8 66,0–74,4.
+         Coupes : S0 0–3,6 · S1 3,6–10,8 · S2 10,8–17,4 · S3 17,4–24,0 · S4 24,0–31,2 · S5 31,2–49,4 · S6 49,4–57,8 · S7 57,8–68,0 · S8 68,0–76,4.
          (Le détail SHOTS ci-dessous décrit la conception d'origine ; le déroulé actuel est dans README.md.)
 LOOK:    fond #FFFFFF plat + trame de points Ø2 px #E4E4E7 au pas de 48 px (papier technique, aucun dégradé).
          Encre #111111 : traits de structure 2,5 px, détails 1,5 px, cellules 1 px #D4D4D8, fond de panneau #F3F3F4.

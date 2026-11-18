@@ -1,5 +1,18 @@
 # REVIEW
 
+## Passage 21 — nouvelle musique, voix « Charlotte », rapport plus long
+- Musique : « Tech Background Music », choisie parmi trois propositions générées dans FLORA (ElevenLabs Music v2.5,
+  instrumentale, 90 s) ; extrait 12,6–89 s pour que la fin naturelle du morceau tombe sur la dernière image, montée
+  de 1 s au début, −16 LUFS ; toujours en fond (0,5, et 0,15 sous la voix).
+- Voix : « Charlotte » (ElevenLabs v4), choisie parmi trois essais ; le texte entier lu d'une traite (96 crédits au lieu
+  de 384 phrase par phrase), découpé en 8 phrases au milieu des pauses (`tools/voice_split.py`), placé phrase par
+  phrase ; chaque phrase finit avant le changement d'image suivant.
+- S5 : pages « Classés par gravité » et « Un rapport aux normes » +1 s chacune (la checklist complète reste affichée
+  1 s avant l'arrivée de la souris). Durée totale 76,4 s (le client accepte de dépasser 1 min 15).
+- `hyperframes check` : en 16:9, « last line on screen 1,40 s » est un artefact (l'analyse s'arrête vers 75 s) : le
+  slogan reste affiché ≈ 4 s (72,4 – 76,4 s, vérifié sur les images) ; en 9:16, avertissements « zone de sécurité »
+  TikTok / Reels / Shorts (textes proches des bords), sans changement de mise en page à ce stade.
+
 ## Passage 20 — titre du survol
 - S3 : « Le scan infrarouge révèle chaque échauffement. » devient « La caméra infrarouge révèle chaque
   *échauffement*. » (même place, même animation ; 859 px en 9:16 pour 972 px disponibles).
