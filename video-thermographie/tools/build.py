@@ -539,8 +539,8 @@ def build_s0():
       blurIn(0.15, title, 0.22, 0.06, 8);
       draw(0.75, $("#s0-rule"), 0.6, "power2.out");
       // sortie : le titre se floute, le filet se dé-trace vers la droite
-      blurOut(3.05, title, 0.2, 0.015);
-      undraw(3.05, $("#s0-rule"), 0.35, "power3.in");"""
+      blurOut(2.65, title, 0.2, 0.015);
+      undraw(2.65, $("#s0-rule"), 0.35, "power3.in");"""
     write_scene("s0", "Scène 0 — Titre d'ouverture", [svar("s0-title", "Scène 0 — titre (| = retour ligne, *mot* = orange)", text)],
                 css, body, js)
 
@@ -1084,7 +1084,7 @@ S5_LINK, S5_LINK_FS, S5_LINK_2L = {  # x, y, largeur, hauteur ; corps (≥ 28 px
     "9x16": ((260, 664, 520, 104), 36, True),
     "1x1": ((260, 660, 520, 112), 40, True),
 }[FMT]
-S5_CHECKS = [round(13.3 + i * 0.36, 2) for i in range(4)]  # cases de la checklist (page 3), une toutes les 0,36 s
+S5_CHECKS = [round(14.3 + i * 0.36, 2) for i in range(4)]  # cases de la checklist (page 3), une toutes les 0,36 s
 S5_LOGO_Y = S5_LINK[1] + S5_LINK[3] + (38 if S5_LINK_2L else 38)  # petit logo de la couverture, sous le lien
 CUR_K = {"16x9": 1.3, "9x16": 1.5, "1x1": 1.25}[FMT]  # taille du curseur
 
@@ -1463,36 +1463,36 @@ def build_s5():
         blurIn(9.65 + i * 0.3, $("#s5-cat" + i), 0.18);
       });
       // PAGE 3 — couverture du rapport, conforme à la norme
-      blurOut(11.6, t2, 0.16, 0.02);
-      blurOut(11.6, [$("#s5-chart"), $("#s5-lab-y"), $("#s5-cat0"), $("#s5-cat1")], 0.2, 0.02);
-      pageOut(11.6, P2);
-      pageIn(11.8, P3);
-      blurIn(11.9, t3, 0.15, 0.067);
-      draw(11.9, $("#s5-acc"), 0.4, "power2.out");
-      blurIn(11.95, $("#s5-ct"), 0.2);
-      blurIn(12.15, $("#s5-cs"), 0.2);
-      draw(12.0, $$(".s5-ill"), 0.4, "power2.out", 0.05);
-      fadeIn(12.4, $("#s5-hotc"), 0.3);
-      fadeIn(12.5, $("#s5-mlogo"), 0.35);
-      tl.fromTo($("#s5-stamp"), { opacity: 0, scale: 1.45, transformOrigin: "50% 50%" }, { opacity: 1, scale: 1, duration: 0.32, ease: "back.out(1.8)" }, 12.8);
+      blurOut(12.6, t2, 0.16, 0.02);
+      blurOut(12.6, [$("#s5-chart"), $("#s5-lab-y"), $("#s5-cat0"), $("#s5-cat1")], 0.2, 0.02);
+      pageOut(12.6, P2);
+      pageIn(12.8, P3);
+      blurIn(12.9, t3, 0.15, 0.067);
+      draw(12.9, $("#s5-acc"), 0.4, "power2.out");
+      blurIn(12.95, $("#s5-ct"), 0.2);
+      blurIn(13.15, $("#s5-cs"), 0.2);
+      draw(13, $$(".s5-ill"), 0.4, "power2.out", 0.05);
+      fadeIn(13.4, $("#s5-hotc"), 0.3);
+      fadeIn(13.5, $("#s5-mlogo"), 0.35);
+      tl.fromTo($("#s5-stamp"), { opacity: 0, scale: 1.45, transformOrigin: "50% 50%" }, { opacity: 1, scale: 1, duration: 0.32, ease: "back.out(1.8)" }, 13.8);
       //   ce que contient le rapport
-      draw(13.0, $$(".s5-box"), 0.3, "power2.out", 0.1);
-      blurIn(13.1, [$("#s5-i0"), $("#s5-i1"), $("#s5-i2"), $("#s5-i3")], 0.18, 0.15);
+      draw(14, $$(".s5-box"), 0.3, "power2.out", 0.1);
+      blurIn(14.1, [$("#s5-i0"), $("#s5-i1"), $("#s5-i2"), $("#s5-i3")], 0.18, 0.15);
       S5_CHECKS.forEach((t, i) => draw(t, $("#s5-k" + i), 0.28, "power2.out"));
       //   le rapport contient le lien vers la plateforme en ligne
-      tl.fromTo($("#s5-link"), { opacity: 0, scale: 0.9, transformOrigin: "50% 50%" }, { opacity: 1, scale: 1, duration: 0.35, ease: "back.out(1.6)" }, 13.0);
+      tl.fromTo($("#s5-link"), { opacity: 0, scale: 0.9, transformOrigin: "50% 50%" }, { opacity: 1, scale: 1, duration: 0.35, ease: "back.out(1.6)" }, 14);
       // 4. toutes les cases cochées, le curseur arrive et clique sur le lien ; la fenêtre de la plateforme s'ouvre depuis le lien
       const cur = $("#s5-cur");
-      tl.fromTo(cur, { x: __CUX0__, y: __CUY0__, opacity: 0 }, { x: __CUX__, y: __CUY__, opacity: 1, duration: 0.45, ease: "power2.out" }, 14.75);
-      tl.to(cur, { scale: 0.82, duration: 0.07, ease: "power1.in", yoyo: true, repeat: 1 }, 15.25);
-      tl.to($("#s5-link"), { backgroundColor: "#FFD2BC", duration: 0.08, yoyo: true, repeat: 1 }, 15.25);
-      blurOut(15.4, [...t3, $("#s5-i0"), $("#s5-i1"), $("#s5-i2"), $("#s5-i3")], 0.2, 0.015);
-      blurOut(15.42, [$("#s5-check")], 0.2, 0);
-      tl.set($("#s5-open"), { opacity: 1 }, 15.48);
+      tl.fromTo(cur, { x: __CUX0__, y: __CUY0__, opacity: 0 }, { x: __CUX__, y: __CUY__, opacity: 1, duration: 0.45, ease: "power2.out" }, 16.75);
+      tl.to(cur, { scale: 0.82, duration: 0.07, ease: "power1.in", yoyo: true, repeat: 1 }, 17.25);
+      tl.to($("#s5-link"), { backgroundColor: "#FFD2BC", duration: 0.08, yoyo: true, repeat: 1 }, 17.25);
+      blurOut(17.4, [...t3, $("#s5-i0"), $("#s5-i1"), $("#s5-i2"), $("#s5-i3")], 0.2, 0.015);
+      blurOut(17.42, [$("#s5-check")], 0.2, 0);
+      tl.set($("#s5-open"), { opacity: 1 }, 17.48);
       // (le rectangle finit exactement sur le cadre de la fenêtre de la scène 6 : trait de 2,5 px centré, rayon 18 px à l'extérieur)
       tl.fromTo($("#s5-open"), { attr: { x: __LX__, y: __LY__, width: __LW__, height: __LH__, rx: __LR__, fill: "#FFF1E8", stroke: "#FF5700", "stroke-width": 2 } },
-        { attr: { x: __WX__, y: __WY__, width: __WW__, height: __WH__, rx: 16.75, fill: "#FFFFFF", stroke: "#111111", "stroke-width": 2.5 }, duration: 0.6, ease: "power3.inOut", immediateRender: false }, 15.5);
-      tl.to($("#s5-docw"), { opacity: 0, filter: "blur(6px)", duration: 0.3, ease: "power2.in" }, 15.55);"""
+        { attr: { x: __WX__, y: __WY__, width: __WW__, height: __WH__, rx: 16.75, fill: "#FFFFFF", stroke: "#111111", "stroke-width": 2.5 }, duration: 0.6, ease: "power3.inOut", immediateRender: false }, 17.5);
+      tl.to($("#s5-docw"), { opacity: 0, filter: "blur(6px)", duration: 0.3, ease: "power2.in" }, 17.55);"""
     js = (js.replace("__B2X__", n(BOX2[0])).replace("__B2Y__", n(BOX2[1])).replace("__B2W__", n(BOX2[2])).replace("__B2H__", n(BOX2[3])))
     cux, cuy = lx0 + (lx1 - lx0) * 0.66, (ly0 + ly1) / 2 + 4
     js = js.replace("__AY__", str(S5_AY)).replace("S5_CHECKS", str(S5_CHECKS))
@@ -1851,17 +1851,17 @@ def build_s6():
       tl.fromTo(ms, {{ opacity: 0, scale: 1.25, transformOrigin: "50% 50%" }}, {{ opacity: 1, scale: 1, duration: 0.35, ease: "back.out(1.6)" }}, 2.32);
       [2.35, 3.35].forEach((t) => pulse(0, t));
       detail(0, 2.4);
-      tl.to(cur, {{ x: {n(lay["row_x"])}, y: {n(rys[1])}, duration: 0.5, ease: "power2.inOut" }}, 4.3);
-      click(4.85);
-      tl.to(sel, {{ y: {n(S6_PICK[1] * rh)}, duration: 0.25, ease: "power2.inOut" }}, 4.9);
-      tl.to(ms, {{ attr: {{ x: MS[1][0], y: MS[1][1], width: MS[1][2], height: MS[1][3] }}, duration: 0.4, ease: "power2.inOut" }}, 4.9);
-      [5.0, 6.0].forEach((t) => pulse(1, t));
-      blurOut(4.9, $("#s6-d0"), 0.18, 0);
-      detail(1, 5.05);
-      tl.to(cur, {{ x: "+=" + {n(70 * CUR_K)}, y: "+=" + {n(90 * CUR_K)}, duration: 0.7, ease: "power2.inOut" }}, 6.1);
+      tl.to(cur, {{ x: {n(lay["row_x"])}, y: {n(rys[1])}, duration: 0.5, ease: "power2.inOut" }}, 4.1);
+      click(4.65);
+      tl.to(sel, {{ y: {n(S6_PICK[1] * rh)}, duration: 0.25, ease: "power2.inOut" }}, 4.7);
+      tl.to(ms, {{ attr: {{ x: MS[1][0], y: MS[1][1], width: MS[1][2], height: MS[1][3] }}, duration: 0.4, ease: "power2.inOut" }}, 4.7);
+      [4.8, 5.8].forEach((t) => pulse(1, t));
+      blurOut(4.7, $("#s6-d0"), 0.18, 0);
+      detail(1, 4.85);
+      tl.to(cur, {{ x: "+=" + {n(70 * CUR_K)}, y: "+=" + {n(90 * CUR_K)}, duration: 0.7, ease: "power2.inOut" }}, 5.9);
       // 3. sortie : tout se floute
-      blurOut(7.7, title, 0.18, 0.02);
-      tl.to([$("#s6-win"), $("#s6-svg"), cur], {{ opacity: 0, filter: "blur(8px)", duration: 0.32, ease: "power2.in" }}, 7.75);"""
+      blurOut(7.1, title, 0.18, 0.02);
+      tl.to([$("#s6-win"), $("#s6-svg"), cur], {{ opacity: 0, filter: "blur(8px)", duration: 0.32, ease: "power2.in" }}, 7.15);"""
     write_scene(
         "s6",
         "Scène 6 — Plateforme en ligne : liste des anomalies, vues IR et RVB, carte de l'installation",
@@ -1973,7 +1973,7 @@ def build_s7():
 # --------------------------------------------------------------------------
 # S8 — Logo : le serpentin se trace (bruit de drone), le nom apparaît, le logo remonte, slogan et coordonnées
 # --------------------------------------------------------------------------
-S8_DUR = 8.4
+S8_DUR = 8.0
 
 
 def build_s8():
@@ -2043,9 +2043,12 @@ def build_s8():
 # --------------------------------------------------------------------------
 # index.html
 # --------------------------------------------------------------------------
-SCENES = [("s0", 0, 3.6), ("s1", 3.6, 7.2), ("s2", 10.8, 6.6), ("s3", 17.4, 6.6), ("s4", 24.0, 7.2), ("s5", 31.2, 16.2),
-          ("s6", 47.4, 8.4), ("s7", 55.8, S7_DUR), ("s8", 66.0, S8_DUR)]
-TOTAL = 74.4
+SCENE_DURS = [("s0", 3.2), ("s1", 7.2), ("s2", 6.6), ("s3", 6.6), ("s4", 7.2), ("s5", 18.2), ("s6", 7.8), ("s7", S7_DUR), ("s8", S8_DUR)]
+SCENES, _t = [], 0.0
+for _sid, _d in SCENE_DURS:
+    SCENES.append((_sid, round(_t, 3), _d))
+    _t += _d
+TOTAL = round(_t, 3)  # 75,0 s
 T_ = {sid: t for sid, t, _ in SCENES}
 
 # (id, fichier, instant dans le film, volume) : le pic mesuré du fichier tombe une image après l'événement
@@ -2063,13 +2066,13 @@ SFX = [
     ("sfx-box2", "key-press.mp3", T_["s5"] + 5.72, 0.3),
     ("sfx-plan", "pop.mp3", T_["s5"] + 3.55, 0.25),
     ("sfx-page2", "whoosh-high.mp3", T_["s5"] + 8.2, 0.18),
-    ("sfx-page3", "whoosh-high.mp3", T_["s5"] + 11.75, 0.18),
-    ("sfx-stamp", "pop.mp3", T_["s5"] + 12.88, 0.45),
+    ("sfx-page3", "whoosh-high.mp3", T_["s5"] + 12.75, 0.18),
+    ("sfx-stamp", "pop.mp3", T_["s5"] + 13.88, 0.45),
     *[(f"sfx-check{i + 1}", f"validation-{i + 1}.wav", T_["s5"] + t + 0.1, 0.2) for i, t in enumerate(S5_CHECKS)],
-    ("sfx-link", "click-soft.mp3", T_["s5"] + 15.25, 0.75),
-    ("sfx-open", "whoosh-short.mp3", T_["s5"] + 15.7, 0.3),
+    ("sfx-link", "click-soft.mp3", T_["s5"] + 16.25, 0.75),
+    ("sfx-open", "whoosh-short.mp3", T_["s5"] + 16.7, 0.3),
     ("sfx-row1", "click-soft.mp3", T_["s6"] + 2.25, 0.75),
-    ("sfx-row2", "click-soft.mp3", T_["s6"] + 4.85, 0.75),
+    ("sfx-row2", "click-soft.mp3", T_["s6"] + 4.65, 0.75),
     ("sfx-type1", "typing-18.wav", T_["s7"] + S7_Q[0][1], 0.75),
     ("sfx-enter1", "key-enter.wav", T_["s7"] + 2.7, 0.8),
     ("sfx-res1", "whoosh-short.mp3", T_["s7"] + 3.2, 0.22),
