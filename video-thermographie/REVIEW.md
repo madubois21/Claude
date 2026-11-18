@@ -12,6 +12,8 @@
 - `hyperframes check` : en 16:9, « last line on screen 1,40 s » est un artefact (l'analyse s'arrête vers 75 s) : le
   slogan reste affiché ≈ 4 s (72,4 – 76,4 s, vérifié sur les images) ; en 9:16, avertissements « zone de sécurité »
   TikTok / Reels / Shorts (textes proches des bords), sans changement de mise en page à ce stade.
+- Rendus (trois formats) : 76,4 s ; −18,5 LUFS intégré, crête vraie −2,2 dBTP ; phrase 05 dans le mix −16,0 LUFS pour
+  −16,1 LUFS seule (la musique reste sous la voix) ; plateforme sans voix −21,6 LUFS ; images clés relues.
 
 ## Passage 20 — titre du survol
 - S3 : « Le scan infrarouge révèle chaque échauffement. » devient « La caméra infrarouge révèle chaque
