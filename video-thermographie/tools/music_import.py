@@ -9,7 +9,7 @@ La piste source est dans assets/audio/source/tech-background-music.mp3. Ce scrip
 Le niveau sous la voix et le reste du mixage sont réglés dans tools/build.py (piste « music », automation de volume).
 tools/music.py (musique synthétisée des versions précédentes) n'est plus utilisé.
 
-    python3 tools/music_import.py [durée totale, 75.0 par défaut]
+    python3 tools/music_import.py [durée totale, 76.4 par défaut]
 """
 import json
 import os
@@ -22,7 +22,7 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SRC = os.path.join(ROOT, "assets", "audio", "source", "tech-background-music.mp3")
 OUT = os.path.join(ROOT, "assets", "audio", "music.wav")
 SR = 48000
-TOTAL = float(sys.argv[1]) if len(sys.argv) > 1 else 75.0
+TOTAL = float(sys.argv[1]) if len(sys.argv) > 1 else 76.4
 FADE_IN = 1.0
 
 

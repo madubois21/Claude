@@ -539,8 +539,8 @@ def build_s0():
       blurIn(0.15, title, 0.22, 0.06, 8);
       draw(0.75, $("#s0-rule"), 0.6, "power2.out");
       // sortie : le titre se floute, le filet se dé-trace vers la droite
-      blurOut(2.65, title, 0.2, 0.015);
-      undraw(2.65, $("#s0-rule"), 0.35, "power3.in");"""
+      blurOut(3.05, title, 0.2, 0.015);
+      undraw(3.05, $("#s0-rule"), 0.35, "power3.in");"""
     write_scene("s0", "Scène 0 — Titre d'ouverture", [svar("s0-title", "Scène 0 — titre (| = retour ligne, *mot* = orange)", text)],
                 css, body, js)
 
@@ -1851,17 +1851,17 @@ def build_s6():
       tl.fromTo(ms, {{ opacity: 0, scale: 1.25, transformOrigin: "50% 50%" }}, {{ opacity: 1, scale: 1, duration: 0.35, ease: "back.out(1.6)" }}, 2.32);
       [2.35, 3.35].forEach((t) => pulse(0, t));
       detail(0, 2.4);
-      tl.to(cur, {{ x: {n(lay["row_x"])}, y: {n(rys[1])}, duration: 0.5, ease: "power2.inOut" }}, 4.1);
-      click(4.65);
-      tl.to(sel, {{ y: {n(S6_PICK[1] * rh)}, duration: 0.25, ease: "power2.inOut" }}, 4.7);
-      tl.to(ms, {{ attr: {{ x: MS[1][0], y: MS[1][1], width: MS[1][2], height: MS[1][3] }}, duration: 0.4, ease: "power2.inOut" }}, 4.7);
-      [4.8, 5.8].forEach((t) => pulse(1, t));
-      blurOut(4.7, $("#s6-d0"), 0.18, 0);
-      detail(1, 4.85);
-      tl.to(cur, {{ x: "+=" + {n(70 * CUR_K)}, y: "+=" + {n(90 * CUR_K)}, duration: 0.7, ease: "power2.inOut" }}, 5.9);
+      tl.to(cur, {{ x: {n(lay["row_x"])}, y: {n(rys[1])}, duration: 0.5, ease: "power2.inOut" }}, 4.3);
+      click(4.85);
+      tl.to(sel, {{ y: {n(S6_PICK[1] * rh)}, duration: 0.25, ease: "power2.inOut" }}, 4.9);
+      tl.to(ms, {{ attr: {{ x: MS[1][0], y: MS[1][1], width: MS[1][2], height: MS[1][3] }}, duration: 0.4, ease: "power2.inOut" }}, 4.9);
+      [5.0, 6.0].forEach((t) => pulse(1, t));
+      blurOut(4.9, $("#s6-d0"), 0.18, 0);
+      detail(1, 5.05);
+      tl.to(cur, {{ x: "+=" + {n(70 * CUR_K)}, y: "+=" + {n(90 * CUR_K)}, duration: 0.7, ease: "power2.inOut" }}, 6.1);
       // 3. sortie : tout se floute
-      blurOut(7.1, title, 0.18, 0.02);
-      tl.to([$("#s6-win"), $("#s6-svg"), cur], {{ opacity: 0, filter: "blur(8px)", duration: 0.32, ease: "power2.in" }}, 7.15);"""
+      blurOut(7.7, title, 0.18, 0.02);
+      tl.to([$("#s6-win"), $("#s6-svg"), cur], {{ opacity: 0, filter: "blur(8px)", duration: 0.32, ease: "power2.in" }}, 7.75);"""
     write_scene(
         "s6",
         "Scène 6 — Plateforme en ligne : liste des anomalies, vues IR et RVB, carte de l'installation",
@@ -1973,7 +1973,7 @@ def build_s7():
 # --------------------------------------------------------------------------
 # S8 — Logo : le serpentin se trace (bruit de drone), le nom apparaît, le logo remonte, slogan et coordonnées
 # --------------------------------------------------------------------------
-S8_DUR = 8.0
+S8_DUR = 8.4
 
 
 def build_s8():
@@ -2043,12 +2043,12 @@ def build_s8():
 # --------------------------------------------------------------------------
 # index.html
 # --------------------------------------------------------------------------
-SCENE_DURS = [("s0", 3.2), ("s1", 7.2), ("s2", 6.6), ("s3", 6.6), ("s4", 7.2), ("s5", 18.2), ("s6", 7.8), ("s7", S7_DUR), ("s8", S8_DUR)]
+SCENE_DURS = [("s0", 3.6), ("s1", 7.2), ("s2", 6.6), ("s3", 6.6), ("s4", 7.2), ("s5", 18.2), ("s6", 8.4), ("s7", S7_DUR), ("s8", S8_DUR)]
 SCENES, _t = [], 0.0
 for _sid, _d in SCENE_DURS:
     SCENES.append((_sid, round(_t, 3), _d))
     _t += _d
-TOTAL = round(_t, 3)  # 75,0 s
+TOTAL = round(_t, 3)  # 76,4 s (le client accepte de dépasser 1 min 15)
 T_ = {sid: t for sid, t, _ in SCENES}
 
 # (id, fichier, instant dans le film, volume) : le pic mesuré du fichier tombe une image après l'événement
@@ -2072,7 +2072,7 @@ SFX = [
     ("sfx-link", "click-soft.mp3", T_["s5"] + 16.25, 0.75),
     ("sfx-open", "whoosh-short.mp3", T_["s5"] + 16.7, 0.3),
     ("sfx-row1", "click-soft.mp3", T_["s6"] + 2.25, 0.75),
-    ("sfx-row2", "click-soft.mp3", T_["s6"] + 4.65, 0.75),
+    ("sfx-row2", "click-soft.mp3", T_["s6"] + 4.85, 0.75),
     ("sfx-type1", "typing-18.wav", T_["s7"] + S7_Q[0][1], 0.75),
     ("sfx-enter1", "key-enter.wav", T_["s7"] + 2.7, 0.8),
     ("sfx-res1", "whoosh-short.mp3", T_["s7"] + 3.2, 0.22),
