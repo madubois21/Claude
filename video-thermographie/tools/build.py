@@ -2053,7 +2053,7 @@ T_ = {sid: t for sid, t, _ in SCENES}
 
 # (id, fichier, instant dans le film, volume) : le pic mesuré du fichier tombe une image après l'événement
 SFX = [
-    *[(f"sfx-pk{i}", "pop.mp3", T_["s2"] + 0.95 + i * 0.4, 0.12) for i in range(6)],
+    *[(f"sfx-pk{i}", "pop.mp3", T_["s2"] + 0.8 + i * 0.32, 0.12) for i in range(6)],  # arrivée de chaque pictogramme (0,7 + 0,32 i)
     ("sfx-cam", "whoosh-low.mp3", T_["s2"] + 5.6, 0.22),
     ("sfx-drone", "whoosh-short.mp3", T_["s3"] + 0.72, 0.5),
     ("sfx-scan", "whoosh-cinematic.mp3", T_["s3"] + 3.95, 0.3),
@@ -2069,8 +2069,8 @@ SFX = [
     ("sfx-page3", "whoosh-high.mp3", T_["s5"] + 12.75, 0.18),
     ("sfx-stamp", "pop.mp3", T_["s5"] + 13.88, 0.45),
     *[(f"sfx-check{i + 1}", f"validation-{i + 1}.wav", T_["s5"] + t + 0.1, 0.2) for i, t in enumerate(S5_CHECKS)],
-    ("sfx-link", "click-soft.mp3", T_["s5"] + 16.25, 0.75),
-    ("sfx-open", "whoosh-short.mp3", T_["s5"] + 16.7, 0.3),
+    ("sfx-link", "click-soft.mp3", T_["s5"] + 17.25, 0.75),  # clic de la souris sur le lien (s5.html, 17,25 s)
+    ("sfx-open", "whoosh-short.mp3", T_["s5"] + 17.7, 0.3),  # la fenêtre s'ouvre (17,5 – 18,1 s)
     ("sfx-row1", "click-soft.mp3", T_["s6"] + 2.25, 0.75),
     ("sfx-row2", "click-soft.mp3", T_["s6"] + 4.85, 0.75),
     ("sfx-type1", "typing-18.wav", T_["s7"] + S7_Q[0][1], 0.75),

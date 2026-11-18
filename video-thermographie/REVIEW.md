@@ -1,5 +1,13 @@
 # REVIEW
 
+## Passage 22 — bruitages resynchronisés
+- S5 : le bruit du clic sur « Accéder à votre installation » arrivait 1 s avant le clic (le clic avait été décalé de
+  2 s par l'allongement des deux pages du rapport, le son d'1 s seulement) : clic et « whoosh » d'ouverture recalés
+  (pic du clic à 48,48 s pour un clic à l'image à 48,45 s).
+- S2 : les « pop » des pictogrammes suivaient encore l'ancienne arrivée (le dernier tombait 0,65 s trop tard) :
+  recalés sur l'arrivée en spirale (0,7 + 0,32 s par pictogramme).
+- Contrôle de tous les autres bruitages face à leur animation : alignés.
+
 ## Passage 21 — nouvelle musique, voix « Charlotte », rapport plus long
 - Musique : « Tech Background Music », choisie parmi trois propositions générées dans FLORA (ElevenLabs Music v2.5,
   instrumentale, 90 s) ; extrait 12,6–89 s pour que la fin naturelle du morceau tombe sur la dernière image, montée
