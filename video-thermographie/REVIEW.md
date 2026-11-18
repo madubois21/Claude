@@ -7,6 +7,8 @@
 - S2 : les « pop » des pictogrammes suivaient encore l'ancienne arrivée (le dernier tombait 0,65 s trop tard) :
   recalés sur l'arrivée en spirale (0,7 + 0,32 s par pictogramme).
 - Contrôle de tous les autres bruitages face à leur animation : alignés.
+- Rendus (trois formats) : 76,4 s ; −18,5 LUFS, crête vraie −2,2 dBTP ; dans le rendu 16:9, le transitoire du clic est
+  mesuré à 48,46 s pour un clic à l'image à 48,45 s.
 
 ## Passage 21 — nouvelle musique, voix « Charlotte », rapport plus long
 - Musique : « Tech Background Music », choisie parmi trois propositions générées dans FLORA (ElevenLabs Music v2.5,
