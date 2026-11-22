@@ -5,6 +5,8 @@
   « Surveillance Infrarouge » ; texte entier lu d'une traite (96 crédits), découpé en 8 phrases (`tools/voice_split.py`),
   placé aux mêmes instants que la voix précédente ; chaque phrase finit avant le changement d'image suivant.
   Phrases de « Charlotte » gardées sous `raw_XX_charlotte.wav`.
+- Rendus (trois formats) : 76,4 s ; −18,7 LUFS intégré, crête vraie −3,2 dBTP ; phrase 05 dans le mix −16,1 LUFS pour
+  −16,2 LUFS seule ; `hyperframes check` sans erreur ; images clés relues.
 
 ## Passage 22 — bruitages resynchronisés
 - S5 : le bruit du clic sur « Accéder à votre installation » arrivait 1 s avant le clic (le clic avait été décalé de
