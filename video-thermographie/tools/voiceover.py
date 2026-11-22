@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Voix off (FLORA — ElevenLabs v4, voix « Charlotte », fr) : nettoyage et placement.
+"""Voix off (FLORA — ElevenLabs v4, voix « George », fr) : nettoyage et placement.
 
 La voix a été générée dans FLORA (lecture d'une traite), découpée par tools/voice_split.py en assets/audio/vo/raw_XX.wav.
 Ce script, déterministe :
@@ -27,12 +27,12 @@ BASE = "https://media.flora.ai/node-inputs/2026/11/3/px78199r2h4zbzqw7mjp0659jx8
 SR = 48000
 
 # (id, run FLORA, début absolu (s), pause interne max (s), tempo, texte)
-# Voix « Charlotte » (ElevenLabs v4, via FLORA), lue d'une traite (run m17fref01q1qsrdygnf1kx3ysx8jf8x0) puis découpée
-# en phrases par tools/voice_split.py ; les anciennes voix « Umbriel » sont gardées sous raw_XX_umbriel.wav.
+# Voix « George » (ElevenLabs v4, via FLORA), lue d'une traite (run m17214qf8kw36xdv699pthyhch8jp63v) puis découpée
+# en phrases par tools/voice_split.py ; voix précédentes gardées sous raw_XX_charlotte.wav et raw_XX_umbriel.wav.
 # Placement calé sur l'image (version 21, 76,4 s) : S0 titre 0–3,6 · S1 3,6–10,8 · S2 10,8–17,4 · S3 17,4–24,0 ·
 # S4 24,0–31,2 · S5 rapport 31,2–49,4 (page 2 à 39,45, page 3 à 44,0) · S6 plateforme 49,4–57,8 · S7 recherche 57,8–68,0 ·
 # S8 logo 68,0–76,4. Pas de voix sur le titre, la recherche et le logo.
-RUN = "m17fref01q1qsrdygnf1kx3ysx8jf8x0"
+RUN = "m17214qf8kw36xdv699pthyhch8jp63v"
 LINES = [
     ("01", RUN, 4.50, 0.30, 1.00,
      "Sur une toiture solaire, certains défauts restent totalement invisibles à l'œil nu."),
