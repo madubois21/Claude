@@ -1,5 +1,11 @@
 # REVIEW
 
+## Passage 23 — voix « George »
+- Voix off : « George » (ElevenLabs v4, voix d'homme chaude et posée), choisie par le client à partir de l'essai
+  « Surveillance Infrarouge » ; texte entier lu d'une traite (96 crédits), découpé en 8 phrases (`tools/voice_split.py`),
+  placé aux mêmes instants que la voix précédente ; chaque phrase finit avant le changement d'image suivant.
+  Phrases de « Charlotte » gardées sous `raw_XX_charlotte.wav`.
+
 ## Passage 22 — bruitages resynchronisés
 - S5 : le bruit du clic sur « Accéder à votre installation » arrivait 1 s avant le clic (le clic avait été décalé de
   2 s par l'allongement des deux pages du rapport, le son d'1 s seulement) : clic et « whoosh » d'ouverture recalés

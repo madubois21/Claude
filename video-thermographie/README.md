@@ -1,6 +1,6 @@
 # Fly Scan’Air — vidéo motion design « Le contrôle thermographique appliqué aux installations photovoltaïques »
 
-Vidéo full motion design de 76,4 s (version 21), 16:9 (1920 × 1080, 30 i/s), pensée pour LinkedIn, déclinée en 9:16 et 1:1.
+Vidéo full motion design de 76,4 s (version 23), 16:9 (1920 × 1080, 30 i/s), pensée pour LinkedIn, déclinée en 9:16 et 1:1.
 Elle s’ouvre sur un titre et se termine sur le logo et le slogan.
 Réalisée avec [HyperFrames](https://hyperframes.heygen.com) : HTML + SVG + GSAP, rendus en MP4 image par image.
 
@@ -13,14 +13,14 @@ Réalisée avec [HyperFrames](https://hyperframes.heygen.com) : HTML + SVG + GSA
 | Déclinaison carrée 1:1 | `renders/FlyScanAir_thermographie_1x1.mp4` (1080 × 1080) |
 | Projet source | `index.html` + `compositions/s0.html` … `s8.html` (16:9) ; `formats/9x16/` et `formats/1x1/` (projets autonomes des déclinaisons) |
 | Assets graphiques | tout est vectoriel dans les scènes (aucune photo de panneau) ; logo : lettres vectorisées depuis le logo fourni (`assets/images/logo-flyscanair.png` → `assets/logo-letters.json`, par `tools/logo_trace.py`), serpentin et billes remesurés sur la même image ; police Comfortaa `assets/fonts/` |
-| Voix off (FLORA, ElevenLabs v4, voix « Charlotte ») | `assets/audio/vo/raw_XX.wav` (lecture d’une traite découpée en phrases par `tools/voice_split.py` ; anciennes voix « Umbriel » : `raw_XX_umbriel.wav`), `vo_01.wav` … `vo_08.wav` (nettoyés et placés par `tools/voiceover.py`) |
+| Voix off (FLORA, ElevenLabs v4, voix « George ») | `assets/audio/vo/raw_XX.wav` (lecture d’une traite découpée en phrases par `tools/voice_split.py` ; voix précédentes : `raw_XX_charlotte.wav`, `raw_XX_umbriel.wav`), `vo_01.wav` … `vo_08.wav` (nettoyés et placés par `tools/voiceover.py`) |
 | Musique | « Tech Background Music », générée dans FLORA (ElevenLabs Music v2.5, instrumentale) : `assets/audio/source/tech-background-music.mp3`, calée sur la vidéo par `tools/music_import.py` → `assets/audio/music.wav` |
 | Effets sonores | `assets/audio/sfx/` (voir `CREDITS.md`) ; frappe au clavier (vraies touches découpées dans `typing.mp3`), son de validation des cases et bourdonnement du drone construits par `tools/sfx.py` |
 | Pictogrammes | Phosphor Icons, graisse bold (licence MIT, `assets/images/LICENSE-phosphor.txt`) : tracés dans `assets/icons-phosphor.json` |
 | Captures | site web : `assets/images/site-flyscanair.jpg` ; page LinkedIn : `assets/images/linkedin-flyscanair.jpg` (vraie page avec la barre LinkedIn, pastilles de notification retirées, relation personnelle masquée ; préparée par `tools/linkedin_image.cjs`) |
 | Fiche technique | `SPEC.md` ; note de revue : `REVIEW.md` |
 
-Voix off en français (8 phrases, voix féminine « Charlotte », ElevenLabs v4) ; la musique reste un fond : 0,5 (−6 dB) sur toute la
+Voix off en français (8 phrases, voix masculine « George », ElevenLabs v4) ; la musique reste un fond : 0,5 (−6 dB) sur toute la
 vidéo, 0,15 (−16,5 dB) sous la voix, et 0,3 pendant la frappe au clavier.
 Pas de voix sur le titre, la recherche et le logo final.
 Les textes à l’écran portent toujours le message seuls, pour la lecture sans le son sur LinkedIn.

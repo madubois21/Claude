@@ -2,6 +2,7 @@
 
 Source : `Cahier_des_charges.pdf` (structure en 6 scènes, textes S1 et S2 imposés).
 Choix validés avec le client : pas de voix off ; musique originale composée ; 16:9 seul pour ce premier passage.
+Passage 23 : voix off « George » (ElevenLabs v4).
 Passage 21 : musique « Tech Background Music » (ElevenLabs Music) ; voix « Charlotte » (ElevenLabs v4) ; rapport +2 s ; 76,4 s.
 Passage 19 : voix off de la plateforme (« Suivez votre installation sur notre plateforme en ligne. ») ; drone du logo +2,7 dB.
 Passage 17 : plateforme : carte thermique avec signatures et cadres de détection, vue IR avec réticule et échelle.
